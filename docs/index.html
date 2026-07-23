@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f2eee3" />
+    <meta
+      name="description"
+      content="依照法語課程與錯題安排的每日複習介面"
+    />
+    <title>Encore — 每日法語複習</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="paper-noise" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Encore 首頁">
+        <span class="brand-mark">E</span>
+        <span>
+          <strong>Encore</strong>
+          <small>法語複習手帳</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="主要導覽">
+        <button class="nav-link active" data-view="today">今日</button>
+        <button class="nav-link" data-view="review">複習</button>
+        <button class="nav-link" data-view="mistakes">錯題簿</button>
+        <button class="nav-link" data-view="classes">課程</button>
+        <button class="nav-link" data-view="game">遊戲</button>
+      </nav>
+
+      <button class="streak-pill" id="streakButton" aria-label="連續學習天數">
+        <span class="flame">✦</span>
+        <span><strong id="streakCount">4</strong> 天連續</span>
+      </button>
+    </header>
+
+    <main>
+      <section class="view active" id="today-view">
+        <div class="hero-grid">
+          <div class="date-rail" aria-hidden="true">
+            <span id="monthLabel">JUIL.</span>
+            <strong id="dayLabel">23</strong>
+            <span id="weekdayLabel">JEU.</span>
+          </div>
+
+          <div class="hero-copy">
+            <p class="eyebrow">BONJOUR, ZOE <span>·</span> OBJECTIF TCF CANADA B2</p>
+            <h1>今天，再靠近<br /><em>法語一點點。</em></h1>
+            <p class="hero-intro">
+              依照你的課堂進度與常見錯誤，今天專注在
+              <strong>飲食冠詞</strong>與<strong>動詞變化</strong>。
+            </p>
+            <button class="primary-button" id="startReview">
+              <span>開始今日複習</span>
+              <span class="button-arrow">↗</span>
+            </button>
+          </div>
+
+          <aside class="today-note">
+            <div class="tape"></div>
+            <span class="note-number">07 / 23</span>
+            <p class="handwriting">Petit à petit,<br />l’oiseau fait son nid.</p>
+            <span class="translation">積少成多。</span>
+            <div class="tiny-sketch" aria-hidden="true">⌁ ☕︎</div>
+          </aside>
+        </div>
+
+        <section class="goal-strip" aria-labelledby="goal-title">
+          <div class="goal-copy">
+            <p class="eyebrow light">CAP SUR LE B2</p>
+            <h2 id="goal-title">TCF Canada<br /><em>目標路線</em></h2>
+            <p>目標日：<strong>2027.02.28</strong></p>
+          </div>
+          <div class="level-route" aria-label="TCF Canada B2 學習路線">
+            <div class="level-node current">
+              <span>現在</span>
+              <strong>A1+</strong>
+              <small>建立主動輸出</small>
+            </div>
+            <div class="route-line"><span></span></div>
+            <div class="level-node">
+              <span>2026.09</span>
+              <strong>A2</strong>
+              <small>日常溝通穩定</small>
+            </div>
+            <div class="route-line"></div>
+            <div class="level-node">
+              <span>2026.11</span>
+              <strong>B1</strong>
+              <small>開始 TCF 題型訓練</small>
+            </div>
+            <div class="route-line"></div>
+            <div class="level-node target">
+              <span>2027.02</span>
+              <strong>B2</strong>
+              <small>完整限時模考</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="daily-plan" aria-labelledby="daily-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">PLAN DU JOUR</p>
+              <h2 id="daily-title">今日複習計畫</h2>
+            </div>
+            <div class="plan-progress">
+              <span><strong id="completedCount">0</strong> / 3 完成</span>
+              <div class="progress-track">
+                <span id="progressBar"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="memory-board" aria-label="複習記憶狀態">
+            <div>
+              <span class="metric-mark due-mark"></span>
+              <p>今天到期</p>
+              <strong id="dueCount">0</strong>
+              <small>張卡片等待回想</small>
+            </div>
+            <div>
+              <span class="metric-mark mastered-mark"></span>
+              <p>已穩定</p>
+              <strong id="masteredCount">0</strong>
+              <small>連續答對 3 次以上</small>
+            </div>
+            <div>
+              <span class="metric-mark weak-mark"></span>
+              <p>待加強</p>
+              <strong id="weakCount">0</strong>
+              <small>錯誤率超過一半</small>
+            </div>
+            <div class="next-review">
+              <p>系統策略</p>
+              <strong>先複習最容易忘的</strong>
+              <small id="nextReviewText">依你的作答紀錄自動排序</small>
+            </div>
+          </div>
+
+          <div class="task-grid">
+            <article class="task-card coral" data-task="words">
+              <div class="task-topline">
+                <span class="task-index">01</span>
+                <button class="task-check" aria-label="標記單字複習完成">✓</button>
+              </div>
+              <div class="card-glyph">Aa</div>
+              <p class="task-kicker">8 MIN · VOCABULAIRE</p>
+              <h3>飲食與三餐</h3>
+              <p>du pain、de l’eau、des légumes，以及三餐的說法。</p>
+              <button class="text-action task-launch" data-set="food">
+                練習 8 個單字 <span>→</span>
+              </button>
+            </article>
+
+            <article class="task-card blue" data-task="grammar">
+              <div class="task-topline">
+                <span class="task-index">02</span>
+                <button class="task-check" aria-label="標記文法複習完成">✓</button>
+              </div>
+              <div class="card-glyph">ne<br />pas</div>
+              <p class="task-kicker">10 MIN · GRAMMAIRE</p>
+              <h3>否定句的 de</h3>
+              <p>把 un / une / des 變成 de，並練習母音前的省音。</p>
+              <button class="text-action task-launch" data-set="negative">
+                做 5 道題目 <span>→</span>
+              </button>
+            </article>
+
+            <article class="task-card yellow" data-task="speaking">
+              <div class="task-topline">
+                <span class="task-index">03</span>
+                <button class="task-check" aria-label="標記口說複習完成">✓</button>
+              </div>
+              <div class="card-glyph sound-glyph">)))</div>
+              <p class="task-kicker">5 MIN · EXPRESSION</p>
+              <h3>回答早餐吃什麼</h3>
+              <p>用完整句回答，特別留意 boire、prendre、manger。</p>
+              <button class="text-action task-launch" data-set="speaking">
+                開始口說提示 <span>→</span>
+              </button>
+            </article>
+          </div>
+        </section>
+
+        <section class="weakness-strip">
+          <div>
+            <p class="eyebrow light">À REVOIR</p>
+            <h2>你的易錯重點</h2>
+          </div>
+          <div class="weakness-list">
+            <button class="weakness-chip" data-set="verbs">
+              <span>01</span> boire 的變化 <b>12 次錯誤</b>
+            </button>
+            <button class="weakness-chip" data-set="negative">
+              <span>02</span> 否定句冠詞 <b>9 次錯誤</b>
+            </button>
+            <button class="weakness-chip" data-set="questions">
+              <span>03</span> 問句結構 <b>7 次錯誤</b>
+            </button>
+          </div>
+        </section>
+
+        <section class="game-hub" aria-labelledby="game-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow light">AVENTURE</p>
+              <h2 id="game-title">今日任務模式</h2>
+            </div>
+            <div class="mini-status" id="dailyRunStatus">連續 0 天完成任務</div>
+          </div>
+
+          <div class="game-grid">
+            <article class="game-card">
+              <p class="task-kicker">LEVEL UP</p>
+              <h3>累積 <span id="gameLevel">1</span> 級</h3>
+              <p><strong id="xpValue">0</strong> XP</p>
+              <p id="xpNextText">距離下一級還有 100 XP</p>
+              <div class="progress-track" aria-hidden="true">
+                <span id="xpBar"></span>
+              </div>
+            </article>
+
+            <article class="game-card">
+              <p class="task-kicker">任務追蹤</p>
+              <h3>每日成就</h3>
+              <ul class="quest-list" id="questList"></ul>
+              <p class="quest-reset-note">每日 00:00 重置</p>
+            </article>
+
+            <article class="game-card" id="bossCard">
+              <p class="task-kicker">BOSS戰</p>
+              <h3>薄弱點總決戰：<span id="bossSkill">載入中…</span></h3>
+              <p id="bossReady">完成本日一題以上錯題後解鎖</p>
+              <div class="tiny-action-row">
+                <button class="text-action" id="bossStart">開始 BOSS 戰 →</button>
+                <small id="bossBadge">未解鎖</small>
+              </div>
+            </article>
+
+            <article class="game-card wide">
+              <p class="task-kicker">徽章牆</p>
+              <h3>你的獎章</h3>
+              <div class="achievement-list" id="achievementList"></div>
+            </article>
+
+            <article class="game-card wide">
+              <p class="task-kicker">戰鬥紀錄</p>
+              <h3>今日摘要</h3>
+              <div id="runLog"></div>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <section class="view review-layout" id="review-view">
+        <div class="review-header">
+          <div>
+            <p class="eyebrow">RÉVISION ACTIVE</p>
+            <h1>先想，再揭曉。</h1>
+          </div>
+          <button class="ghost-button" id="exitReview">結束複習 ×</button>
+        </div>
+
+        <div class="review-workspace">
+          <aside class="session-rail">
+            <span class="session-label">本回合</span>
+            <strong><span id="questionNumber">1</span><small>/ <span id="sessionTotal">5</span></small></strong>
+            <div class="session-dots" id="sessionDots"></div>
+            <p>不急著答。先大聲說出完整句，再查看答案。</p>
+          </aside>
+
+          <article class="flashcard" id="flashcard">
+            <div class="flashcard-meta">
+              <span id="questionCategory">GRAMMAIRE</span>
+              <button id="speakPrompt" aria-label="朗讀題目">♪ 聽題目</button>
+            </div>
+            <p class="prompt-label" id="promptLabel">請翻譯成法文</p>
+            <h2 id="questionText">我早餐吃麵包。</h2>
+
+            <div class="response-box" id="responseBox">
+              <label for="typedAnswer">你的法文答案</label>
+              <textarea
+                id="typedAnswer"
+                rows="2"
+                autocomplete="off"
+                autocapitalize="sentences"
+                spellcheck="false"
+                placeholder="先在這裡寫下完整答案…"
+              ></textarea>
+              <div class="response-actions">
+                <span id="inputHint">輸入後才能核對答案</span>
+                <button id="checkAnswer" disabled>核對答案 ↗</button>
+              </div>
+            </div>
+
+            <div class="answer-area" id="answerArea">
+              <div class="answer-result">
+                <span id="resultLabel">正確答案</span>
+                <strong id="matchScore">—</strong>
+              </div>
+              <strong id="answerText">Je mange du pain au petit déjeuner.</strong>
+              <p id="answerNote">食物前用 du；三餐前使用 au。</p>
+              <p class="user-answer-line">你的答案：<span id="userAnswerText"></span></p>
+            </div>
+
+            <div class="grading" id="grading">
+              <p>這張卡片何時再出現？</p>
+              <div>
+                <button data-grade="again"><span>再練一次</span><small>10 分鐘</small></button>
+                <button data-grade="hard"><span>有點難</span><small>明天</small></button>
+                <button data-grade="good"><span>記住了</span><small id="goodInterval">3 天</small></button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view content-view" id="mistakes-view">
+        <div class="content-hero">
+          <p class="eyebrow">CARNET D’ERREURS</p>
+          <h1>錯過的字，<em>最值得再見一次。</em></h1>
+          <p>整理自你的課堂回答與 PPT 對照筆記。</p>
+        </div>
+        <div class="error-dashboard" id="errorDashboard"></div>
+        <div class="mistake-list" id="mistakeList"></div>
+      </section>
+
+      <section class="view content-view" id="classes-view">
+        <div class="content-hero class-hero">
+          <p class="eyebrow">MON PARCOURS</p>
+          <h1>從第一堂課，<em>一路走到今天。</em></h1>
+          <p>點選任一課程，立即用該主題開始複習。</p>
+        </div>
+        <div class="class-timeline" id="classTimeline"></div>
+      </section>
+
+      <section class="view content-view game-view" id="game-view">
+        <div class="content-hero game-page-hero">
+          <p class="eyebrow">MODE BATTLE</p>
+          <h1>像遊戲一樣複習，<em>不斷升級。</em></h1>
+          <p>完成複習可獲得 XP，達成任務可拿到新徽章。</p>
+        </div>
+        <div class="game-board-grid">
+          <div class="game-score-box">
+            <p class="task-kicker">今日 XP</p>
+            <div class="big-number"><span id="gameViewXp">0</span><small>XP</small></div>
+            <p id="runStreak">當前連勝：0</p>
+          </div>
+          <div class="game-score-box">
+            <p class="task-kicker">完成回合</p>
+            <div class="big-number"><span id="gamesDone">0</span><small>回合</small></div>
+            <p id="goldCount">金幣：0</p>
+          </div>
+          <div class="game-score-box">
+            <p class="task-kicker">弱點 BOSS</p>
+            <div class="big-number"><span id="bossDefeated">0</span><small>場</small></div>
+            <p id="bossHint">回到弱點題目可解鎖</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
