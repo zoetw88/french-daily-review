@@ -1,0 +1,117 @@
+2026-07-16 13:33:00 From ludo corsini to Everyone:
+	je me couche a 22 heures
+	
+2026-07-16 13:37:12 From ludo corsini to Everyone:
+	{CA022311-D5A9-4250-9E69-C665B86B1A29}.png
+	
+2026-07-16 13:42:49 From ludo corsini to Everyone:
+	lire=to read
+	
+2026-07-16 13:44:40 From ludo corsini to Everyone:
+	22h=dix heures
+	
+2026-07-16 13:44:49 From ludo corsini to Everyone:
+	22h-6h=8h
+	
+2026-07-16 13:45:51 From ludo corsini to Everyone:
+	la piscine=swimming pool
+	
+2026-07-16 13:46:21 From ludo corsini to Everyone:
+	2
+	
+2026-07-16 13:46:58 From ludo corsini to Everyone:
+	Petit Paris=le restaurant
+	
+2026-07-16 13:47:11 From ludo corsini to Everyone:
+	Rex= le nom du cinema
+	
+2026-07-16 13:47:27 From ludo corsini to Everyone:
+	TGV=Train Grande vitesse
+	
+2026-07-16 13:47:41 From ludo corsini to Everyone:
+	La Baule=ville en France
+	
+2026-07-16 13:53:24 From ludo corsini to Everyone:
+	quel jour=which day
+	
+2026-07-16 13:54:37 From ludo corsini to Everyone:
+	une reunion=a meeting
+	
+2026-07-16 13:55:11 From ludo corsini to Everyone:
+	aller=to go
+	
+2026-07-16 13:56:16 From ludo corsini to Everyone:
+	elle y va en TGV
+	
+2026-07-16 13:57:05 From ludo corsini to Everyone:
+	La Rochelle=ville en France
+	
+2026-07-16 14:00:45 From Zoe to Everyone:
+	il a un bus a la gare 10 , a 7:15 to 9:16
+	
+2026-07-16 14:01:31 From ludo corsini to Everyone:
+	il y a =there is
+	
+2026-07-16 14:02:15 From Zoe to Everyone:
+	il y a bus 10  a 7:15
+	
+2026-07-16 14:03:24 From Zoe to Everyone:
+	Les cours a 9-12 et 14-16 h
+	
+2026-07-16 14:04:25 From Zoe to Everyone:
+	il y a une piscine a cote de la plage des Minimes  a 10-21 h
+	
+2026-07-16 14:05:24 From ludo corsini to Everyone:
+	1
+	
+2026-07-16 14:08:27 From ludo corsini to Everyone:
+	1-c
+	
+2026-07-16 14:08:51 From Zoe to Everyone:
+	2-d
+	
+2026-07-16 14:09:16 From Zoe to Everyone:
+	2-j
+	
+2026-07-16 14:09:34 From Zoe to Everyone:
+	3-k
+	
+2026-07-16 14:09:50 From ludo corsini to Everyone:
+	3-g
+	
+2026-07-16 14:09:56 From Zoe to Everyone:
+	4-k
+	
+2026-07-16 14:10:15 From Zoe to Everyone:
+	5-i
+	
+2026-07-16 14:10:49 From Zoe to Everyone:
+	5-e
+	
+2026-07-16 14:11:04 From ludo corsini to Everyone:
+	5-h
+	
+2026-07-16 14:11:22 From Zoe to Everyone:
+	6-i
+	
+2026-07-16 14:11:43 From Zoe to Everyone:
+	6-e
+	
+2026-07-16 14:11:55 From Zoe to Everyone:
+	7-i
+	
+2026-07-16 14:12:01 From Zoe to Everyone:
+	8-d
+	
+2026-07-16 14:12:53 From Zoe to Everyone:
+	8-a
+	
+2026-07-16 14:12:55 From ludo corsini to Everyone:
+	8-a
+	
+2026-07-16 14:13:12 From Zoe to Everyone:
+	9-d
+	
+2026-07-16 14:13:34 From Zoe to Everyone:
+	10-b ,11-f
+	

@@ -1,0 +1,153 @@
+2026-07-08 19:21:27 From ludo corsini to Everyone:
+	louer=to rent
+	
+2026-07-08 19:24:18 From ludo corsini to Everyone:
+	ou=where
+	
+2026-07-08 19:27:41 From ludo corsini to Everyone:
+	le couloir=the corridor
+	
+2026-07-08 19:28:17 From ludo corsini to Everyone:
+	le bureau= a desk
+	
+2026-07-08 19:28:38 From ludo corsini to Everyone:
+	3
+	
+2026-07-08 19:28:47 From ludo corsini to Everyone:
+	en face de=in front of
+	
+2026-07-08 19:28:56 From ludo corsini to Everyone:
+	au coin de=at the corner of
+	
+2026-07-08 19:29:03 From ludo corsini to Everyone:
+	au bout de=at the bottom of
+	
+2026-07-08 19:29:08 From ludo corsini to Everyone:
+	pres de=near
+	
+2026-07-08 19:30:26 From ludo corsini to Everyone:
+	4
+	
+2026-07-08 19:30:58 From Zoe to Everyone:
+	au coin
+	
+2026-07-08 19:32:10 From Zoe to Everyone:
+	dans
+	
+2026-07-08 19:32:42 From Zoe to Everyone:
+	a droite
+	
+2026-07-08 19:32:51 From Zoe to Everyone:
+	au bout
+	
+2026-07-08 19:33:21 From Zoe to Everyone:
+	au bout de l'entree
+	
+2026-07-08 19:33:57 From Zoe to Everyone:
+	a droite du couloir
+	
+2026-07-08 19:34:06 From Zoe to Everyone:
+	dans les chambres
+	
+2026-07-08 19:36:40 From ludo corsini to Everyone:
+	7
+	
+2026-07-08 19:37:00 From ludo corsini to Everyone:
+	rez de chaussee=ground floor
+	
+2026-07-08 19:37:12 From ludo corsini to Everyone:
+	dernier=last
+	
+2026-07-08 19:37:27 From ludo corsini to Everyone:
+	au-dessus
+	
+2026-07-08 19:37:35 From ludo corsini to Everyone:
+	1-......
+	
+2026-07-08 19:39:23 From Zoe to Everyone:
+	Suzanne est 1th floor
+	
+2026-07-08 19:39:44 From ludo corsini to Everyone:
+	1= suzanne
+	
+2026-07-08 19:41:05 From Zoe to Everyone:
+	2 = Jean Chantal  , 5=Valerie, Paul et Virginie= 3
+	
+2026-07-08 19:42:57 From ludo corsini to Everyone:
+	4-donatien
+	
+2026-07-08 19:43:18 From ludo corsini to Everyone:
+	1- premier etage
+	
+2026-07-08 19:43:26 From ludo corsini to Everyone:
+	2-deuxieme etage
+	
+2026-07-08 19:43:36 From ludo corsini to Everyone:
+	3-troisieme etage=third floor
+	
+2026-07-08 19:43:43 From ludo corsini to Everyone:
+	4- quatrieme etage
+	
+2026-07-08 19:43:51 From ludo corsini to Everyone:
+	5-cinquieme etage
+	
+2026-07-08 19:44:51 From ludo corsini to Everyone:
+	Tours=ville en France
+	
+2026-07-08 19:45:03 From ludo corsini to Everyone:
+	etg=
+	
+2026-07-08 19:45:07 From ludo corsini to Everyone:
+	chbre=
+	
+2026-07-08 19:45:09 From ludo corsini to Everyone:
+	cuis
+	
+2026-07-08 19:45:12 From ludo corsini to Everyone:
+	sdb
+	
+2026-07-08 19:45:15 From ludo corsini to Everyone:
+	imm
+	
+2026-07-08 19:45:21 From ludo corsini to Everyone:
+	park
+	
+2026-07-08 19:46:06 From Zoe to Everyone:
+	troisieme estage, il y a salon et cusine, immeuble
+	
+2026-07-08 19:46:19 From ludo corsini to Everyone:
+	etg=etage
+	
+2026-07-08 19:46:44 From Zoe to Everyone:
+	chbre=chambre
+	
+2026-07-08 19:47:27 From Zoe to Everyone:
+	cuis=cuisine, sdb=sallon de bath, imm=immeuble,park=parking
+	
+2026-07-08 19:47:39 From ludo corsini to Everyone:
+	sdb=salle de bain
+	
+2026-07-08 19:47:46 From ludo corsini to Everyone:
+	/ par
+	
+2026-07-08 19:47:57 From ludo corsini to Everyone:
+	m2=metre carre
+	
+2026-07-08 19:51:35 From ludo corsini to Everyone:
+	piece=room
+	
+2026-07-08 19:54:36 From ludo corsini to Everyone:
+	clair=clear
+	
+2026-07-08 19:54:41 From ludo corsini to Everyone:
+	calme=quiet
+	
+2026-07-08 19:54:47 From ludo corsini to Everyone:
+	bruyant=noisy
+	
+2026-07-08 19:55:02 From ludo corsini to Everyone:
+	sombre=dark
+	
+2026-07-08 19:57:30 From ludo corsini to Everyone:
+	il y a 4 chaises
+	

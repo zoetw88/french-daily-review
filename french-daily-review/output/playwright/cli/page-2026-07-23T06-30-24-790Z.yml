@@ -1,0 +1,105 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "Encore 首頁" [ref=e3] [cursor=pointer]:
+      - /url: "#"
+      - generic [ref=e4]: E
+      - generic [ref=e5]:
+        - strong [ref=e6]: Encore
+        - text: 法語複習手帳
+    - navigation "主要導覽" [ref=e7]:
+      - button "今日" [ref=e8] [cursor=pointer]
+      - button "複習" [ref=e9] [cursor=pointer]
+      - button "錯題簿" [ref=e10] [cursor=pointer]
+      - button "課程" [ref=e11] [cursor=pointer]
+    - button "連續學習天數" [ref=e12]:
+      - generic [ref=e13]: ✦
+      - generic [ref=e14]:
+        - strong [ref=e15]: "4"
+        - text: 天連續
+  - main [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: JUIL.
+          - strong [ref=e21]: "23"
+          - generic [ref=e22]: JEU.
+        - generic [ref=e23]:
+          - paragraph [ref=e24]: BONJOUR, ZOE · A1
+          - heading [level=1] [ref=e25]:
+            - text: 今天，再靠近
+            - emphasis [ref=e26]: 法語一點點。
+          - paragraph [ref=e27]:
+            - text: 依照你的課堂進度與常見錯誤，今天專注在
+            - strong [ref=e28]: 飲食冠詞
+            - text: 與
+            - strong [ref=e29]: 動詞變化
+            - text: 。
+          - button "開始今日複習 ↗" [ref=e30] [cursor=pointer]:
+            - generic [ref=e31]: 開始今日複習
+            - generic [ref=e32]: ↗
+        - complementary [ref=e33]:
+          - text: 07 / 23
+          - paragraph [ref=e35]: Petit à petit,l’oiseau fait son nid.
+          - text: 積少成多。
+          - generic [ref=e37]: ⌁ ☕︎
+        - text: RÉVISER
+      - region [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - paragraph [ref=e41]: PLAN DU JOUR
+            - heading "今日複習計畫" [level=2] [ref=e42]
+          - generic [ref=e44]:
+            - strong [ref=e45]: "0"
+            - text: / 3 完成
+        - generic [ref=e47]:
+          - article [ref=e48]:
+            - generic [ref=e49]:
+              - generic [ref=e50]: "01"
+              - button "標記單字複習完成" [ref=e51] [cursor=pointer]: ✓
+            - generic [ref=e52]: Aa
+            - paragraph [ref=e53]: 8 MIN · VOCABULAIRE
+            - heading "飲食與三餐" [level=3] [ref=e54]
+            - paragraph [ref=e55]: du pain、de l’eau、des légumes，以及三餐的說法。
+            - button "練習 8 個單字 →" [ref=e56] [cursor=pointer]:
+              - text: 練習 8 個單字
+              - generic [ref=e57]: →
+          - article [ref=e58]:
+            - generic [ref=e59]:
+              - generic [ref=e60]: "02"
+              - button "標記文法複習完成" [ref=e61] [cursor=pointer]: ✓
+            - generic [ref=e62]: nepas
+            - paragraph [ref=e63]: 10 MIN · GRAMMAIRE
+            - heading "否定句的 de" [level=3] [ref=e64]
+            - paragraph [ref=e65]: 把 un / une / des 變成 de，並練習母音前的省音。
+            - button "做 5 道題目 →" [ref=e66] [cursor=pointer]:
+              - text: 做 5 道題目
+              - generic [ref=e67]: →
+          - article [ref=e68]:
+            - generic [ref=e69]:
+              - generic [ref=e70]: "03"
+              - button "標記口說複習完成" [ref=e71] [cursor=pointer]: ✓
+            - generic [ref=e72]: )))
+            - paragraph [ref=e73]: 5 MIN · EXPRESSION
+            - heading "回答早餐吃什麼" [level=3] [ref=e74]
+            - paragraph [ref=e75]: 用完整句回答，特別留意 boire、prendre、manger。
+            - button "開始口說提示 →" [ref=e76] [cursor=pointer]:
+              - text: 開始口說提示
+              - generic [ref=e77]: →
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - paragraph [ref=e80]: À REVOIR
+          - heading "你的易錯重點" [level=2] [ref=e81]
+        - generic [ref=e82]:
+          - button "01 boire 的變化 12 次錯誤" [ref=e83] [cursor=pointer]:
+            - generic [ref=e84]: "01"
+            - text: boire 的變化
+            - generic [ref=e85]: 12 次錯誤
+          - button "02 否定句冠詞 9 次錯誤" [ref=e86] [cursor=pointer]:
+            - generic [ref=e87]: "02"
+            - text: 否定句冠詞
+            - generic [ref=e88]: 9 次錯誤
+          - button "03 問句結構 7 次錯誤" [ref=e89] [cursor=pointer]:
+            - generic [ref=e90]: "03"
+            - text: 問句結構
+            - generic [ref=e91]: 7 次錯誤
+  - status

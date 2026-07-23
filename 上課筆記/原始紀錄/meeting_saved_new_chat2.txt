@@ -1,0 +1,264 @@
+2026-07-04 18:08:04 From ludo corsini to Everyone:
+	le vocabulaire
+	
+2026-07-04 18:08:10 From ludo corsini to Everyone:
+	petit=small
+	
+2026-07-04 18:08:14 From ludo corsini to Everyone:
+	grand=tall
+	
+2026-07-04 18:08:28 From ludo corsini to Everyone:
+	les lunettes=glasses
+	
+2026-07-04 18:08:38 From ludo corsini to Everyone:
+	les vetements=the clothes
+	
+2026-07-04 18:08:50 From ludo corsini to Everyone:
+	blond= blond hair
+	
+2026-07-04 18:09:02 From ludo corsini to Everyone:
+	brun= brown
+	
+2026-07-04 18:09:17 From ludo corsini to Everyone:
+	un pantalon=a trouser
+	
+2026-07-04 18:09:33 From ludo corsini to Everyone:
+	un blouson= a jacket
+	
+2026-07-04 18:09:44 From ludo corsini to Everyone:
+	noir=black
+	
+2026-07-04 18:09:50 From ludo corsini to Everyone:
+	rouge=red
+	
+2026-07-04 18:10:03 From ludo corsini to Everyone:
+	la chemise= the shirt
+	
+2026-07-04 18:10:11 From ludo corsini to Everyone:
+	verte= green
+	
+2026-07-04 18:10:18 From ludo corsini to Everyone:
+	les chaussures= shoes
+	
+2026-07-04 18:10:35 From ludo corsini to Everyone:
+	les baskets= the tennis shoes
+	
+2026-07-04 18:10:50 From ludo corsini to Everyone:
+	porter= to wear
+	
+2026-07-04 18:10:57 From ludo corsini to Everyone:
+	Je porte
+	
+2026-07-04 18:11:00 From ludo corsini to Everyone:
+	tu portes
+	
+2026-07-04 18:11:07 From ludo corsini to Everyone:
+	il-elle porte
+	
+2026-07-04 18:11:10 From ludo corsini to Everyone:
+	nous portons
+	
+2026-07-04 18:11:13 From ludo corsini to Everyone:
+	vous portez
+	
+2026-07-04 18:11:21 From ludo corsini to Everyone:
+	ils-elles portent
+	
+2026-07-04 18:11:58 From ludo corsini to Everyone:
+	...ent=e
+	
+2026-07-04 18:16:04 From ludo corsini to Everyone:
+	il est de taille moyenne=average size
+	
+2026-07-04 18:22:05 From ludo corsini to Everyone:
+	la forme negative=
+	
+2026-07-04 18:22:16 From ludo corsini to Everyone:
+	ne+verbe+pas
+	
+2026-07-04 18:22:25 From ludo corsini to Everyone:
+	Je porte un une chemise
+	
+2026-07-04 18:22:36 From ludo corsini to Everyone:
+	je ne porte pas de chemise
+	
+2026-07-04 18:22:46 From ludo corsini to Everyone:
+	attention!
+	
+2026-07-04 18:22:54 From ludo corsini to Everyone:
+	un, une, des change en DE
+	
+2026-07-04 18:23:17 From ludo corsini to Everyone:
+	Je porte une chemise
+	
+2026-07-04 18:23:24 From ludo corsini to Everyone:
+	je ne porte pas de chemise
+	
+2026-07-04 18:23:34 From ludo corsini to Everyone:
+	7
+	
+2026-07-04 18:24:06 From zoe to Everyone:
+	ils ne portent pas de lunettes
+	
+2026-07-04 18:24:35 From zoe to Everyone:
+	j ne ai pas de  blouson
+	
+2026-07-04 18:24:55 From ludo corsini to Everyone:
+	je n'ai pas de blouson
+	
+2026-07-04 18:25:00 From ludo corsini to Everyone:
+	n'+vowel
+	
+2026-07-04 18:25:21 From zoe to Everyone:
+	Vous ne avze pas des baskets
+	
+2026-07-04 18:25:45 From zoe to Everyone:
+	Vous ne avze pas de baskets
+	
+2026-07-04 18:25:51 From ludo corsini to Everyone:
+	vous n'avez
+	
+2026-07-04 18:26:16 From zoe to Everyone:
+	vous n'avze pas de baskets
+	
+2026-07-04 18:26:27 From ludo corsini to Everyone:
+	n'avez
+	
+2026-07-04 18:26:42 From zoe to Everyone:
+	vous n'avez pas de baskets
+	
+2026-07-04 18:27:14 From zoe to Everyone:
+	ils ne ont pas de chemises blanches
+	
+2026-07-04 18:27:34 From zoe to Everyone:
+	ils n'ont pas de chemises blanches
+	
+2026-07-04 18:28:00 From zoe to Everyone:
+	Nous n'portons pas de tee-shirts rouges
+	
+2026-07-04 18:28:17 From ludo corsini to Everyone:
+	n'+vowel=a, e, o. i, u
+	
+2026-07-04 18:28:35 From zoe to Everyone:
+	Nous ne portons pas de tee-shirts rouges
+	
+2026-07-04 18:28:34 From ludo corsini to Everyone:
+	nous ne portons pas de tee-shirts
+	
+2026-07-04 18:31:09 From ludo corsini to Everyone:
+	4
+	
+2026-07-04 18:31:32 From ludo corsini to Everyone:
+	a qui est-ce -= it belong to whom?
+	
+2026-07-04 18:33:13 From ludo corsini to Everyone:
+	la robe= the dress
+	
+2026-07-04 18:33:24 From ludo corsini to Everyone:
+	1-d
+	
+2026-07-04 18:34:14 From ludo corsini to Everyone:
+	2-b
+	
+2026-07-04 18:34:36 From ludo corsini to Everyone:
+	3-a
+	
+2026-07-04 18:35:20 From ludo corsini to Everyone:
+	5
+	
+2026-07-04 18:36:34 From zoe to Everyone:
+	Oui,  j'ai un tee-shirt vert.
+	
+2026-07-04 18:37:01 From zoe to Everyone:
+	Non, tu n'ai pas un tee-shirt vert.
+	
+2026-07-04 18:37:15 From ludo corsini to Everyone:
+	Non, je ...
+	
+2026-07-04 18:37:28 From zoe to Everyone:
+	je n'ai pas un tee-shirt vert
+	
+2026-07-04 18:37:57 From zoe to Everyone:
+	je n'avez pas de chaussures noires.
+	
+2026-07-04 18:38:03 From ludo corsini to Everyone:
+	avoir:
+	
+2026-07-04 18:38:05 From ludo corsini to Everyone:
+	j'ai
+	
+2026-07-04 18:38:07 From ludo corsini to Everyone:
+	tu as
+	
+2026-07-04 18:38:10 From ludo corsini to Everyone:
+	il-elle a
+	
+2026-07-04 18:38:13 From ludo corsini to Everyone:
+	nous avons
+	
+2026-07-04 18:38:15 From ludo corsini to Everyone:
+	vous avez
+	
+2026-07-04 18:38:18 From ludo corsini to Everyone:
+	ils-elles ont
+	
+2026-07-04 18:38:50 From zoe to Everyone:
+	je n'ai de chaussures noires.
+	
+2026-07-04 18:39:07 From zoe to Everyone:
+	je n'ai pas de chaussures noires.
+	
+2026-07-04 18:39:37 From zoe to Everyone:
+	elle n'a pas de robe.
+	
+2026-07-04 18:39:58 From zoe to Everyone:
+	ell ne port pas de robe.
+	
+2026-07-04 18:40:03 From ludo corsini to Everyone:
+	porte
+	
+2026-07-04 18:40:37 From zoe to Everyone:
+	ils n'ont pas de chemise bleue.
+	
+2026-07-04 18:41:04 From zoe to Everyone:
+	je n'ai pas de baskets.
+	
+2026-07-04 18:41:25 From ludo corsini to Everyone:
+	le pluriel
+	
+2026-07-04 18:41:30 From ludo corsini to Everyone:
+	le, la=les
+	
+2026-07-04 18:41:33 From ludo corsini to Everyone:
+	un, une=des
+	
+2026-07-04 18:41:37 From ludo corsini to Everyone:
+	nom+s
+	
+2026-07-04 18:41:43 From ludo corsini to Everyone:
+	je porte une chemise
+	
+2026-07-04 18:41:48 From ludo corsini to Everyone:
+	je porte des chemises
+	
+2026-07-04 18:42:03 From ludo corsini to Everyone:
+	4
+	
+2026-07-04 18:42:25 From ludo corsini to Everyone:
+	j'ai des blousons noirs
+	
+2026-07-04 18:42:46 From zoe to Everyone:
+	tu as des jeans bleus
+	
+2026-07-04 18:43:03 From zoe to Everyone:
+	il a des chemise jaunes
+	
+2026-07-04 18:43:15 From ludo corsini to Everyone:
+	des chemises
+	
+2026-07-04 18:43:29 From zoe to Everyone:
+	elle a des robes vertes
+	
+2026-07-04 18:43:42 From zoe to Everyone:
+	il a des tee-shirts blancs
+	

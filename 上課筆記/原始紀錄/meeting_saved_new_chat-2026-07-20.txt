@@ -1,0 +1,204 @@
+2026-07-20 21:09:43 From ludo corsini to Everyone:
+	1 liter=1 litre
+	
+2026-07-20 21:09:47 From ludo corsini to Everyone:
+	lait=milk
+	
+2026-07-20 21:11:08 From ludo corsini to Everyone:
+	{174764BE-0BC4-4644-9592-C247FD9EF721}.png
+	
+2026-07-20 21:11:26 From ludo corsini to Everyone:
+	3
+	
+2026-07-20 21:12:33 From Zoe to Everyone:
+	Je mange le pain pour petit dejeuner.
+	
+2026-07-20 21:13:08 From Zoe to Everyone:
+	je buve du the.
+	
+2026-07-20 21:13:17 From ludo corsini to Everyone:
+	je bois du the
+	
+2026-07-20 21:13:46 From Zoe to Everyone:
+	je prend le riz pour dejeuner.
+	
+2026-07-20 21:14:19 From Zoe to Everyone:
+	je prend le poisson pour diner.
+	
+2026-07-20 21:14:37 From ludo corsini to Everyone:
+	je prends
+	
+2026-07-20 21:14:47 From ludo corsini to Everyone:
+	2
+	
+2026-07-20 21:15:03 From ludo corsini to Everyone:
+	prends du poisson
+	
+2026-07-20 21:15:37 From Zoe to Everyone:
+	achete de la confiture.
+	
+2026-07-20 21:16:02 From Zoe to Everyone:
+	prends aussi de l'eau.
+	
+2026-07-20 21:16:21 From Zoe to Everyone:
+	donnez-moi des cereales.
+	
+2026-07-20 21:16:33 From Zoe to Everyone:
+	tu bois du lait.
+	
+2026-07-20 21:18:46 From Zoe to Everyone:
+	de l'
+	
+2026-07-20 21:19:01 From Zoe to Everyone:
+	du jus
+	
+2026-07-20 21:19:14 From ludo corsini to Everyone:
+	de jus de fruit
+	
+2026-07-20 21:19:31 From Zoe to Everyone:
+	des, de
+	
+2026-07-20 21:19:49 From Zoe to Everyone:
+	des, de
+	
+2026-07-20 21:20:10 From Zoe to Everyone:
+	de la viande, de
+	
+2026-07-20 21:20:33 From Zoe to Everyone:
+	de , du
+	
+2026-07-20 21:21:01 From ludo corsini to Everyone:
+	des oeufs-de la farine
+	
+2026-07-20 21:21:17 From Zoe to Everyone:
+	de la , de
+	
+2026-07-20 21:21:45 From ludo corsini to Everyone:
+	du poisson-des legumes
+	
+2026-07-20 21:23:40 From ludo corsini to Everyone:
+	5
+	
+2026-07-20 21:24:11 From Zoe to Everyone:
+	e
+	
+2026-07-20 21:24:23 From ludo corsini to Everyone:
+	1-e
+	
+2026-07-20 21:24:35 From Zoe to Everyone:
+	2-b
+	
+2026-07-20 21:25:14 From Zoe to Everyone:
+	3-d
+	
+2026-07-20 21:25:36 From Zoe to Everyone:
+	4-a, 5-c
+	
+2026-07-20 21:27:54 From ludo corsini to Everyone:
+	{FACD81FF-D202-46E0-B5C9-1F3D24154391}.png
+	
+2026-07-20 21:29:02 From ludo corsini to Everyone:
+	acheter:
+	
+2026-07-20 21:29:04 From ludo corsini to Everyone:
+	j'achete
+	
+2026-07-20 21:29:07 From ludo corsini to Everyone:
+	tu achetes
+	
+2026-07-20 21:29:10 From ludo corsini to Everyone:
+	il-elle achete
+	
+2026-07-20 21:29:13 From ludo corsini to Everyone:
+	nous achetons
+	
+2026-07-20 21:29:16 From ludo corsini to Everyone:
+	vous achetez
+	
+2026-07-20 21:29:20 From ludo corsini to Everyone:
+	ils-elles achetent
+	
+2026-07-20 21:29:59 From ludo corsini to Everyone:
+	manger:
+	
+2026-07-20 21:30:02 From ludo corsini to Everyone:
+	je mange
+	
+2026-07-20 21:30:06 From ludo corsini to Everyone:
+	tu manges
+	
+2026-07-20 21:30:09 From ludo corsini to Everyone:
+	il-elle mange
+	
+2026-07-20 21:30:13 From ludo corsini to Everyone:
+	nous mangeons
+	
+2026-07-20 21:30:15 From ludo corsini to Everyone:
+	vous mangez
+	
+2026-07-20 21:30:20 From ludo corsini to Everyone:
+	ils-elles mangent
+	
+2026-07-20 21:30:52 From Zoe to Everyone:
+	bouvez
+	
+2026-07-20 21:31:08 From ludo corsini to Everyone:
+	vous buvez
+	
+2026-07-20 21:31:18 From Zoe to Everyone:
+	nous buvons
+	
+2026-07-20 21:31:41 From Zoe to Everyone:
+	manges , mange
+	
+2026-07-20 21:32:14 From Zoe to Everyone:
+	boit
+	
+2026-07-20 21:32:34 From Zoe to Everyone:
+	mangez
+	
+2026-07-20 21:32:45 From Zoe to Everyone:
+	mangons
+	
+2026-07-20 21:33:05 From ludo corsini to Everyone:
+	nous mangeons
+	
+2026-07-20 21:33:22 From Zoe to Everyone:
+	mangent , buvevent
+	
+2026-07-20 21:33:47 From ludo corsini to Everyone:
+	ils boivent
+	
+2026-07-20 21:36:12 From Zoe to Everyone:
+	Qu'est-ce que vous mangez le matin?
+	
+2026-07-20 21:36:54 From Zoe to Everyone:
+	Qu'est-ce que il boivent pour dejeuner ?
+	
+2026-07-20 21:37:26 From ludo corsini to Everyone:
+	qu'est ce qu'ils boivent pour dejeuner?
+	
+2026-07-20 21:37:57 From Zoe to Everyone:
+	Qu'est-ce vous mangez pour diner?
+	
+2026-07-20 21:39:00 From Zoe to Everyone:
+	Qu'est-ce vous mangez du posson per semaine?
+	
+2026-07-20 21:39:43 From ludo corsini to Everyone:
+	combien de fois vous mangez du poisson pae semaine?
+	
+2026-07-20 21:39:55 From ludo corsini to Everyone:
+	combien de fois=how many times
+	
+2026-07-20 21:40:05 From Zoe to Everyone:
+	Vous buvez de cafe de  dejeuner?
+	
+2026-07-20 21:40:13 From ludo corsini to Everyone:
+	au dejeuner
+	
+2026-07-20 21:40:34 From Zoe to Everyone:
+	Vous prenz de dessert ?
+	
+2026-07-20 21:40:52 From ludo corsini to Everyone:
+	vous prenez du dessert?
+	

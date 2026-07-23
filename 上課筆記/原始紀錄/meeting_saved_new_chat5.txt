@@ -1,0 +1,276 @@
+2026-07-10 19:19:36 From ludo corsini to Everyone:
+	louer=to rent
+	
+2026-07-10 19:20:51 From ludo corsini to Everyone:
+	il y a 3 pieces
+	
+2026-07-10 19:26:56 From ludo corsini to Everyone:
+	l'apres-midi=afternoon
+	
+2026-07-10 19:29:10 From ludo corsini to Everyone:
+	faire les courses=go to shopping
+	
+2026-07-10 19:29:16 From ludo corsini to Everyone:
+	souvent=often
+	
+2026-07-10 19:29:22 From ludo corsini to Everyone:
+	la campagne
+	
+2026-07-10 19:29:36 From ludo corsini to Everyone:
+	faire le menage=clean the house
+	
+2026-07-10 19:29:51 From ludo corsini to Everyone:
+	en boite=discotheque
+	
+2026-07-10 19:30:02 From ludo corsini to Everyone:
+	rentrer=to come back
+	
+2026-07-10 19:30:10 From ludo corsini to Everyone:
+	dormir=to sleep
+	
+2026-07-10 19:30:17 From ludo corsini to Everyone:
+	midi=noon
+	
+2026-07-10 19:30:55 From ludo corsini to Everyone:
+	se reposer=to relax
+	
+2026-07-10 19:31:09 From ludo corsini to Everyone:
+	je me repose
+	
+2026-07-10 19:31:12 From ludo corsini to Everyone:
+	tu te reposes
+	
+2026-07-10 19:31:17 From ludo corsini to Everyone:
+	il-elle se repose
+	
+2026-07-10 19:31:22 From ludo corsini to Everyone:
+	nous nous reposons
+	
+2026-07-10 19:31:29 From ludo corsini to Everyone:
+	vous vous reposez
+	
+2026-07-10 19:31:35 From ludo corsini to Everyone:
+	ils-elles se reposent
+	
+2026-07-10 19:32:29 From ludo corsini to Everyone:
+	se lever=to wake up
+	
+2026-07-10 19:32:49 From zoe to Everyone:
+	je me leve
+	
+2026-07-10 19:32:57 From zoe to Everyone:
+	tu te leves
+	
+2026-07-10 19:33:06 From zoe to Everyone:
+	il-elle se leve
+	
+2026-07-10 19:33:16 From zoe to Everyone:
+	nous nous leveons
+	
+2026-07-10 19:33:24 From ludo corsini to Everyone:
+	levons
+	
+2026-07-10 19:33:36 From zoe to Everyone:
+	vous vous levez
+	
+2026-07-10 19:33:55 From zoe to Everyone:
+	ils-elles se levent
+	
+2026-07-10 19:34:06 From ludo corsini to Everyone:
+	se laver=to wash
+	
+2026-07-10 19:34:17 From zoe to Everyone:
+	je me laver
+	
+2026-07-10 19:34:50 From ludo corsini to Everyone:
+	je me lave
+	
+2026-07-10 19:34:56 From zoe to Everyone:
+	tu te laves
+	
+2026-07-10 19:35:28 From zoe to Everyone:
+	il-elle se lave
+	
+2026-07-10 19:35:41 From zoe to Everyone:
+	nous nous lavon
+	
+2026-07-10 19:35:48 From ludo corsini to Everyone:
+	lavons
+	
+2026-07-10 19:36:06 From zoe to Everyone:
+	ils-ells se lavent
+	
+2026-07-10 19:36:26 From ludo corsini to Everyone:
+	je me repose
+	
+2026-07-10 19:36:43 From zoe to Everyone:
+	tu tu reposes
+	
+2026-07-10 19:37:12 From zoe to Everyone:
+	je me lave
+	
+2026-07-10 19:37:22 From zoe to Everyone:
+	je me leve
+	
+2026-07-10 19:37:39 From ludo corsini to Everyone:
+	je m'habille=s'habiller=to wear
+	
+2026-07-10 19:38:11 From ludo corsini to Everyone:
+	7
+	
+2026-07-10 19:38:23 From ludo corsini to Everyone:
+	il se leve
+	
+2026-07-10 19:38:35 From zoe to Everyone:
+	Il se leve
+	
+2026-07-10 19:38:42 From zoe to Everyone:
+	Tu tu reposes
+	
+2026-07-10 19:38:56 From ludo corsini to Everyone:
+	tu te reposes
+	
+2026-07-10 19:38:59 From zoe to Everyone:
+	je me lave
+	
+2026-07-10 19:39:10 From zoe to Everyone:
+	je m'habille
+	
+2026-07-10 19:39:27 From zoe to Everyone:
+	ils se reposent
+	
+2026-07-10 19:39:36 From zoe to Everyone:
+	vous vous levez
+	
+2026-07-10 19:40:54 From ludo corsini to Everyone:
+	4
+	
+2026-07-10 19:41:20 From zoe to Everyone:
+	tu te leves
+	
+2026-07-10 19:41:34 From zoe to Everyone:
+	tu te laves
+	
+2026-07-10 19:41:43 From zoe to Everyone:
+	tu te reposes
+	
+2026-07-10 19:41:55 From ludo corsini to Everyone:
+	tu fais
+	
+2026-07-10 19:42:15 From zoe to Everyone:
+	tu fais le menage
+	
+2026-07-10 19:42:24 From zoe to Everyone:
+	tu fais de tennis
+	
+2026-07-10 19:42:55 From zoe to Everyone:
+	elle se leves
+	
+2026-07-10 19:43:06 From ludo corsini to Everyone:
+	elle se leve
+	
+2026-07-10 19:43:29 From zoe to Everyone:
+	elle fait le menage
+	
+2026-07-10 19:43:46 From zoe to Everyone:
+	elle se lave
+	
+2026-07-10 19:44:11 From ludo corsini to Everyone:
+	lire=to read
+	
+2026-07-10 19:44:16 From ludo corsini to Everyone:
+	ecrire=to write
+	
+2026-07-10 19:44:22 From ludo corsini to Everyone:
+	faire: to do
+	
+2026-07-10 19:44:24 From ludo corsini to Everyone:
+	je fais
+	
+2026-07-10 19:44:27 From ludo corsini to Everyone:
+	tu fais
+	
+2026-07-10 19:44:30 From ludo corsini to Everyone:
+	il-elle fait
+	
+2026-07-10 19:44:33 From ludo corsini to Everyone:
+	nous faisons
+	
+2026-07-10 19:44:36 From ludo corsini to Everyone:
+	vous faites
+	
+2026-07-10 19:44:39 From ludo corsini to Everyone:
+	ils-elles font
+	
+2026-07-10 19:46:01 From ludo corsini to Everyone:
+	{79099FAB-9EC3-420A-A8A1-3CC14C143073}.png
+	
+2026-07-10 19:46:08 From ludo corsini to Everyone:
+	3
+	
+2026-07-10 19:46:24 From zoe to Everyone:
+	tu fais
+	
+2026-07-10 19:46:49 From zoe to Everyone:
+	je ecris
+	
+2026-07-10 19:47:11 From ludo corsini to Everyone:
+	j'ecris
+	
+2026-07-10 19:47:37 From ludo corsini to Everyone:
+	le journal=newspaper
+	
+2026-07-10 19:47:54 From zoe to Everyone:
+	je lis
+	
+2026-07-10 19:48:07 From zoe to Everyone:
+	vous faites
+	
+2026-07-10 19:48:23 From zoe to Everyone:
+	vous lisez
+	
+2026-07-10 19:48:43 From zoe to Everyone:
+	vous  ecrivez
+	
+2026-07-10 19:49:05 From zoe to Everyone:
+	vous lisez
+	
+2026-07-10 19:49:27 From ludo corsini to Everyone:
+	vous ecrivez
+	
+2026-07-10 19:49:47 From zoe to Everyone:
+	Nous lisons
+	
+2026-07-10 19:51:40 From ludo corsini to Everyone:
+	2
+	
+2026-07-10 19:52:02 From zoe to Everyone:
+	vous ecrivez
+	
+2026-07-10 19:52:22 From zoe to Everyone:
+	je n'ecris
+	
+2026-07-10 19:52:40 From zoe to Everyone:
+	vous lisez
+	
+2026-07-10 19:52:50 From zoe to Everyone:
+	je lis
+	
+2026-07-10 19:53:11 From zoe to Everyone:
+	Les enfants ecrit
+	
+2026-07-10 19:53:24 From ludo corsini to Everyone:
+	les enfants ecrivent
+	
+2026-07-10 19:53:27 From ludo corsini to Everyone:
+	les enfants=ils
+	
+2026-07-10 19:53:43 From zoe to Everyone:
+	nous ecrivons
+	
+2026-07-10 19:53:56 From ludo corsini to Everyone:
+	nous lisons le journal
+	
+2026-07-10 19:57:00 From ludo corsini to Everyone:
+	se coucher=go to bed
+	

@@ -1,0 +1,246 @@
+2026-07-22 21:09:16 From ludo corsini to Everyone:
+	les magasins=shop
+	
+2026-07-22 21:09:33 From ludo corsini to Everyone:
+	pull-over
+	
+2026-07-22 21:10:07 From ludo corsini to Everyone:
+	le passe-compose:
+	
+2026-07-22 21:10:25 From ludo corsini to Everyone:
+	avoir au present+participe passe du verbe
+	
+2026-07-22 21:10:28 From ludo corsini to Everyone:
+	j'ai
+	
+2026-07-22 21:10:30 From ludo corsini to Everyone:
+	tu as
+	
+2026-07-22 21:10:32 From ludo corsini to Everyone:
+	il-elle a
+	
+2026-07-22 21:10:34 From ludo corsini to Everyone:
+	nous avons
+	
+2026-07-22 21:10:37 From ludo corsini to Everyone:
+	vous avez
+	
+2026-07-22 21:10:40 From ludo corsini to Everyone:
+	ils-elles ont
+	
+2026-07-22 21:11:11 From ludo corsini to Everyone:
+	.....er=e
+	
+2026-07-22 21:11:15 From ludo corsini to Everyone:
+	...ir=i
+	
+2026-07-22 21:11:24 From ludo corsini to Everyone:
+	faire=fait
+	
+2026-07-22 21:11:31 From ludo corsini to Everyone:
+	prendre=pris
+	
+2026-07-22 21:11:59 From ludo corsini to Everyone:
+	1- je travaille au bureau
+	
+2026-07-22 21:12:06 From ludo corsini to Everyone:
+	2- elle regarde la tv
+	
+2026-07-22 21:12:23 From ludo corsini to Everyone:
+	3- vous ecoutez le professeur
+	
+2026-07-22 21:12:31 From ludo corsini to Everyone:
+	4- elle parle a son amie
+	
+2026-07-22 21:12:39 From ludo corsini to Everyone:
+	5- il aime le film
+	
+2026-07-22 21:12:48 From ludo corsini to Everyone:
+	6- ils jouent au football
+	
+2026-07-22 21:13:02 From ludo corsini to Everyone:
+	7- vous preparez le repas
+	
+2026-07-22 21:13:13 From ludo corsini to Everyone:
+	8- tu telephones a ta mere
+	
+2026-07-22 21:14:14 From Zoe to Everyone:
+	1 j'ai travaillu au breau
+	
+2026-07-22 21:14:30 From ludo corsini to Everyone:
+	..er=e
+	
+2026-07-22 21:14:34 From ludo corsini to Everyone:
+	j'ai travaille
+	
+2026-07-22 21:14:51 From Zoe to Everyone:
+	elle a regarde la tv.
+	
+2026-07-22 21:15:14 From Zoe to Everyone:
+	vous  avez ecoutez le professeur
+	
+2026-07-22 21:15:37 From Zoe to Everyone:
+	ecoute
+	
+2026-07-22 21:15:52 From Zoe to Everyone:
+	elle a parle a son amie
+	
+2026-07-22 21:16:04 From Zoe to Everyone:
+	il a aime le film
+	
+2026-07-22 21:16:27 From Zoe to Everyone:
+	ils ont joue au football
+	
+2026-07-22 21:16:42 From Zoe to Everyone:
+	vous avez prepare le repas
+	
+2026-07-22 21:16:58 From Zoe to Everyone:
+	tu as telephone a ta mere
+	
+2026-07-22 21:18:33 From ludo corsini to Everyone:
+	3
+	
+2026-07-22 21:20:20 From ludo corsini to Everyone:
+	4
+	
+2026-07-22 21:20:34 From ludo corsini to Everyone:
+	faire=fait
+	
+2026-07-22 21:20:41 From ludo corsini to Everyone:
+	boire=bu
+	
+2026-07-22 21:20:46 From ludo corsini to Everyone:
+	prendre=pris
+	
+2026-07-22 21:20:53 From ludo corsini to Everyone:
+	lire=lu
+	
+2026-07-22 21:21:50 From Zoe to Everyone:
+	Hier j'ai fit les magasins, j'ai achete des vetements et , le soir j'ai dine avec des amis.
+	
+2026-07-22 21:21:55 From ludo corsini to Everyone:
+	fait
+	
+2026-07-22 21:22:53 From Zoe to Everyone:
+	Hier midi, j'ai mange du poisson et de la salade. J'ai bu de l'eau. Ensuite, j'ai pris un bon dessert.
+	
+2026-07-22 21:24:34 From Zoe to Everyone:
+	Hier, J'ai pris le bus a six heures et je suis chez moi vers spet heures. J'ai lu le journal, j'ai regarde la tele et j'ai ecoute des disques. J'ai dine a huit heures.
+	
+2026-07-22 21:24:49 From ludo corsini to Everyone:
+	j'ai ete chez moi
+	
+2026-07-22 21:26:15 From ludo corsini to Everyone:
+	Lundi=monday
+	
+2026-07-22 21:26:20 From ludo corsini to Everyone:
+	Mardi=tuesday
+	
+2026-07-22 21:26:25 From ludo corsini to Everyone:
+	Mercredi=wednesday
+	
+2026-07-22 21:26:32 From ludo corsini to Everyone:
+	Jeudi=thursday
+	
+2026-07-22 21:26:38 From ludo corsini to Everyone:
+	vendredi=Friday
+	
+2026-07-22 21:26:55 From ludo corsini to Everyone:
+	Lundi, il a dine avec Marie...
+	
+2026-07-22 21:27:43 From Zoe to Everyone:
+	Lundi, il a dine avec Marie a 20 heures.
+	
+2026-07-22 21:28:54 From Zoe to Everyone:
+	Mardi, il a achete cadeau pour maman avec Lucas.
+	
+2026-07-22 21:29:32 From Zoe to Everyone:
+	Mercredi, il  a telephone avec Maman.
+	
+2026-07-22 21:30:03 From Zoe to Everyone:
+	Jedu, il a june tennis avec Theo a 17 heures.
+	
+2026-07-22 21:30:11 From ludo corsini to Everyone:
+	il a joue
+	
+2026-07-22 21:30:48 From Zoe to Everyone:
+	Vendredi, il a traine pour Lille  a 18 h 32.
+	
+2026-07-22 21:30:57 From ludo corsini to Everyone:
+	le train=the train
+	
+2026-07-22 21:31:01 From ludo corsini to Everyone:
+	il a pris
+	
+2026-07-22 21:31:36 From ludo corsini to Everyone:
+	il a dine au restaurant
+	
+2026-07-22 21:31:46 From ludo corsini to Everyone:
+	il n'a pas dine au restaurant
+	
+2026-07-22 21:31:59 From ludo corsini to Everyone:
+	ne/n'+verbe+pas
+	
+2026-07-22 21:32:05 From ludo corsini to Everyone:
+	n'=before a vowel
+	
+2026-07-22 21:32:46 From Zoe to Everyone:
+	Fabien et sa soeur n'ont pas dine dans un restaurant italien.
+	
+2026-07-22 21:33:16 From Zoe to Everyone:
+	Fabin ne a pas mange du poisson.
+	
+2026-07-22 21:33:29 From ludo corsini to Everyone:
+	n'a pas mange
+	
+2026-07-22 21:34:06 From Zoe to Everyone:
+	Sa soeur n'a pris pas de viande.
+	
+2026-07-22 21:34:54 From Zoe to Everyone:
+	Ils n'ont pas pris un dessert.
+	
+2026-07-22 21:35:05 From ludo corsini to Everyone:
+	n'a pas pris
+	
+2026-07-22 21:37:12 From ludo corsini to Everyone:
+	7
+	
+2026-07-22 21:37:32 From ludo corsini to Everyone:
+	1-j
+	
+2026-07-22 21:38:04 From Zoe to Everyone:
+	2-b
+	
+2026-07-22 21:38:13 From ludo corsini to Everyone:
+	2-c
+	
+2026-07-22 21:38:45 From Zoe to Everyone:
+	3-g
+	
+2026-07-22 21:39:29 From Zoe to Everyone:
+	3-d
+	
+2026-07-22 21:39:39 From Zoe to Everyone:
+	4-a
+	
+2026-07-22 21:40:12 From Zoe to Everyone:
+	5-g
+	
+2026-07-22 21:40:43 From Zoe to Everyone:
+	6-b
+	
+2026-07-22 21:41:46 From Zoe to Everyone:
+	7-j
+	
+2026-07-22 21:42:11 From ludo corsini to Everyone:
+	7-i
+	
+2026-07-22 21:42:20 From Zoe to Everyone:
+	8-f
+	
+2026-07-22 21:42:47 From Zoe to Everyone:
+	9-e
+	
+2026-07-22 21:42:58 From Zoe to Everyone:
+	10-h
+	

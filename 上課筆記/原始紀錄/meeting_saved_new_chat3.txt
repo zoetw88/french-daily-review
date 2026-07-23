@@ -1,0 +1,162 @@
+2026-07-06 19:39:36 From ludo corsini to Everyone:
+	les etageres=shelves
+	
+2026-07-06 19:41:03 From ludo corsini to Everyone:
+	quel= what
+	
+2026-07-06 19:41:10 From ludo corsini to Everyone:
+	quel=mas
+	
+2026-07-06 19:41:15 From ludo corsini to Everyone:
+	quelle=fem
+	
+2026-07-06 19:41:28 From ludo corsini to Everyone:
+	quels=masc/pluriel
+	
+2026-07-06 19:41:40 From ludo corsini to Everyone:
+	quelles=fem/pluriel
+	
+2026-07-06 19:42:02 From ludo corsini to Everyone:
+	comment est-ce que tu trouve= how do you find
+	
+2026-07-06 19:42:08 From ludo corsini to Everyone:
+	tu trouves
+	
+2026-07-06 19:42:37 From ludo corsini to Everyone:
+	il coute combien= how much it cost
+	
+2026-07-06 19:42:48 From ludo corsini to Everyone:
+	combien ca coute= how much is it
+	
+2026-07-06 19:43:21 From ludo corsini to Everyone:
+	3
+	
+2026-07-06 19:44:26 From zoe to Everyone:
+	quelle vetements est-ce que tu amies?
+	
+2026-07-06 19:44:34 From zoe to Everyone:
+	quelles
+	
+2026-07-06 19:44:58 From zoe to Everyone:
+	ces chaussures coutent combien, s'il vous plait?
+	
+2026-07-06 19:46:13 From zoe to Everyone:
+	quels vetments est-ce que tu aimes?
+	
+2026-07-06 19:47:21 From zoe to Everyone:
+	quels tu trouves cette table? Elle est jilie,non?
+	
+2026-07-06 19:47:26 From zoe to Everyone:
+	quelles
+	
+2026-07-06 19:47:51 From ludo corsini to Everyone:
+	comment tu trouves cette table? elle est jolie non
+	
+2026-07-06 19:48:41 From zoe to Everyone:
+	Il y a comment couleurs?
+	
+2026-07-06 19:48:53 From ludo corsini to Everyone:
+	il y a quelles couleurs
+	
+2026-07-06 19:49:36 From zoe to Everyone:
+	Oui, combien est le prix, s'il vous plait?
+	
+2026-07-06 19:49:47 From ludo corsini to Everyone:
+	oui quel est le prix
+	
+2026-07-06 19:51:41 From ludo corsini to Everyone:
+	3
+	
+2026-07-06 19:53:37 From zoe to Everyone:
+	quelles est elle coulers?
+	
+2026-07-06 19:54:04 From ludo corsini to Everyone:
+	quelle est la couleur de la robe?
+	
+2026-07-06 19:56:22 From zoe to Everyone:
+	combien est la robe ?
+	
+2026-07-06 19:56:41 From ludo corsini to Everyone:
+	combien coute la robe?
+	
+2026-07-06 19:57:48 From zoe to Everyone:
+	comment est-ce que tu aime ?
+	
+2026-07-06 19:58:04 From ludo corsini to Everyone:
+	comment est-ce que tu trouves ce pantalon?
+	
+2026-07-06 19:58:56 From zoe to Everyone:
+	quelle est la couleur de pantalon?
+	
+2026-07-06 19:59:38 From zoe to Everyone:
+	quelle est la taillie de ce pantalon?
+	
+2026-07-06 20:00:33 From ludo corsini to Everyone:
+	ce=masculin noun
+	
+2026-07-06 20:00:39 From ludo corsini to Everyone:
+	cette=feminine noun
+	
+2026-07-06 20:00:46 From ludo corsini to Everyone:
+	ces=plural
+	
+2026-07-06 20:01:08 From ludo corsini to Everyone:
+	cet: before a vowel a , o, i H muet
+	
+2026-07-06 20:01:14 From ludo corsini to Everyone:
+	=this
+	
+2026-07-06 20:01:40 From ludo corsini to Everyone:
+	2
+	
+2026-07-06 20:02:26 From zoe to Everyone:
+	j'am bien la couleur de ces chaussures.
+	
+2026-07-06 20:02:31 From zoe to Everyone:
+	j'aime
+	
+2026-07-06 20:02:48 From zoe to Everyone:
+	Et ce pantlon bleu?
+	
+2026-07-06 20:03:04 From zoe to Everyone:
+	Ces sacs sont tres grands.
+	
+2026-07-06 20:03:27 From zoe to Everyone:
+	Ce robe es tres jolie,
+	
+2026-07-06 20:03:32 From zoe to Everyone:
+	est
+	
+2026-07-06 20:04:18 From zoe to Everyone:
+	cette  robe
+	
+2026-07-06 20:05:02 From zoe to Everyone:
+	comment est-ce que vous trouvez ces lunettes?
+	
+2026-07-06 20:06:11 From ludo corsini to Everyone:
+	2
+	
+2026-07-06 20:06:42 From zoe to Everyone:
+	cette robe bleue avec ces chaussures?
+	
+2026-07-06 20:07:01 From zoe to Everyone:
+	et toi, comment tu trouves ces lunettes ?
+	
+2026-07-06 20:07:22 From zoe to Everyone:
+	Je trouve ce chemise tres jolie.
+	
+2026-07-06 20:07:34 From ludo corsini to Everyone:
+	cette chemise
+	
+2026-07-06 20:07:49 From zoe to Everyone:
+	J'am beaucoup ce pull noir.
+	
+2026-07-06 20:08:19 From zoe to Everyone:
+	Oui ,il est joli. Mais ce pull rouge avec cette robe bleue
+	
+2026-07-06 20:08:36 From zoe to Everyone:
+	Cet objet rougue et blanc
+	
+2026-07-06 20:09:50 From ludo corsini to Everyone:
+	5
+	
