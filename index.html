@@ -15,8 +15,8 @@
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260724g" />
-    <script src="app.js?v=20260724g" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260725a" />
+    <script src="app.js?v=20260725a" defer></script>
   </head>
   <body>
     <div class="paper-noise" aria-hidden="true"></div>
@@ -71,9 +71,30 @@
               正在依照你的程度、到期錯題與 TCF 目標安排今天的內容。
             </p>
             <button class="primary-button" id="startReview">
-              <span id="startReviewLabel">開始今日 35 分鐘複習</span>
+              <span id="startReviewLabel">開啟今日任務</span>
               <span class="button-arrow">↗</span>
             </button>
+
+            <div class="player-hud" aria-label="學習角色進度">
+              <div class="player-level-chip">
+                <span>LEVEL</span>
+                <strong id="playerLevel">01</strong>
+              </div>
+              <div class="player-xp-meter">
+                <div>
+                  <span>今日冒險進度</span>
+                  <strong id="playerXp">0 / 120 XP</strong>
+                </div>
+                <div class="player-xp-track" aria-hidden="true">
+                  <i id="playerXpBar"></i>
+                </div>
+              </div>
+              <div class="player-coin-chip">
+                <span aria-hidden="true">◆</span>
+                <strong id="playerCoins">0</strong>
+                <small>JETONS</small>
+              </div>
+            </div>
           </div>
 
           <aside class="today-note">
@@ -273,18 +294,141 @@
 
       </section>
 
+      <section
+        class="view mission-command-center"
+        id="mission-view"
+        aria-label="今日任務控制台"
+      >
+        <div class="mission-shell">
+          <header class="mission-header">
+            <div>
+              <p class="eyebrow light">MISSION DU JOUR · TCF B2</p>
+              <h1>今天的法語，<br /><em>一關一關拿下。</em></h1>
+            </div>
+            <button class="ghost-button" id="exitMission" type="button">回到首頁 ×</button>
+          </header>
+
+          <div class="mission-briefing">
+            <article class="mission-core-card">
+              <div class="mission-card-index">00</div>
+              <div>
+                <span class="mission-card-kicker">CORE ROUTE · 35 MIN</span>
+                <h2>主線複習</h2>
+                <p id="missionCoreDescription">
+                  到期回想、弱點修補、新章節與 TCF 完整輸出，完成後才推進 B2 路線。
+                </p>
+              </div>
+              <div class="mission-core-progress">
+                <strong id="missionCoreProgress">0 / 4</strong>
+                <span>今日主線</span>
+              </div>
+              <button class="mission-primary-action" id="missionCoreStart" type="button">
+                <span id="missionCoreLabel">開始主線</span>
+                <b aria-hidden="true">↗</b>
+              </button>
+            </article>
+
+            <aside class="mission-reward-card" aria-label="今日遊戲獎勵">
+              <span>DAILY PASSPORT</span>
+              <strong id="dailyGameProgress">0 / 4</strong>
+              <p>完成四種訓練，取得今日四枚護照章。</p>
+              <div class="passport-stamps" id="passportStamps" aria-label="今日遊戲完成狀態"></div>
+            </aside>
+          </div>
+
+          <div class="mission-game-grid" aria-label="今日小遊戲">
+            <article class="mission-game-card matching-card" data-game-card="matching">
+              <span class="mission-game-number">01</span>
+              <div class="mission-game-symbol" aria-hidden="true">A ↔ B</div>
+              <p>RECALL · 4 PAIRS</p>
+              <h2>連連看</h2>
+              <span>把法文和中文配成四組，內容來自今天到期與弱點題。</span>
+              <button id="matchingGameStart" type="button">開始配對 <b>↗</b></button>
+            </article>
+
+            <article class="mission-game-card puzzle-card" data-game-card="sentence-puzzle">
+              <span class="mission-game-number">02</span>
+              <div class="mission-game-symbol" aria-hidden="true">MOTS</div>
+              <p>SYNTAXE · ORDER</p>
+              <h2>句子拼圖</h2>
+              <span>把詞塊排回正確順序，建立法語語序的肌肉記憶。</span>
+              <button id="sentencePuzzleStart" type="button">開始拼句 <b>↗</b></button>
+            </article>
+
+            <article class="mission-game-card listening-card" data-game-card="listening-choice">
+              <span class="mission-game-number">03</span>
+              <div class="mission-game-symbol" aria-hidden="true">)))</div>
+              <p>ÉCOUTE · 3 CHOIX</p>
+              <h2>聽音選句</h2>
+              <span>只聽法文，從三個意思中找出唯一正確答案，可不限次重播。</span>
+              <button id="listeningGameStart" type="button">開始聽力 <b>↗</b></button>
+            </article>
+
+            <article class="mission-game-card hunter-card" data-game-card="error-hunter">
+              <span class="mission-game-number">04</span>
+              <div class="mission-game-symbol" aria-hidden="true">ŒIL</div>
+              <p>GRAMMAIRE · ONE ERROR</p>
+              <h2>錯誤獵人</h2>
+              <span>每句只有一個人工校對過的錯誤，點出它並看正確形式。</span>
+              <button id="errorHunterStart" type="button">開始找錯 <b>↗</b></button>
+            </article>
+          </div>
+
+          <article class="boss-checkpoint" id="bossCheckpoint">
+            <div class="boss-scanline" aria-hidden="true"></div>
+            <div>
+              <span class="boss-label">BOSS CHECKPOINT</span>
+              <strong id="bossCountdown">再完成 5 課解鎖</strong>
+            </div>
+            <p id="bossDescription">每五課一次綜合挑戰；失敗不倒退，只重練弱點。</p>
+            <button id="bossChallengeStart" type="button" disabled>
+              進入 BOSS <span aria-hidden="true">⚔</span>
+            </button>
+          </article>
+
+          <section class="mini-game-stage" id="miniGameStage" hidden tabindex="-1">
+            <header class="mini-game-header">
+              <div>
+                <p id="miniGameKicker">MISSION 01 · RECALL</p>
+                <h2 id="miniGameTitle">連連看</h2>
+              </div>
+              <div class="mini-game-score">
+                <span>SCORE</span>
+                <strong id="miniGameScore">100</strong>
+              </div>
+            </header>
+            <p class="mini-game-instructions" id="miniGameInstructions">
+              先選一張題目，再選它對應的答案。
+            </p>
+            <div class="mini-game-board" id="miniGameBoard"></div>
+            <div class="mini-game-toolbar">
+              <button id="miniGameAudio" type="button" hidden>♪ 重播法文</button>
+              <button id="miniGameReset" type="button">重新開始</button>
+              <button id="miniGameClose" type="button">收起遊戲</button>
+            </div>
+            <p id="miniGameStatus" role="status" aria-live="polite">
+              選一個遊戲開始今天的額外訓練。
+            </p>
+            <div class="reward-burst" id="rewardBurst" hidden aria-hidden="true">
+              <span>MISSION CLEAR</span>
+              <strong id="rewardBurstValue">+24 XP</strong>
+            </div>
+          </section>
+        </div>
+      </section>
+
       <section class="view review-layout" id="review-view">
         <div class="review-header">
           <div>
-            <p class="eyebrow">RÉVISION ACTIVE</p>
-            <h1>先想，再揭曉。</h1>
+            <p class="eyebrow" id="reviewEyebrow">RÉVISION ACTIVE</p>
+            <h1 id="reviewHeading">先想，再揭曉。</h1>
           </div>
           <button class="ghost-button" id="exitReview">結束複習 ×</button>
         </div>
 
         <div class="review-workspace">
           <aside class="session-rail">
-            <span class="session-label">本回合</span>
+            <span class="session-label" id="sessionLabel">本回合</span>
             <strong><span id="questionNumber">1</span><small>/ <span id="sessionTotal">5</span></small></strong>
             <div class="session-dots" id="sessionDots"></div>
             <p>不急著答。先大聲說出完整句，再查看答案。</p>

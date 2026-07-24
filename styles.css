@@ -788,6 +788,1021 @@ h1 em {
   line-height: 1.6;
 }
 
+.player-hud {
+  width: min(720px, 100%);
+  display: grid;
+  grid-template-columns: auto minmax(180px, 1fr) auto;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 25px;
+  border: 1px solid var(--ink);
+  background: rgba(242, 238, 227, 0.76);
+  box-shadow: 7px 7px 0 rgba(23, 43, 43, 0.13);
+  backdrop-filter: blur(8px);
+}
+
+.player-level-chip,
+.player-coin-chip {
+  min-width: 105px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  padding: 13px 17px;
+}
+
+.player-level-chip {
+  color: var(--paper);
+  background: var(--green);
+}
+
+.player-level-chip span,
+.player-coin-chip small,
+.player-xp-meter span {
+  font: 9px var(--mono);
+  letter-spacing: 0.14em;
+}
+
+.player-level-chip strong {
+  font: 600 31px/1 var(--serif);
+}
+
+.player-xp-meter {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  border-right: 1px solid var(--ink);
+  padding: 12px 18px;
+}
+
+.player-xp-meter > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 15px;
+}
+
+.player-xp-meter strong {
+  font: 10px var(--mono);
+}
+
+.player-xp-track {
+  height: 8px;
+  overflow: hidden;
+  border: 1px solid var(--ink);
+  background: var(--paper-deep);
+}
+
+.player-xp-track i {
+  width: 0;
+  height: 100%;
+  display: block;
+  background: linear-gradient(90deg, var(--coral), var(--yellow));
+  transition: width 600ms cubic-bezier(.2,.8,.2,1);
+}
+
+.player-coin-chip {
+  grid-template-columns: auto auto;
+  gap: 0 7px;
+}
+
+.player-coin-chip > span {
+  color: #9a6710;
+  font-size: 13px;
+}
+
+.player-coin-chip strong {
+  font: 600 22px var(--serif);
+}
+
+.player-coin-chip small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+}
+
+.mission-command-center {
+  min-height: calc(100vh - 86px);
+  overflow: hidden;
+  color: var(--paper);
+  background:
+    radial-gradient(circle at 8% 6%, rgba(237, 106, 82, 0.2), transparent 28%),
+    radial-gradient(circle at 95% 30%, rgba(231, 184, 61, 0.13), transparent 24%),
+    var(--green);
+}
+
+.mission-command-center::before {
+  content: "";
+  position: fixed;
+  inset: 86px 0 0;
+  pointer-events: none;
+  opacity: 0.13;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.13) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+.mission-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1320px, calc(100% - 9vw));
+  margin: 0 auto;
+  padding: 56px 0 100px;
+}
+
+.mission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 35px;
+  padding-bottom: 38px;
+  border-bottom: 1px solid rgba(242, 238, 227, 0.25);
+}
+
+.mission-header h1 {
+  max-width: 850px;
+  margin: 10px 0 0;
+  color: var(--paper);
+  font-size: clamp(48px, 6.3vw, 92px);
+  letter-spacing: -0.055em;
+}
+
+.mission-header h1 em {
+  color: var(--yellow);
+}
+
+.mission-briefing {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 18px;
+  margin: 32px 0 18px;
+}
+
+.mission-core-card {
+  position: relative;
+  min-height: 210px;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 25px;
+  overflow: hidden;
+  border: 1px solid var(--ink);
+  padding: 30px;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 11px 11px 0 rgba(10, 23, 22, 0.42);
+}
+
+.mission-core-card::after {
+  content: "PRIORITÉ";
+  position: absolute;
+  right: -29px;
+  top: 19px;
+  padding: 5px 31px;
+  color: var(--paper);
+  background: var(--coral);
+  transform: rotate(40deg);
+  font: 8px var(--mono);
+  letter-spacing: 0.16em;
+}
+
+.mission-card-index {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  font: 600 24px var(--serif);
+  animation: missionPulse 2.8s ease-in-out infinite;
+}
+
+.mission-card-kicker,
+.mission-reward-card > span,
+.mission-game-card > p,
+.boss-label {
+  font: 9px var(--mono);
+  letter-spacing: 0.17em;
+}
+
+.mission-core-card h2 {
+  margin: 5px 0 8px;
+  font-size: 34px;
+}
+
+.mission-core-card p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.mission-core-progress {
+  min-width: 90px;
+  display: grid;
+  gap: 3px;
+  border-left: 1px solid var(--line);
+  padding-left: 22px;
+}
+
+.mission-core-progress strong {
+  font: 600 29px var(--serif);
+}
+
+.mission-core-progress span {
+  color: var(--muted);
+  font: 9px var(--mono);
+}
+
+.mission-primary-action,
+.mission-game-card button,
+.boss-checkpoint button,
+.mini-game-toolbar button,
+.mini-game-submit {
+  min-height: 46px;
+  border: 1px solid currentColor;
+  padding: 11px 15px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.mission-primary-action {
+  min-width: 160px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.mission-primary-action:disabled {
+  cursor: default;
+  opacity: 0.62;
+}
+
+.mission-reward-card {
+  position: relative;
+  min-height: 210px;
+  display: grid;
+  align-content: center;
+  border: 1px solid var(--paper);
+  padding: 25px;
+  color: var(--ink);
+  background: var(--yellow);
+  box-shadow: 8px 8px 0 rgba(10, 23, 22, 0.42);
+}
+
+.mission-reward-card::before,
+.mission-reward-card::after {
+  content: "";
+  position: absolute;
+  left: -7px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.mission-reward-card::before { top: 28%; }
+.mission-reward-card::after { bottom: 28%; }
+
+.mission-reward-card > strong {
+  margin: 8px 0 0;
+  font: 600 58px/.95 var(--serif);
+}
+
+.mission-reward-card > p {
+  margin: 10px 0 17px;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.passport-stamps {
+  display: flex;
+  gap: 7px;
+}
+
+.passport-stamps span {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--ink);
+  border-radius: 50%;
+  font: 9px var(--mono);
+  transform: rotate(-8deg);
+}
+
+.passport-stamps span:nth-child(even) {
+  transform: rotate(7deg);
+}
+
+.passport-stamps span.earned {
+  color: var(--paper);
+  background: var(--coral);
+  border-style: solid;
+  animation: rewardOverlayBurst 520ms cubic-bezier(.2,.9,.25,1.35);
+}
+
+.mission-game-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.mission-game-card {
+  position: relative;
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(242, 238, 227, 0.52);
+  padding: 24px;
+  color: var(--paper);
+  background: rgba(16, 39, 36, 0.73);
+  transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+
+.mission-game-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -25px -40px auto;
+  width: 120px;
+  height: 120px;
+  border: 1px solid rgba(242, 238, 227, 0.13);
+  border-radius: 50%;
+}
+
+.mission-game-card:hover {
+  z-index: 2;
+  background: rgba(16, 39, 36, 0.96);
+  box-shadow: 9px 9px 0 rgba(10, 23, 22, 0.45);
+  transform: translateY(-6px);
+}
+
+.mission-game-card.is-complete {
+  border-color: var(--yellow);
+}
+
+.mission-game-card.is-complete::before {
+  content: "CLEAR ✓";
+  position: absolute;
+  top: 20px;
+  right: -26px;
+  min-width: 110px;
+  padding: 5px 8px;
+  color: var(--ink);
+  background: var(--yellow);
+  transform: rotate(35deg);
+  text-align: center;
+  font: 8px var(--mono);
+  letter-spacing: 0.12em;
+}
+
+.mission-game-number {
+  font: 10px var(--mono);
+  opacity: 0.62;
+}
+
+.mission-game-symbol {
+  width: 86px;
+  height: 86px;
+  display: grid;
+  place-items: center;
+  margin: 22px 0 18px;
+  border: 1px solid rgba(242, 238, 227, 0.46);
+  border-radius: 50%;
+  color: var(--yellow);
+  font: 600 17px var(--serif);
+}
+
+.matching-card .mission-game-symbol { border-radius: 0; transform: rotate(-3deg); }
+.puzzle-card .mission-game-symbol { border-style: dashed; }
+.listening-card .mission-game-symbol { border-width: 3px 1px; animation: missionPulse 2s infinite; }
+.hunter-card .mission-game-symbol { border-radius: 50% 0 50% 0; transform: rotate(45deg); }
+.hunter-card .mission-game-symbol::first-line { transform: rotate(-45deg); }
+
+.mission-game-card > p {
+  margin: 0;
+  color: rgba(242, 238, 227, 0.6);
+}
+
+.mission-game-card h2 {
+  margin: 6px 0 10px;
+  font-size: 29px;
+}
+
+.mission-game-card > span:not(.mission-game-number) {
+  color: rgba(242, 238, 227, 0.67);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.mission-game-card button {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.mission-game-card button:hover,
+.mission-game-card button:focus-visible {
+  background: var(--yellow);
+}
+
+.boss-checkpoint {
+  position: relative;
+  min-height: 130px;
+  display: grid;
+  grid-template-columns: minmax(250px, .8fr) minmax(280px, 1fr) auto;
+  align-items: center;
+  gap: 30px;
+  overflow: hidden;
+  margin-top: 18px;
+  border: 1px solid rgba(242, 238, 227, 0.33);
+  padding: 27px 30px;
+  background: #142724;
+}
+
+.boss-checkpoint::before {
+  content: "LOCKED";
+  position: absolute;
+  left: -5px;
+  top: 5px;
+  color: rgba(242, 238, 227, 0.055);
+  font: 600 clamp(60px, 9vw, 120px)/1 var(--serif);
+  letter-spacing: -0.06em;
+}
+
+.boss-checkpoint.unlocked {
+  border-color: var(--coral);
+  box-shadow: inset 5px 0 0 var(--coral);
+}
+
+.boss-checkpoint.unlocked::before {
+  content: "READY";
+  color: rgba(237, 106, 82, 0.12);
+}
+
+.boss-checkpoint.complete::before { content: "CLEARED"; }
+
+.boss-checkpoint > div:not(.boss-scanline) {
+  position: relative;
+  display: grid;
+  gap: 6px;
+}
+
+.boss-label { color: var(--coral); }
+
+.boss-checkpoint strong {
+  font: 600 25px var(--serif);
+}
+
+.boss-checkpoint p {
+  position: relative;
+  margin: 0;
+  color: rgba(242, 238, 227, 0.64);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.boss-checkpoint button {
+  position: relative;
+  min-width: 160px;
+  color: var(--paper);
+  background: transparent;
+}
+
+.boss-checkpoint.unlocked button {
+  color: var(--ink);
+  background: var(--coral);
+  border-color: var(--coral);
+  animation: missionPulse 1.8s infinite;
+}
+
+.boss-checkpoint button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.boss-scanline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 4px,
+    var(--paper) 5px
+  );
+}
+
+.mini-game-stage {
+  position: relative;
+  min-height: 620px;
+  margin-top: 30px;
+  border: 1px solid var(--ink);
+  padding: clamp(24px, 4.5vw, 58px);
+  color: var(--ink);
+  background:
+    linear-gradient(90deg, transparent 34px, rgba(237, 106, 82, 0.2) 35px, transparent 36px),
+    repeating-linear-gradient(to bottom, transparent 0, transparent 39px, rgba(23, 43, 43, 0.075) 40px),
+    var(--paper);
+  box-shadow: 15px 15px 0 rgba(10, 23, 22, 0.45);
+  outline: none;
+  scroll-margin-top: 104px;
+}
+
+.mini-game-stage[hidden] {
+  display: none;
+}
+
+.mini-game-stage:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 4px;
+}
+
+.mini-game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 25px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.mini-game-header p {
+  margin: 0;
+  color: var(--coral);
+  font: 10px var(--mono);
+  letter-spacing: 0.16em;
+}
+
+.mini-game-header h2 {
+  margin: 6px 0 0;
+  font-size: clamp(40px, 5vw, 66px);
+}
+
+.mini-game-score {
+  min-width: 105px;
+  display: grid;
+  border: 1px solid var(--ink);
+  padding: 10px 15px;
+  text-align: center;
+}
+
+.mini-game-score span {
+  font: 8px var(--mono);
+  letter-spacing: .18em;
+}
+
+.mini-game-score strong {
+  font: 600 37px var(--serif);
+}
+
+.mini-game-instructions {
+  max-width: 760px;
+  margin: 20px 0 28px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.mini-game-board {
+  min-height: 330px;
+}
+
+.mini-game-board.is-wrong {
+  animation: gameNudge 360ms ease;
+}
+
+.matching-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(20px, 5vw, 75px);
+}
+
+.matching-column > p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font: 9px var(--mono);
+  letter-spacing: .14em;
+}
+
+.matching-column > div {
+  display: grid;
+  gap: 10px;
+}
+
+.mini-game-stage .match-tile {
+  min-height: 70px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--ink);
+  padding: 13px 16px;
+  color: var(--ink);
+  background: rgba(242, 238, 227, 0.88);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.mini-game-stage .match-tile span {
+  font: 600 clamp(15px, 1.8vw, 21px) var(--serif);
+}
+
+.mini-game-stage .match-tile small {
+  max-width: 63px;
+  color: var(--muted);
+  font: 7px/1.3 var(--mono);
+  letter-spacing: .08em;
+  text-align: right;
+}
+
+.mini-game-stage .match-tile:hover:not(:disabled) {
+  box-shadow: 5px 5px 0 rgba(23, 43, 43, .18);
+  transform: translate(-2px, -2px);
+}
+
+.mini-game-stage .match-tile.selected {
+  color: var(--paper);
+  background: var(--coral);
+}
+
+.mini-game-stage .match-tile.selected small { color: var(--paper); }
+
+.mini-game-stage .match-tile.matched {
+  color: var(--ink);
+  background: #cfe7d7;
+  border-width: 2px;
+  cursor: default;
+  opacity: 1;
+  animation: rewardBurst 430ms ease;
+}
+
+.puzzle-prompt {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.puzzle-prompt span,
+.error-hunter-copy > span {
+  color: var(--muted);
+  font: 9px var(--mono);
+  letter-spacing: .13em;
+}
+
+.puzzle-prompt strong {
+  font: 600 clamp(23px, 3vw, 36px) var(--serif);
+}
+
+.puzzle-answer-zone {
+  min-height: 102px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 9px;
+  border: 2px dashed rgba(23, 43, 43, .35);
+  padding: 17px;
+  background: rgba(255, 255, 255, .24);
+}
+
+.puzzle-answer-zone.has-tokens {
+  border-style: solid;
+  border-color: var(--ink);
+}
+
+.puzzle-answer-zone > span {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.puzzle-answer-zone button,
+.puzzle-token-bank button {
+  min-height: 46px;
+  border: 1px solid var(--ink);
+  padding: 9px 14px;
+  background: var(--paper);
+  cursor: pointer;
+  font: 600 18px var(--serif);
+}
+
+.puzzle-answer-zone button {
+  color: var(--paper);
+  background: var(--green);
+  animation: rewardBurst 260ms ease;
+}
+
+.puzzle-token-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 20px 0;
+}
+
+.puzzle-token-bank button:disabled {
+  color: transparent;
+  border-style: dashed;
+  background: transparent;
+}
+
+.mini-game-submit {
+  min-width: 190px;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.listening-orbit {
+  width: 130px;
+  height: 130px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 25px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+}
+
+.listening-orbit strong {
+  font: 600 27px var(--serif);
+}
+
+.listening-orbit i {
+  position: absolute;
+  inset: -10px;
+  border: 1px solid var(--coral);
+  border-radius: 50%;
+  animation: listeningWave 2.4s ease-out infinite;
+}
+
+.listening-orbit i:nth-child(2) { animation-delay: .8s; }
+.listening-orbit i:nth-child(3) { animation-delay: 1.6s; }
+
+.listening-choices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.listening-choices button {
+  min-height: 150px;
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  align-content: center;
+  gap: 7px 12px;
+  border: 1px solid var(--ink);
+  padding: 17px;
+  background: rgba(242, 238, 227, .9);
+  text-align: left;
+  cursor: pointer;
+}
+
+.listening-choices button > span {
+  grid-row: 1 / 3;
+  font: 600 27px var(--serif);
+}
+
+.listening-choices button strong {
+  font: 600 18px/1.45 var(--serif);
+}
+
+.listening-choices button small {
+  color: var(--muted);
+  font: 8px var(--mono);
+}
+
+.listening-choices button:hover:not(:disabled) {
+  color: var(--paper);
+  background: var(--green);
+}
+
+.listening-choices button:hover:not(:disabled) small { color: var(--paper); }
+
+.listening-choices button.wrong-choice {
+  border-style: dashed;
+  text-decoration: line-through;
+}
+
+.error-hunter-copy {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  min-height: 310px;
+  border: 1px solid var(--ink);
+  padding: 35px;
+  background: rgba(242, 238, 227, .72);
+  text-align: center;
+}
+
+.error-hunter-copy p {
+  margin: 30px 0;
+  font: 600 clamp(27px, 4vw, 48px)/1.65 var(--serif);
+}
+
+.error-hunter-copy p button {
+  min-height: 52px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 0 4px;
+  background: transparent;
+  cursor: crosshair;
+  font: inherit;
+}
+
+.error-hunter-copy p button:hover,
+.error-hunter-copy p button:focus-visible {
+  border-bottom-color: var(--coral);
+  color: #a73626;
+}
+
+.error-hunter-copy p button.not-error {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.error-hunter-copy p button.found-error {
+  color: var(--paper);
+  background: var(--coral);
+  animation: rewardBurst 420ms ease;
+}
+
+.error-hunter-copy > small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.mini-game-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 25px;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+
+.mini-game-toolbar button {
+  background: transparent;
+}
+
+.mini-game-toolbar button:first-child {
+  color: var(--paper);
+  background: var(--green);
+}
+
+#miniGameStatus {
+  min-height: 48px;
+  margin: 17px 0 0;
+  border-left: 4px solid var(--ink);
+  padding: 12px 15px;
+  color: var(--ink);
+  background: rgba(23, 43, 43, .06);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+#miniGameStatus[data-tone="success"] {
+  border-left-color: #237151;
+  background: rgba(35, 113, 81, .11);
+}
+
+#miniGameStatus[data-tone="error"] {
+  border-left-color: #a73626;
+  background: rgba(167, 54, 38, .1);
+}
+
+#miniGameStatus[data-tone="warning"] {
+  border-left-color: #926314;
+  background: rgba(146, 99, 20, .1);
+}
+
+.reward-burst {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: 5;
+  min-width: 260px;
+  display: grid;
+  place-items: center;
+  border: 3px double var(--ink);
+  border-radius: 50%;
+  padding: 34px 25px;
+  color: var(--ink);
+  background: var(--yellow);
+  box-shadow: 0 0 0 10px rgba(231, 184, 61, .28);
+  transform: translate(-50%, -50%) rotate(-6deg);
+  animation: rewardBurst 520ms cubic-bezier(.2,.9,.25,1.35);
+}
+
+.reward-burst[hidden] { display: none; }
+
+.reward-burst span {
+  font: 9px var(--mono);
+  letter-spacing: .18em;
+}
+
+.reward-burst strong {
+  font: 600 38px var(--serif);
+}
+
+button:focus-visible,
+.mission-game-card button:focus-visible,
+.mini-game-stage button:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+@keyframes missionPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(237, 106, 82, 0); }
+  50% { transform: scale(1.035); box-shadow: 0 0 0 8px rgba(237, 106, 82, .09); }
+}
+
+@keyframes rewardBurst {
+  from { opacity: 0; transform: translateY(12px) scale(.72) rotate(-8deg); }
+  to { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+
+@keyframes rewardOverlayBurst {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 12px)) scale(.72) rotate(-14deg); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-6deg); }
+}
+
+@keyframes gameNudge {
+  0%, 100% { transform: translateX(0); }
+  30% { transform: translateX(-8px); }
+  65% { transform: translateX(7px); }
+}
+
+@keyframes listeningWave {
+  0% { opacity: .8; transform: scale(.78); }
+  100% { opacity: 0; transform: scale(1.45); }
+}
+
+@media (max-width: 1050px) {
+  .mission-game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mission-core-card {
+    grid-template-columns: 62px minmax(0, 1fr) auto;
+  }
+  .mission-primary-action { grid-column: 2 / -1; }
+  .boss-checkpoint { grid-template-columns: 1fr auto; }
+  .boss-checkpoint > p { grid-column: 1 / -1; grid-row: 2; }
+  .listening-choices { grid-template-columns: 1fr; }
+  .listening-choices button { min-height: 110px; }
+}
+
+@media (max-width: 760px) {
+  .player-hud { grid-template-columns: 80px minmax(0, 1fr); }
+  .player-level-chip,
+  .player-coin-chip { min-width: 0; }
+  .player-coin-chip {
+    grid-column: 1 / -1;
+    grid-template-columns: auto auto auto;
+    justify-content: center;
+    border-top: 1px solid var(--ink);
+    padding: 8px;
+  }
+  .player-coin-chip small { grid-column: auto; }
+  .mission-shell { width: calc(100% - 36px); padding: 35px 0 80px; }
+  .mission-header { display: block; }
+  .mission-header h1 {
+    font-size: 42px;
+    line-height: 1.02;
+    overflow-wrap: anywhere;
+  }
+  .mission-header .ghost-button { margin-top: 23px; }
+  .mission-briefing { grid-template-columns: 1fr; }
+  .mission-core-card {
+    grid-template-columns: 52px 1fr;
+    gap: 17px;
+    padding: 23px 20px;
+  }
+  .mission-core-card > div { min-width: 0; }
+  .mission-core-card h2 { font-size: 30px; }
+  .mission-core-card p { overflow-wrap: anywhere; }
+  .mission-card-index { width: 48px; height: 48px; }
+  .mission-core-progress { grid-column: 2; border-left: 0; padding-left: 0; }
+  .mission-primary-action { grid-column: 1 / -1; }
+  .mission-reward-card { min-height: 180px; }
+  .mission-game-grid { grid-template-columns: 1fr; }
+  .mission-game-card { min-height: 285px; }
+  .boss-checkpoint { grid-template-columns: 1fr; padding: 24px 20px; }
+  .boss-checkpoint > p { grid-column: 1; grid-row: auto; }
+  .boss-checkpoint button { width: 100%; }
+  .mini-game-stage { min-height: 560px; padding: 24px 17px; }
+  .mini-game-header h2 { font-size: 40px; }
+  .matching-board { grid-template-columns: 1fr; gap: 25px; }
+  .mini-game-stage .match-tile { min-height: 58px; }
+  .error-hunter-copy { padding: 25px 14px; }
+  .error-hunter-copy p { font-size: 28px; }
+}
+
 .game-hub {
   padding: 75px 4.5vw 90px;
   background: linear-gradient(120deg, #f2eee3 0%, #f8f3e6 55%, #ede2d0 100%);
@@ -1474,6 +2489,26 @@ h1 em {
   padding: 50px 5vw 60px;
   background: var(--green);
   color: var(--paper);
+}
+
+.review-layout.boss-session {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(231, 184, 61, .2), transparent 27%),
+    radial-gradient(circle at 12% 78%, rgba(237, 106, 82, .18), transparent 29%),
+    #172f2b;
+}
+
+.review-layout.boss-session .review-header {
+  border-left: 5px solid var(--yellow);
+  padding-left: 24px;
+}
+
+.review-layout.boss-session .review-header .eyebrow {
+  color: var(--yellow);
+}
+
+.review-layout.boss-session .flashcard {
+  box-shadow: 13px 13px 0 var(--coral), 17px 17px 0 rgba(255,255,255,.22);
 }
 
 .review-header {

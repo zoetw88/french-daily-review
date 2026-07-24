@@ -569,6 +569,349 @@ const allCards = Object.entries(studySets).flatMap(([set, cards]) =>
   cards.map((card, index) => ({ ...card, set, id: card.id || `${set}-${index}` }))
 );
 
+const MINI_GAME_IDS = Object.freeze([
+  "matching",
+  "sentence-puzzle",
+  "listening-choice",
+  "error-hunter",
+]);
+const MINI_GAME_ID_SET = new Set(MINI_GAME_IDS);
+const BOSS_MILESTONES = Object.freeze(
+  Array.from({ length: 10 }, (_, index) => (index + 1) * 5),
+);
+const GAME_ERROR_TRAPS = Object.freeze([
+  {
+    id: "verb-prendre-elle",
+    skill: "動詞",
+    sentence: "Elle ne prende pas de dessert.",
+    wrongIndex: 2,
+    correction: "prend",
+    explanation: "elle 的 prendre 現在式是 prend，不加 -e。",
+  },
+  {
+    id: "verb-boire-je",
+    skill: "動詞",
+    sentence: "Je boiv du café au déjeuner.",
+    wrongIndex: 1,
+    correction: "bois",
+    explanation: "je 的 boire 現在式是 bois。",
+  },
+  {
+    id: "past-aller-feminine",
+    skill: "助動詞 être",
+    sentence: "Hier soir, je suis allé au restaurant.",
+    wrongIndex: 4,
+    correction: "allée",
+    explanation: "Zoe 是女性；aller 使用 être，過去分詞要寫成 allée。",
+  },
+  {
+    id: "negation-partitive",
+    skill: "否定句",
+    sentence: "Elle ne prend pas du dessert.",
+    wrongIndex: 4,
+    correction: "de",
+    explanation: "一般否定句中，部分冠詞 du 要改成 de。",
+  },
+  {
+    id: "future-near-infinitive",
+    skill: "未來式",
+    sentence: "Demain, je vais travaille à la maison.",
+    wrongIndex: 3,
+    correction: "travailler",
+    explanation: "futur proche 是 aller + 動詞原形，所以用 travailler。",
+  },
+  {
+    id: "adjective-agreement",
+    skill: "性數配合",
+    sentence: "Elles sont arrivé hier matin.",
+    wrongIndex: 2,
+    correction: "arrivées",
+    explanation: "être 後的過去分詞要和 elles 做陰性複數配合：arrivées。",
+  },
+]);
+
+function hashSeed(seed) {
+  let hash = 2166136261;
+  for (const character of String(seed)) {
+    hash ^= character.charCodeAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function seededShuffle(items, seed) {
+  const shuffled = [...items];
+  let value = hashSeed(seed) || 1;
+  const random = () => {
+    value += 0x6d2b79f5;
+    let result = value;
+    result = Math.imul(result ^ (result >>> 15), result | 1);
+    result ^= result + Math.imul(result ^ (result >>> 7), result | 61);
+    return ((result ^ (result >>> 14)) >>> 0) / 4294967296;
+  };
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const target = Math.floor(random() * (index + 1));
+    [shuffled[index], shuffled[target]] = [shuffled[target], shuffled[index]];
+  }
+  return shuffled;
+}
+
+function uniquePlayableCards(cards = []) {
+  const seenQuestions = new Set();
+  const seenAnswers = new Set();
+  return cards.filter((card) => {
+    const question = String(card?.q || "").trim();
+    const answer = String(card?.a || "").trim();
+    if (!card?.id || !question || !answer || question.length > 100 || answer.length > 120) return false;
+    const questionKey = question.toLocaleLowerCase("fr");
+    const answerKey = answer.toLocaleLowerCase("fr");
+    if (seenQuestions.has(questionKey) || seenAnswers.has(answerKey)) return false;
+    seenQuestions.add(questionKey);
+    seenAnswers.add(answerKey);
+    return true;
+  });
+}
+
+function buildMiniGameCardPool(cards = [], plan = {}, moduleSet = "") {
+  const wantedIds = new Set([
+    ...(Array.isArray(plan?.dueCardIds) ? plan.dueCardIds : []),
+    ...(Array.isArray(plan?.weakCardIds) ? plan.weakCardIds : []),
+  ]);
+  return uniquePlayableCards(cards.filter((card) => wantedIds.has(card.id) || card.set === moduleSet));
+}
+
+function isMatchingMeaningCard(card) {
+  return (
+    isListeningMeaningCard(card)
+    && !["output", "fluency"].includes(card.phase)
+    && String(card.a || "").length <= 88
+  );
+}
+
+function buildMatchingCardPool(preferredCards = [], fallbackCards = []) {
+  const preferred = uniquePlayableCards(preferredCards.filter(isMatchingMeaningCard));
+  if (preferred.length >= 4) return preferred;
+  return uniquePlayableCards([
+    ...preferred,
+    ...fallbackCards.filter(isMatchingMeaningCard),
+  ]);
+}
+
+function buildMatchingRound(cards, seed, fallbackCards = []) {
+  const preferredIds = new Set(
+    uniquePlayableCards(cards.filter(isMatchingMeaningCard)).map((card) => card.id),
+  );
+  const matchingCards = buildMatchingCardPool(cards, fallbackCards);
+  const pairs = seededShuffle(matchingCards, `${seed}:matching-pairs`).slice(0, 4);
+  const tiles = pairs.flatMap((card, index) => {
+    const pairId = `pair-${index + 1}`;
+    return [
+      { id: `${pairId}-prompt`, pairId, side: "prompt", text: card.q, cardId: card.id },
+      { id: `${pairId}-answer`, pairId, side: "answer", text: card.a, cardId: card.id },
+    ];
+  });
+  return {
+    mode: "matching",
+    pairs: pairs.map((card, index) => ({
+      pairId: `pair-${index + 1}`,
+      cardId: card.id,
+      reviewable: preferredIds.has(card.id),
+    })),
+    tiles: seededShuffle(tiles, `${seed}:matching-tiles`),
+  };
+}
+
+function tokenizeFrenchSentence(text) {
+  return String(text || "").trim().match(/\S+/g) || [];
+}
+
+function buildSentencePuzzleRound(card, seed) {
+  const targetTokens = tokenizeFrenchSentence(card?.a);
+  const tokens = seededShuffle(
+    targetTokens.map((text, index) => ({ id: `token-${index}`, text, sourceIndex: index })),
+    `${seed}:sentence-puzzle`,
+  );
+  return {
+    mode: "sentence-puzzle",
+    cardId: card?.id || "",
+    prompt: card?.q || "",
+    answer: card?.a || "",
+    targetTokens,
+    tokens,
+  };
+}
+
+function isListeningMeaningCard(card) {
+  const prompt = String(card?.q || "").trim();
+  const answer = String(card?.a || "").trim();
+  const hasChineseMeaning = /[\u3400-\u9fff]/u.test(prompt);
+  const hasFrenchAnswer = /[A-Za-zÀ-ÖØ-öø-ÿŒœ]/u.test(answer)
+    && !/[\u3400-\u9fff]/u.test(answer);
+  return !card?.openEnded
+    && hasChineseMeaning
+    && hasFrenchAnswer
+    && !answer.includes("\n")
+    && answer.length <= 110;
+}
+
+function buildListeningCardPool(preferredCards = [], fallbackCards = []) {
+  const preferred = uniquePlayableCards(preferredCards.filter(isListeningMeaningCard));
+  if (preferred.length >= 3) return preferred;
+  return uniquePlayableCards([
+    ...preferred,
+    ...fallbackCards.filter(isListeningMeaningCard),
+  ]);
+}
+
+function buildListeningRound(cards, seed, fallbackCards = []) {
+  const preferredIds = new Set(
+    uniquePlayableCards(cards.filter(isListeningMeaningCard)).map((card) => card.id),
+  );
+  const playable = buildListeningCardPool(cards, fallbackCards);
+  const [target] = seededShuffle(playable, `${seed}:listening-target`);
+  const distractors = seededShuffle(
+    playable.filter((card) => card.id !== target?.id && card.q !== target?.q),
+    `${seed}:listening-distractors`,
+  ).slice(0, 2);
+  const choices = seededShuffle(
+    [target, ...distractors].filter(Boolean).map((card) => ({
+      id: card.id,
+      text: card.q,
+      correct: card.id === target?.id,
+    })),
+    `${seed}:listening-choices`,
+  );
+  return {
+    mode: "listening-choice",
+    cardId: target?.id || "",
+    audioText: target?.a || "",
+    reviewable: preferredIds.has(target?.id),
+    choices,
+  };
+}
+
+function filterGameFallbackCards(cards = [], curriculumModuleSets = [], allowedModuleSets = []) {
+  const curriculumSets = new Set(curriculumModuleSets);
+  const allowedSets = new Set(allowedModuleSets);
+  return uniquePlayableCards(cards.filter((card) => (
+    !curriculumSets.has(card.set) || allowedSets.has(card.set)
+  )));
+}
+
+function buildErrorHunterRound(skill, seed) {
+  const matchingTraps = GAME_ERROR_TRAPS.filter((trap) => trap.skill === skill);
+  const candidates = matchingTraps.length ? matchingTraps : GAME_ERROR_TRAPS;
+  const [trap] = seededShuffle(candidates, `${seed}:error-hunter`);
+  return {
+    mode: "error-hunter",
+    trapId: trap.id,
+    skill: trap.skill,
+    tokens: tokenizeFrenchSentence(trap.sentence).map((text, index) => ({
+      id: `error-token-${index}`,
+      text,
+    })),
+    wrongIndex: trap.wrongIndex,
+    correction: trap.correction,
+    explanation: trap.explanation,
+  };
+}
+
+function getBossMilestoneState(completedModuleCount, clearedMilestones = []) {
+  const completed = Math.max(0, Math.floor(Number(completedModuleCount) || 0));
+  const cleared = new Set(
+    (Array.isArray(clearedMilestones) ? clearedMilestones : [])
+      .map(Number)
+      .filter((value) => BOSS_MILESTONES.includes(value)),
+  );
+  const nextMilestone = BOSS_MILESTONES.find((milestone) => !cleared.has(milestone))
+    || BOSS_MILESTONES.at(-1);
+  const complete = BOSS_MILESTONES.every((milestone) => cleared.has(milestone));
+  const pendingMilestone = !complete && completed >= nextMilestone ? nextMilestone : null;
+  return {
+    nextMilestone,
+    pendingMilestone,
+    unlocked: pendingMilestone !== null,
+    complete,
+  };
+}
+
+function getMiniGameReward(mode, score, alreadyCompleted) {
+  if (alreadyCompleted || Number(score) < 80 || !MINI_GAME_ID_SET.has(mode)) {
+    return { xp: 0, coins: 0, firstClear: false };
+  }
+  const rewards = {
+    matching: { xp: 24, coins: 2 },
+    "sentence-puzzle": { xp: 26, coins: 2 },
+    "listening-choice": { xp: 28, coins: 3 },
+    "error-hunter": { xp: 26, coins: 2 },
+  };
+  return { ...rewards[mode], firstClear: true };
+}
+
+function normalizeRewardLedger(raw = {}, legacyXp = 0, legacyCoins = 0) {
+  const safeRaw = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+  const receipts = {};
+  if (safeRaw.receipts && typeof safeRaw.receipts === "object" && !Array.isArray(safeRaw.receipts)) {
+    Object.entries(safeRaw.receipts).forEach(([eventId, receipt]) => {
+      if (!eventId || !receipt || typeof receipt !== "object") return;
+      receipts[eventId] = {
+        xp: Math.max(0, Math.floor(Number(receipt.xp) || 0)),
+        coins: Math.max(0, Math.floor(Number(receipt.coins) || 0)),
+        earnedAt: Math.max(0, Number(receipt.earnedAt) || 0),
+      };
+    });
+  }
+  let baseXp = Math.max(0, Math.floor(Number(safeRaw.baseXp) || 0));
+  let baseCoins = Math.max(0, Math.floor(Number(safeRaw.baseCoins) || 0));
+  const receiptTotals = Object.values(receipts).reduce(
+    (totals, receipt) => ({
+      xp: totals.xp + receipt.xp,
+      coins: totals.coins + receipt.coins,
+    }),
+    { xp: 0, coins: 0 },
+  );
+  baseXp += Math.max(0, Math.floor(Number(legacyXp) || 0) - baseXp - receiptTotals.xp);
+  baseCoins += Math.max(0, Math.floor(Number(legacyCoins) || 0) - baseCoins - receiptTotals.coins);
+  return { version: 1, baseXp, baseCoins, receipts };
+}
+
+function rewardLedgerTotals(ledger) {
+  const normalized = normalizeRewardLedger(ledger);
+  return Object.values(normalized.receipts).reduce(
+    (totals, receipt) => ({
+      xp: totals.xp + receipt.xp,
+      coins: totals.coins + receipt.coins,
+    }),
+    { xp: normalized.baseXp, coins: normalized.baseCoins },
+  );
+}
+
+function mergeRewardLedgers(localRaw, cloudRaw) {
+  const local = normalizeRewardLedger(localRaw);
+  const cloud = normalizeRewardLedger(cloudRaw);
+  const receipts = { ...local.receipts };
+  Object.entries(cloud.receipts).forEach(([eventId, cloudReceipt]) => {
+    const localReceipt = receipts[eventId];
+    if (!localReceipt) {
+      receipts[eventId] = cloudReceipt;
+      return;
+    }
+    receipts[eventId] = {
+      xp: Math.max(localReceipt.xp, cloudReceipt.xp),
+      coins: Math.max(localReceipt.coins, cloudReceipt.coins),
+      earnedAt: Math.min(
+        ...[localReceipt.earnedAt, cloudReceipt.earnedAt].filter(Boolean),
+      ) || Math.max(localReceipt.earnedAt, cloudReceipt.earnedAt),
+    };
+  });
+  return {
+    version: 1,
+    baseXp: Math.max(local.baseXp, cloud.baseXp),
+    baseCoins: Math.max(local.baseCoins, cloud.baseCoins),
+    receipts,
+  };
+}
+
 function getTodayKey(date = new Date()) {
   return [
     date.getFullYear(),
@@ -847,6 +1190,127 @@ function normalizeStringArray(raw, allowedValues = null) {
   )))];
 }
 
+function normalizeMiniGameRuntime(raw = {}) {
+  const safeRaw = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+  const normalizeIndexes = (values) => [...new Set(
+    (Array.isArray(values) ? values : [])
+      .map(Number)
+      .filter((value) => Number.isInteger(value) && value >= 0 && value < 100),
+  )];
+  return {
+    mistakes: Math.max(0, Math.min(20, Math.floor(Number(safeRaw.mistakes) || 0))),
+    completed: Boolean(safeRaw.completed),
+    selectedTileId: typeof safeRaw.selectedTileId === "string"
+      ? safeRaw.selectedTileId.slice(0, 120)
+      : "",
+    matchedPairIds: normalizeStringArray(safeRaw.matchedPairIds),
+    failedPairIds: normalizeStringArray(safeRaw.failedPairIds),
+    selectedTokenIndexes: normalizeIndexes(safeRaw.selectedTokenIndexes),
+    wrongChoiceIds: normalizeStringArray(safeRaw.wrongChoiceIds),
+    wrongTokenIndexes: normalizeIndexes(safeRaw.wrongTokenIndexes),
+  };
+}
+
+function normalizeMiniGameCheckpoint(raw = {}) {
+  const safeRaw = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+  const knownCardIds = new Set([
+    ...allCards.map((card) => card.id),
+    ...GAME_ERROR_TRAPS.map((trap) => `trap:${trap.id}`),
+  ]);
+  const results = {};
+  if (safeRaw.results && typeof safeRaw.results === "object" && !Array.isArray(safeRaw.results)) {
+    Object.entries(safeRaw.results).forEach(([cardId, result]) => {
+      if (!knownCardIds.has(cardId) || !result || typeof result !== "object") return;
+      results[cardId] = {
+        correct: Boolean(result.correct),
+        updatedAt: Math.max(0, Number(result.updatedAt) || 0),
+      };
+    });
+  }
+  return {
+    seed: typeof safeRaw.seed === "string" ? safeRaw.seed.slice(0, 240) : "",
+    cardIds: normalizeStringArray(safeRaw.cardIds, knownCardIds),
+    answeredCardIds: normalizeStringArray(safeRaw.answeredCardIds, knownCardIds),
+    results,
+    runtime: normalizeMiniGameRuntime(safeRaw.runtime),
+    updatedAt: Math.max(0, Number(safeRaw.updatedAt) || 0),
+  };
+}
+
+function normalizeMiniGameCheckpoints(raw = {}) {
+  const safeRaw = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+  const checkpoints = {};
+  Object.entries(safeRaw).forEach(([mode, checkpoint]) => {
+    if (MINI_GAME_ID_SET.has(mode)) checkpoints[mode] = normalizeMiniGameCheckpoint(checkpoint);
+  });
+  return checkpoints;
+}
+
+function mergeMiniGameCheckpoints(localRaw, cloudRaw) {
+  const local = normalizeMiniGameCheckpoints(localRaw);
+  const cloud = normalizeMiniGameCheckpoints(cloudRaw);
+  const merged = {};
+  MINI_GAME_IDS.forEach((mode) => {
+    const localCheckpoint = local[mode];
+    const cloudCheckpoint = cloud[mode];
+    if (!localCheckpoint && !cloudCheckpoint) return;
+    if (!localCheckpoint || !cloudCheckpoint || localCheckpoint.seed !== cloudCheckpoint.seed) {
+      merged[mode] = !cloudCheckpoint || (
+        localCheckpoint && localCheckpoint.updatedAt >= cloudCheckpoint.updatedAt
+      ) ? localCheckpoint : cloudCheckpoint;
+      return;
+    }
+    const results = { ...localCheckpoint.results };
+    Object.entries(cloudCheckpoint.results).forEach(([cardId, result]) => {
+      if (!results[cardId] || result.updatedAt > results[cardId].updatedAt) results[cardId] = result;
+    });
+    merged[mode] = {
+      seed: localCheckpoint.seed,
+      cardIds: [...new Set([...localCheckpoint.cardIds, ...cloudCheckpoint.cardIds])],
+      answeredCardIds: [...new Set([
+        ...localCheckpoint.answeredCardIds,
+        ...cloudCheckpoint.answeredCardIds,
+      ])],
+      results,
+      runtime: normalizeMiniGameRuntime(
+        localCheckpoint.updatedAt >= cloudCheckpoint.updatedAt
+          ? localCheckpoint.runtime
+          : cloudCheckpoint.runtime,
+      ),
+      updatedAt: Math.max(localCheckpoint.updatedAt, cloudCheckpoint.updatedAt),
+    };
+  });
+  return merged;
+}
+
+function normalizeGameStats(raw = {}) {
+  const safeRaw = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+  return Object.fromEntries(MINI_GAME_IDS.map((mode) => {
+    const stats = safeRaw[mode] && typeof safeRaw[mode] === "object" ? safeRaw[mode] : {};
+    return [mode, {
+      plays: Math.max(0, Math.floor(Number(stats.plays) || 0)),
+      wins: Math.max(0, Math.floor(Number(stats.wins) || 0)),
+      bestScore: Math.max(0, Math.min(100, Number(stats.bestScore) || 0)),
+    }];
+  }));
+}
+
+function mergeGameStats(localRaw, cloudRaw) {
+  const local = normalizeGameStats(localRaw);
+  const cloud = normalizeGameStats(cloudRaw);
+  return Object.fromEntries(MINI_GAME_IDS.map((mode) => [mode, {
+    plays: Math.max(local[mode].plays, cloud[mode].plays),
+    wins: Math.max(local[mode].wins, cloud[mode].wins),
+    bestScore: Math.max(local[mode].bestScore, cloud[mode].bestScore),
+  }]));
+}
+
+function normalizeBossMilestones(raw) {
+  if (!Array.isArray(raw)) return [];
+  return [...new Set(raw.map(Number).filter((value) => BOSS_MILESTONES.includes(value)))]
+    .sort((a, b) => a - b);
+}
+
 function normalizeDailyPlan(raw) {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
   const module = ADVANCE_MODULES.find((item) => item.id === raw.moduleId);
@@ -977,13 +1441,21 @@ function normalizeGameState(raw = {}) {
   const completedTaskIds = normalizedPlan
     ? normalizeStringArray(rawDaily?.completedTaskIds, DAILY_TASK_ID_SET)
     : [];
+  const rewardLedger = normalizeRewardLedger(
+    safeRaw.rewardLedger,
+    safeRaw.xp,
+    safeRaw.coins,
+  );
+  const rewardTotals = rewardLedgerTotals(rewardLedger);
   const daily = rawDaily?.date === today
     ? {
         date: today,
         completedQuests: normalizeStringArray(rawDaily.completedQuests),
         completedTaskIds,
+        completedGameIds: normalizeStringArray(rawDaily.completedGameIds, MINI_GAME_ID_SET),
         plan: normalizedPlan,
         taskCheckpoints: normalizeTaskCheckpoints(rawDaily.taskCheckpoints),
+        miniGameCheckpoints: normalizeMiniGameCheckpoints(rawDaily.miniGameCheckpoints),
         updatedAt: Math.max(0, Number(rawDaily.updatedAt) || 0),
         curriculumAdvanced: normalizedPlan
           && DAILY_TASK_IDS.every((taskId) => completedTaskIds.includes(taskId))
@@ -993,8 +1465,10 @@ function normalizeGameState(raw = {}) {
         date: today,
         completedQuests: [],
         completedTaskIds: [],
+        completedGameIds: [],
         plan: null,
         taskCheckpoints: {},
+        miniGameCheckpoints: {},
         updatedAt: 0,
         curriculumAdvanced: false,
       };
@@ -1009,15 +1483,27 @@ function normalizeGameState(raw = {}) {
     curriculumVersion: CURRICULUM_VERSION,
     achievements: [],
     logs: [],
+    gameStats: normalizeGameStats(),
+    bossMilestones: [],
+    rewardLedger,
     daily: {
       date: today,
       completedQuests: [],
       completedTaskIds: [],
+      completedGameIds: [],
       plan: null,
       taskCheckpoints: {},
+      miniGameCheckpoints: {},
       updatedAt: 0,
     },
     ...safeRaw,
+    xp: rewardTotals.xp,
+    level: Math.max(
+      1,
+      Math.floor(Number(safeRaw.level) || 1),
+      Math.floor(rewardTotals.xp / 120) + 1,
+    ),
+    coins: rewardTotals.coins,
     curriculumIndex: migrateCurriculumIndex(
       safeRaw.curriculumIndex,
       safeRaw.curriculumVersion,
@@ -1025,6 +1511,9 @@ function normalizeGameState(raw = {}) {
     curriculumVersion: CURRICULUM_VERSION,
     achievements: normalizeStringArray(safeRaw.achievements),
     logs: normalizeStringArray(safeRaw.logs),
+    gameStats: normalizeGameStats(safeRaw.gameStats),
+    bossMilestones: normalizeBossMilestones(safeRaw.bossMilestones),
+    rewardLedger,
     daily,
   };
 }
@@ -1077,7 +1566,10 @@ const state = {
   lastStudyDate: localStorage.getItem("encore-last-study-date") || "",
   sessionMode: "normal",
   sessionSource: "due",
+  sessionDate: "",
+  sessionBossMilestone: null,
   dailyTaskId: null,
+  miniGame: null,
   canGrade: false,
   game: normalizeGameState(JSON.parse(localStorage.getItem("encore-game-state") || "{}")),
   studyHistory: normalizeStudyHistory(
@@ -1409,6 +1901,8 @@ function mergeGameStates(localGame, cloudGame, preferLocal) {
   if (!curriculumIndexesDiffer && !planOwner.daily.plan && planFallback.daily.plan) {
     [planOwner, planFallback] = [planFallback, planOwner];
   }
+  const rewardLedger = mergeRewardLedgers(local.rewardLedger, cloud.rewardLedger);
+  const rewardTotals = rewardLedgerTotals(rewardLedger);
   const mergedDaily = {
     ...planOwner.daily,
     completedQuests: [...new Set([
@@ -1421,10 +1915,18 @@ function mergeGameStates(localGame, cloudGame, preferLocal) {
           ...(cloud.daily?.completedTaskIds || []),
         ])]
       : [...(planOwner.daily.completedTaskIds || [])],
+    completedGameIds: [...new Set([
+      ...(local.daily?.completedGameIds || []),
+      ...(cloud.daily?.completedGameIds || []),
+    ])],
     plan: planOwner.daily.plan || null,
     taskCheckpoints: samePlan
       ? mergeTaskCheckpoints(local.daily.taskCheckpoints, cloud.daily.taskCheckpoints)
       : normalizeTaskCheckpoints(planOwner.daily.taskCheckpoints),
+    miniGameCheckpoints: mergeMiniGameCheckpoints(
+      local.daily.miniGameCheckpoints,
+      cloud.daily.miniGameCheckpoints,
+    ),
     updatedAt: Math.max(local.daily.updatedAt || 0, cloud.daily.updatedAt || 0),
     curriculumAdvanced: samePlan
       ? Boolean(local.daily?.curriculumAdvanced || cloud.daily?.curriculumAdvanced)
@@ -1433,15 +1935,21 @@ function mergeGameStates(localGame, cloudGame, preferLocal) {
   return normalizeGameState({
     ...older,
     ...newest,
-    xp: Math.max(local.xp || 0, cloud.xp || 0),
+    xp: rewardTotals.xp,
     level: Math.max(local.level || 1, cloud.level || 1),
-    coins: Math.max(local.coins || 0, cloud.coins || 0),
+    coins: rewardTotals.coins,
     runStreak: Math.max(local.runStreak || 0, cloud.runStreak || 0),
     sessionsDone: Math.max(local.sessionsDone || 0, cloud.sessionsDone || 0),
     bossDefeated: Math.max(local.bossDefeated || 0, cloud.bossDefeated || 0),
     curriculumIndex,
     achievements: [...new Set([...(local.achievements || []), ...(cloud.achievements || [])])],
     logs: [...new Set([...(newest.logs || []), ...(older.logs || [])])].slice(0, 12),
+    gameStats: mergeGameStats(local.gameStats, cloud.gameStats),
+    bossMilestones: normalizeBossMilestones([
+      ...(local.bossMilestones || []),
+      ...(cloud.bossMilestones || []),
+    ]),
+    rewardLedger,
     daily: mergedDaily,
   });
 }
@@ -1645,8 +2153,10 @@ function resetDailyIfNeeded() {
       date: today,
       completedQuests: [],
       completedTaskIds: [],
+      completedGameIds: [],
       plan: null,
       taskCheckpoints: {},
+      miniGameCheckpoints: {},
       updatedAt: 0,
     };
   }
@@ -1725,6 +2235,8 @@ function ensureDailyPlan() {
     createdAt: NOW(),
   };
   state.game.daily.taskCheckpoints = {};
+  state.game.daily.miniGameCheckpoints = {};
+  state.game.daily.completedGameIds = [];
   state.game.daily.updatedAt = state.game.daily.plan.createdAt;
   saveAllProgress({
     syncCloud: false,
@@ -1860,8 +2372,8 @@ function rewardDailyCheckpointIfNeeded(taskId) {
   checkpoint.updatedAt = Math.max(checkpoint.updatedAt, now);
   state.game.daily.taskCheckpoints[taskId] = checkpoint;
   state.game.daily.updatedAt = Math.max(state.game.daily.updatedAt || 0, now);
-  addXp(baseXp);
-  addXp(evaluateAndUnlockQuests({ totalCards: total, goodCount: good }));
+  grantRewardReceipt(`task:${getTodayKey()}:${taskId}`, baseXp, 0, now);
+  evaluateAndUnlockQuests({ totalCards: total, goodCount: good });
   state.game.sessionsDone += 1;
   state.game.runStreak = good >= Math.max(1, Math.floor(total / 2))
     ? state.game.runStreak + 1
@@ -1874,8 +2386,8 @@ function rewardDailyCheckpointIfNeeded(taskId) {
   logRun(title);
 }
 
-function finishDailyTask(taskId) {
-  if (!taskId) return;
+function finishDailyTask(taskId, sessionDate = state.sessionDate) {
+  if (!taskId || sessionDate !== getTodayKey()) return false;
   resetDailyIfNeeded();
   const completed = new Set(state.game.daily.completedTaskIds || []);
   completed.add(taskId);
@@ -1895,8 +2407,7 @@ function finishDailyTask(taskId) {
         ADVANCE_MODULES.length * CURRICULUM_REPETITIONS,
       );
     }
-    addXp(30);
-    state.game.coins += 3;
+    grantRewardReceipt(`daily:${getTodayKey()}`, 30, 3);
     state.game.logs = [
       readyForNextModule
         ? `完成每日四段訓練：${getDailyModule().title}，+30 XP`
@@ -1913,6 +2424,7 @@ function finishDailyTask(taskId) {
   saveAllProgress();
   renderProgress();
   renderStreakMotivation();
+  return true;
 }
 
 function getNextDailyTask() {
@@ -1929,7 +2441,7 @@ function launchDailyTask(task) {
   const remainingCards = cards.filter((card) => !answeredCardIds.has(card.id));
   if (!remainingCards.length && cards.length) {
     rewardDailyCheckpointIfNeeded(task.id);
-    finishDailyTask(task.id);
+    finishDailyTask(task.id, getTodayKey());
     const nextTask = getNextDailyTask();
     if (nextTask) launchDailyTask(nextTask);
     return;
@@ -1947,6 +2459,702 @@ function startDailyReview() {
     return;
   }
   launchDailyTask(nextTask);
+}
+
+const MINI_GAME_META = Object.freeze({
+  matching: {
+    kicker: "MISSION 01 · RECALL",
+    title: "連連看",
+    instructions: "先選一張中文題目，再選它對應的法文答案。配對成功會立即寫入複習紀錄。",
+  },
+  "sentence-puzzle": {
+    kicker: "MISSION 02 · SYNTAXE",
+    title: "句子拼圖",
+    instructions: "依正確語序點選詞塊；點上方答案區的詞可以放回。",
+  },
+  "listening-choice": {
+    kicker: "MISSION 03 · ÉCOUTE",
+    title: "聽音選句",
+    instructions: "先播放法文，再從三個中文意思中選出唯一正確答案。重播不扣分。",
+  },
+  "error-hunter": {
+    kicker: "MISSION 04 · GRAMMAIRE",
+    title: "錯誤獵人",
+    instructions: "句子只有一個主要錯誤。點出錯誤的詞，系統會顯示正確形式。",
+  },
+});
+
+function escapeMarkup(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function getCompletedModuleCount() {
+  return Math.min(
+    ADVANCE_MODULES.length,
+    Math.floor(Math.max(0, Number(state.game.curriculumIndex) || 0) / CURRICULUM_REPETITIONS),
+  );
+}
+
+function renderPlayerHud() {
+  const level = Math.max(1, Math.floor(Number(state.game.level) || 1));
+  const xp = Math.max(0, Math.floor(Number(state.game.xp) || 0));
+  const levelXp = xp % XP_LEVEL_STEP;
+  const levelProgress = Math.min(100, (levelXp / XP_LEVEL_STEP) * 100);
+  $("#playerLevel").textContent = String(level).padStart(2, "0");
+  $("#playerXp").textContent = `${levelXp} / ${XP_LEVEL_STEP} XP`;
+  $("#playerXpBar").style.width = `${levelProgress}%`;
+  $("#playerCoins").textContent = Math.max(0, Math.floor(Number(state.game.coins) || 0));
+}
+
+function renderMissionHub() {
+  const tasks = getDailyTasks();
+  const completedTasks = new Set(state.game.daily.completedTaskIds || []);
+  const completedGames = new Set(state.game.daily.completedGameIds || []);
+  const coreComplete = Boolean(state.game.daily.curriculumAdvanced);
+  const nextTask = tasks.find((task) => !completedTasks.has(task.id));
+  $("#missionCoreProgress").textContent = `${completedTasks.size} / ${tasks.length}`;
+  $("#missionCoreStart").disabled = coreComplete;
+  $("#missionCoreLabel").textContent = coreComplete
+    ? "今日主線完成"
+    : completedTasks.size
+      ? `繼續：${nextTask?.title || "主線"}`
+      : "開始主線";
+  $("#missionCoreDescription").textContent = coreComplete
+    ? "今天的四段主線已保存；小遊戲仍可重玩，但不會重複發放獎勵。"
+    : `${nextTask?.title || "到期回想"}；完成四段後才推進 B2 路線。`;
+  $("#dailyGameProgress").textContent = `${completedGames.size} / ${MINI_GAME_IDS.length}`;
+  $("#passportStamps").innerHTML = MINI_GAME_IDS.map((mode, index) => `
+    <span class="${completedGames.has(mode) ? "earned" : ""}" title="${MINI_GAME_META[mode].title}">
+      ${completedGames.has(mode) ? "✓" : String(index + 1).padStart(2, "0")}
+    </span>
+  `).join("");
+  const miniGameStartLabels = {
+    matching: "開始配對",
+    "sentence-puzzle": "開始拼句",
+    "listening-choice": "開始聽力",
+    "error-hunter": "開始找錯",
+  };
+  MINI_GAME_IDS.forEach((mode) => {
+    const card = document.querySelector(`[data-game-card="${mode}"]`);
+    if (!card) return;
+    const complete = completedGames.has(mode);
+    card.classList.toggle("is-complete", complete);
+    const button = card.querySelector("button");
+    if (button) {
+      button.innerHTML = complete
+        ? `再玩一次 <b>↺</b>`
+        : `${miniGameStartLabels[mode]} <b>↗</b>`;
+    }
+  });
+
+  const completedModules = getCompletedModuleCount();
+  const boss = getBossMilestoneState(completedModules, state.game.bossMilestones);
+  const checkpoint = $("#bossCheckpoint");
+  checkpoint.classList.toggle("unlocked", boss.unlocked);
+  checkpoint.classList.toggle("complete", boss.complete);
+  $("#bossChallengeStart").disabled = !boss.unlocked;
+  if (boss.complete) {
+    $("#bossCountdown").textContent = "10 個 CHECKPOINT 全部完成";
+    $("#bossDescription").textContent = "A2 到 B2 的章節關卡已全部留下通關紀錄。";
+  } else if (boss.unlocked) {
+    $("#bossCountdown").textContent = `CHECKPOINT ${String(boss.pendingMilestone).padStart(2, "0")} 已解鎖`;
+    $("#bossDescription").textContent = "五題綜合挑戰，答對三題即可通過；失敗不倒退。";
+  } else {
+    const remaining = Math.max(0, boss.nextMilestone - completedModules);
+    $("#bossCountdown").textContent = `再完成 ${remaining} 課解鎖 CHECKPOINT ${String(boss.nextMilestone).padStart(2, "0")}`;
+    $("#bossDescription").textContent = "每五課一次綜合挑戰；失敗不倒退，只重練弱點。";
+  }
+}
+
+function openMissionHub() {
+  ensureDailyPlan();
+  renderPlayerHud();
+  renderMissionHub();
+  showView("mission");
+  focusMissionPrimaryControl();
+}
+
+function getMiniGameCardPool() {
+  const plan = ensureDailyPlan();
+  const module = getDailyModule();
+  return buildMiniGameCardPool(allCards, plan, module.set);
+}
+
+function getSafeGameFallbackCards() {
+  const position = getCurriculumPosition();
+  const lastAllowedIndex = position.complete
+    ? ADVANCE_MODULES.length - 1
+    : Math.max(0, Math.min(position.moduleIndex, ADVANCE_MODULES.length - 1));
+  return filterGameFallbackCards(
+    allCards,
+    ADVANCE_MODULES.map((module) => module.set),
+    ADVANCE_MODULES.slice(0, lastAllowedIndex + 1).map((module) => module.set),
+  );
+}
+
+function getMiniGameCheckpoint(mode) {
+  return normalizeMiniGameCheckpoint(state.game.daily.miniGameCheckpoints?.[mode]);
+}
+
+function ensureMiniGameCheckpoint(mode, seed, cardIds = []) {
+  const current = getMiniGameCheckpoint(mode);
+  const checkpoint = current.seed === seed ? current : normalizeMiniGameCheckpoint({ seed });
+  checkpoint.seed = seed;
+  checkpoint.cardIds = [...new Set([...checkpoint.cardIds, ...cardIds])];
+  state.game.daily.miniGameCheckpoints[mode] = checkpoint;
+  return checkpoint;
+}
+
+function recordMiniGameCardResult(card, correct, now = NOW(), { updateReview = true } = {}) {
+  if (!ensureCurrentMiniGameDate()) return false;
+  const mode = state.miniGame?.mode;
+  if (!mode || !card?.id) return false;
+  const checkpoint = getMiniGameCheckpoint(mode);
+  if (checkpoint.answeredCardIds.includes(card.id)) return false;
+  if (updateReview) {
+    const current = reviewFor(card);
+    const interval = correct ? nextGoodInterval(current.streak) : 0;
+    state.reviews[card.id] = {
+      attempts: current.attempts + 1,
+      correct: current.correct + (correct ? 1 : 0),
+      wrong: current.wrong + (correct ? 0 : 1),
+      streak: correct ? current.streak + 1 : 0,
+      interval,
+      nextReview: correct ? now + interval * DAY : now + 10 * 60_000,
+      lastReviewed: now,
+      lastScore: correct ? 100 : 60,
+      skill: card.skill,
+    };
+  }
+  checkpoint.answeredCardIds = [...new Set([...checkpoint.answeredCardIds, card.id])];
+  checkpoint.cardIds = [...new Set([...checkpoint.cardIds, card.id])];
+  checkpoint.results[card.id] = { correct, updatedAt: now };
+  checkpoint.updatedAt = Math.max(checkpoint.updatedAt, now);
+  state.game.daily.miniGameCheckpoints[mode] = checkpoint;
+  state.game.daily.updatedAt = Math.max(state.game.daily.updatedAt || 0, now);
+  recordStudyAnswer({ correct, updatedAt: now });
+  saveAllProgress();
+  if (updateReview) {
+    renderMemoryStats();
+    renderErrorDashboard();
+  }
+  renderStreakMotivation();
+  return true;
+}
+
+function miniGameScore() {
+  return Math.max(60, 100 - (state.miniGame?.mistakes || 0) * 5);
+}
+
+function setMiniGameStatus(message, tone = "neutral") {
+  const status = $("#miniGameStatus");
+  status.textContent = message;
+  status.dataset.tone = tone;
+}
+
+const miniGameLauncherIds = Object.freeze({
+  matching: "matchingGameStart",
+  "sentence-puzzle": "sentencePuzzleStart",
+  "listening-choice": "listeningGameStart",
+  "error-hunter": "errorHunterStart",
+});
+
+function focusMissionPrimaryControl(preferredMode = "") {
+  requestAnimationFrame(() => {
+    const preferred = preferredMode ? $(`#${miniGameLauncherIds[preferredMode]}`) : null;
+    const candidates = [
+      preferred,
+      $("#missionCoreStart"),
+      ...Object.values(miniGameLauncherIds).map((id) => $(`#${id}`)),
+      $("#bossChallengeStart"),
+      $("#exitMission"),
+    ];
+    candidates.find((button) => button && !button.disabled)?.focus();
+  });
+}
+
+function restoreMiniGameFocus(action, dataKey = "", dataValue = "") {
+  requestAnimationFrame(() => {
+    const buttons = $$(`[data-mini-action="${action}"]`, $("#miniGameBoard"));
+    const exact = dataKey
+      ? buttons.find((button) => (
+          button.dataset[dataKey] === String(dataValue) && !button.disabled
+        ))
+      : null;
+    const fallback = buttons.find((button) => !button.disabled)
+      || $("#miniGameBoard").querySelector("button:not(:disabled)");
+    (exact || fallback || $("#miniGameStage")).focus();
+  });
+}
+
+function saveMiniGameRuntime(now = NOW()) {
+  const game = state.miniGame;
+  if (!game) return false;
+  const checkpoint = getMiniGameCheckpoint(game.mode);
+  checkpoint.runtime = normalizeMiniGameRuntime({
+    mistakes: game.mistakes,
+    completed: game.completed,
+    selectedTileId: game.selectedTileId,
+    matchedPairIds: game.matchedPairIds,
+    failedPairIds: game.failedPairIds,
+    selectedTokenIndexes: game.selectedTokenIndexes,
+    wrongChoiceIds: game.wrongChoiceIds,
+    wrongTokenIndexes: game.wrongTokenIndexes,
+  });
+  checkpoint.updatedAt = Math.max(checkpoint.updatedAt, now);
+  state.game.daily.miniGameCheckpoints[game.mode] = checkpoint;
+  state.game.daily.updatedAt = Math.max(state.game.daily.updatedAt || 0, now);
+  saveAllProgress();
+  return true;
+}
+
+function ensureCurrentMiniGameDate() {
+  const game = state.miniGame;
+  if (!game || game.date === getTodayKey()) return true;
+  state.miniGame = null;
+  resetDailyIfNeeded();
+  renderPlayerHud();
+  renderMissionHub();
+  $("#miniGameStage").hidden = true;
+  showToast("日期已更新；昨天未完成的小遊戲沒有寫入今天，請重新開始。");
+  focusMissionPrimaryControl();
+  return false;
+}
+
+function renderMatchingGame() {
+  const game = state.miniGame;
+  const matched = new Set(game.matchedPairIds);
+  const columns = ["prompt", "answer"].map((side) => {
+    const label = side === "prompt" ? "題目 · 中文" : "答案 · FRANÇAIS";
+    return `
+      <div class="matching-column">
+        <p>${label}</p>
+        <div>
+          ${game.round.tiles.filter((tile) => tile.side === side).map((tile) => `
+            <button
+              class="match-tile ${game.selectedTileId === tile.id ? "selected" : ""} ${matched.has(tile.pairId) ? "matched" : ""}"
+              type="button"
+              data-mini-action="match-tile"
+              data-tile-id="${escapeMarkup(tile.id)}"
+              aria-pressed="${game.selectedTileId === tile.id}"
+              ${matched.has(tile.pairId) ? "disabled" : ""}
+            >
+              <span>${escapeMarkup(tile.text)}</span>
+              <small>${matched.has(tile.pairId) ? "已配對 ✓" : side === "prompt" ? "QUESTION" : "RÉPONSE"}</small>
+            </button>
+          `).join("")}
+        </div>
+      </div>`;
+  }).join("");
+  $("#miniGameBoard").innerHTML = `<div class="matching-board">${columns}</div>`;
+}
+
+function renderSentencePuzzleGame() {
+  const game = state.miniGame;
+  const selected = new Set(game.selectedTokenIndexes);
+  const orderedTokens = game.selectedTokenIndexes.map((index) => game.round.tokens[index]);
+  $("#miniGameBoard").innerHTML = `
+    <div class="puzzle-prompt">
+      <span>請拼成法文</span>
+      <strong>${escapeMarkup(game.round.prompt)}</strong>
+    </div>
+    <div class="puzzle-answer-zone ${orderedTokens.length ? "has-tokens" : ""}">
+      ${orderedTokens.length ? orderedTokens.map((token, answerIndex) => `
+        <button type="button" data-mini-action="puzzle-remove" data-answer-index="${answerIndex}">
+          ${escapeMarkup(token.text)}
+        </button>
+      `).join("") : "<span>依序點選下方詞塊…</span>"}
+    </div>
+    <div class="puzzle-token-bank">
+      ${game.round.tokens.map((token, index) => `
+        <button
+          type="button"
+          data-mini-action="puzzle-token"
+          data-token-index="${index}"
+          ${selected.has(index) ? "disabled" : ""}
+        >${escapeMarkup(token.text)}</button>
+      `).join("")}
+    </div>
+    <button class="mini-game-submit" type="button" data-mini-action="puzzle-check">
+      核對語序 <span>↗</span>
+    </button>
+  `;
+}
+
+function renderListeningGame() {
+  const game = state.miniGame;
+  const wrongChoices = new Set(game.wrongChoiceIds);
+  $("#miniGameBoard").innerHTML = `
+    <div class="listening-orbit" aria-hidden="true">
+      <i></i><i></i><i></i><strong>FR</strong>
+    </div>
+    <div class="listening-choices">
+      ${game.round.choices.map((choice, index) => `
+        <button
+          type="button"
+          class="${wrongChoices.has(choice.id) ? "wrong-choice" : ""}"
+          data-mini-action="listening-choice"
+          data-choice-id="${escapeMarkup(choice.id)}"
+          ${wrongChoices.has(choice.id) ? "disabled" : ""}
+        >
+          <span>${String.fromCharCode(65 + index)}</span>
+          <strong>${escapeMarkup(choice.text)}</strong>
+          <small>${wrongChoices.has(choice.id) ? "不是這個意思，再聽一次" : "選擇這個意思"}</small>
+        </button>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderErrorHunterGame() {
+  const game = state.miniGame;
+  const wrongTokens = new Set(game.wrongTokenIndexes);
+  $("#miniGameBoard").innerHTML = `
+    <div class="error-hunter-copy">
+      <span>點出錯誤的詞</span>
+      <p>
+        ${game.round.tokens.map((token, index) => `
+          <button
+            type="button"
+            class="${wrongTokens.has(index) ? "not-error" : ""}"
+            data-mini-action="error-token"
+            data-token-index="${index}"
+          >${escapeMarkup(token.text)}</button>
+        `).join(" ")}
+      </p>
+      <small>每句只放一個經人工校對的主要錯誤。</small>
+    </div>
+  `;
+}
+
+function renderMiniGameBoard() {
+  if (!state.miniGame) return;
+  $("#miniGameScore").textContent = miniGameScore();
+  if (state.miniGame.mode === "matching") renderMatchingGame();
+  if (state.miniGame.mode === "sentence-puzzle") renderSentencePuzzleGame();
+  if (state.miniGame.mode === "listening-choice") renderListeningGame();
+  if (state.miniGame.mode === "error-hunter") renderErrorHunterGame();
+}
+
+function startMiniGame(mode, { resume = true } = {}) {
+  if (!MINI_GAME_ID_SET.has(mode)) return;
+  resetDailyIfNeeded();
+  const pool = getMiniGameCardPool();
+  const fallbackPool = getSafeGameFallbackCards();
+  const planKey = getDailyPlanKey(state.game.daily.plan);
+  const existingCheckpoint = getMiniGameCheckpoint(mode);
+  const seed = existingCheckpoint.seed || `${getTodayKey()}:${planKey}:${mode}`;
+  let round;
+  if (mode === "matching") round = buildMatchingRound(pool, seed, fallbackPool);
+  if (mode === "sentence-puzzle") {
+    const puzzleCards = pool.filter((card) => {
+      const tokens = tokenizeFrenchSentence(card.a);
+      return tokens.length >= 4 && tokens.length <= 14 && !String(card.a).includes("\n");
+    });
+    const [card] = seededShuffle(puzzleCards, `${seed}:card`);
+    round = card ? buildSentencePuzzleRound(card, seed) : null;
+  }
+  if (mode === "listening-choice") round = buildListeningRound(pool, seed, fallbackPool);
+  if (mode === "error-hunter") {
+    const weakSkill = cardsByIds(state.game.daily.plan.weakCardIds)[0]?.skill || getBossSkill();
+    round = buildErrorHunterRound(weakSkill, seed);
+    round.cardId = `trap:${round.trapId}`;
+  }
+  const playable = round && (
+    (mode === "matching" && round.pairs.length === 4)
+    || (mode === "sentence-puzzle" && round.tokens.length >= 4)
+    || (mode === "listening-choice" && round.choices.length === 3)
+    || (mode === "error-hunter" && round.tokens.length >= 3)
+  );
+  if (!playable) {
+    setMiniGameStatus("今天這個模式的安全題目還不夠；先完成主線，系統會累積更多題目。", "warning");
+    $("#miniGameStage").hidden = false;
+    return;
+  }
+  const cardIds = mode === "matching"
+    ? round.pairs.map((pair) => pair.cardId)
+    : [round.cardId].filter(Boolean);
+  const checkpoint = ensureMiniGameCheckpoint(mode, seed, cardIds);
+  const shouldResume = resume
+    && !state.game.daily.completedGameIds.includes(mode)
+    && checkpoint.seed === seed;
+  const savedRuntime = shouldResume
+    ? normalizeMiniGameRuntime(checkpoint.runtime)
+    : normalizeMiniGameRuntime();
+  const pairIds = new Set(round.pairs?.map((pair) => pair.pairId) || []);
+  const tileIds = new Set(round.tiles?.map((tile) => tile.id) || []);
+  const answeredCardIds = new Set(checkpoint.answeredCardIds);
+  const matchedPairIds = [
+    ...new Set([
+      ...savedRuntime.matchedPairIds.filter((pairId) => pairIds.has(pairId)),
+      ...(shouldResume ? round.pairs || [] : [])
+        .filter((pair) => answeredCardIds.has(pair.cardId))
+        .map((pair) => pair.pairId),
+    ]),
+  ];
+  const matchedSet = new Set(matchedPairIds);
+  state.miniGame = {
+    date: getTodayKey(),
+    mode,
+    seed,
+    round,
+    mistakes: savedRuntime.mistakes,
+    completed: false,
+    selectedTileId: tileIds.has(savedRuntime.selectedTileId)
+      && !matchedSet.has(round.tiles?.find((tile) => tile.id === savedRuntime.selectedTileId)?.pairId)
+      ? savedRuntime.selectedTileId
+      : "",
+    matchedPairIds,
+    failedPairIds: savedRuntime.failedPairIds.filter((pairId) => pairIds.has(pairId)),
+    selectedTokenIndexes: savedRuntime.selectedTokenIndexes.filter(
+      (index) => index < (round.tokens?.length || 0),
+    ),
+    wrongChoiceIds: savedRuntime.wrongChoiceIds.filter(
+      (choiceId) => round.choices?.some((choice) => choice.id === choiceId),
+    ),
+    wrongTokenIndexes: savedRuntime.wrongTokenIndexes.filter(
+      (index) => index < (round.tokens?.length || 0),
+    ),
+  };
+  saveMiniGameRuntime();
+  const meta = MINI_GAME_META[mode];
+  $("#miniGameKicker").textContent = meta.kicker;
+  $("#miniGameTitle").textContent = meta.title;
+  $("#miniGameInstructions").textContent = meta.instructions;
+  $("#miniGameAudio").hidden = mode !== "listening-choice";
+  $("#rewardBurst").hidden = true;
+  $("#miniGameStage").hidden = false;
+  setMiniGameStatus(
+    state.game.daily.completedGameIds.includes(mode)
+      ? "今天已拿過這枚護照章；可以再玩一次加深記憶。"
+      : "達到 80 分即可取得今天的護照章與第一次通關獎勵。",
+  );
+  renderMiniGameBoard();
+  $("#miniGameStage").scrollIntoView({ behavior: "smooth", block: "start" });
+  requestAnimationFrame(() => $("#miniGameStage").focus());
+  if (mode === "listening-choice") speakFrench(round.audioText);
+}
+
+function completeMiniGame(mode, score) {
+  if (!state.miniGame || state.miniGame.completed) return;
+  if (!ensureCurrentMiniGameDate()) return;
+  const now = NOW();
+  state.miniGame.completed = true;
+  const alreadyCompleted = state.game.daily.completedGameIds.includes(mode);
+  const reward = getMiniGameReward(mode, score, alreadyCompleted);
+  const stats = state.game.gameStats[mode];
+  stats.plays += 1;
+  stats.wins += score >= 80 ? 1 : 0;
+  stats.bestScore = Math.max(stats.bestScore, score);
+  if (score >= 80 && !alreadyCompleted) {
+    state.game.daily.completedGameIds.push(mode);
+  }
+  if (reward.firstClear) {
+    grantRewardReceipt(
+      `game:${getTodayKey()}:${mode}`,
+      reward.xp,
+      reward.coins,
+    );
+  }
+  state.game.daily.updatedAt = now;
+  saveMiniGameRuntime(now);
+  renderPlayerHud();
+  renderMissionHub();
+  const label = MINI_GAME_META[mode].title;
+  if (score >= 80) {
+    setMiniGameStatus(
+      reward.firstClear
+        ? `${label}通關 · ${score} 分 · +${reward.xp} XP · +${reward.coins} 枚`
+        : `${label}再次完成 · ${score} 分；今天的獎勵已領取。`,
+      "success",
+    );
+    $("#rewardBurstValue").textContent = reward.firstClear ? `+${reward.xp} XP` : `${score} POINTS`;
+    $("#rewardBurst").hidden = false;
+    setTimeout(() => {
+      $("#rewardBurst").hidden = true;
+    }, 1800);
+  } else {
+    setMiniGameStatus(`${label}完成 · ${score} 分；再挑戰一次，80 分就能取得護照章。`, "warning");
+  }
+}
+
+function handleMatchingTile(tileId) {
+  if (!ensureCurrentMiniGameDate()) return;
+  const game = state.miniGame;
+  const tile = game.round.tiles.find((item) => item.id === tileId);
+  if (!tile || game.matchedPairIds.includes(tile.pairId)) return;
+  if (!game.selectedTileId) {
+    game.selectedTileId = tileId;
+    setMiniGameStatus("已選第一張；現在找另一側相對應的卡片。");
+    saveMiniGameRuntime();
+    renderMiniGameBoard();
+    restoreMiniGameFocus("match-tile", "tileId", tileId);
+    return;
+  }
+  const selected = game.round.tiles.find((item) => item.id === game.selectedTileId);
+  if (!selected || selected.id === tile.id) {
+    game.selectedTileId = "";
+    saveMiniGameRuntime();
+    renderMiniGameBoard();
+    restoreMiniGameFocus("match-tile", "tileId", tileId);
+    return;
+  }
+  if (selected.side === tile.side) {
+    game.selectedTileId = tile.id;
+    saveMiniGameRuntime();
+    renderMiniGameBoard();
+    restoreMiniGameFocus("match-tile", "tileId", tileId);
+    return;
+  }
+  game.selectedTileId = "";
+  if (selected.pairId !== tile.pairId) {
+    game.mistakes += 1;
+    game.failedPairIds = [...new Set([...game.failedPairIds, selected.pairId, tile.pairId])];
+    setMiniGameStatus("這兩張不是一組。分數稍微下降，換一組再試。", "error");
+    saveMiniGameRuntime();
+    renderMiniGameBoard();
+    restoreMiniGameFocus("match-tile", "tileId", tileId);
+    $("#miniGameBoard").classList.add("is-wrong");
+    setTimeout(() => $("#miniGameBoard").classList.remove("is-wrong"), 420);
+    return;
+  }
+  game.matchedPairIds.push(tile.pairId);
+  const pair = game.round.pairs.find((item) => item.pairId === tile.pairId);
+  const card = allCards.find((item) => item.id === pair?.cardId);
+  if (card) {
+    recordMiniGameCardResult(
+      card,
+      !game.failedPairIds.includes(tile.pairId),
+      NOW(),
+      { updateReview: pair.reviewable },
+    );
+  }
+  setMiniGameStatus(`配對成功 · ${game.matchedPairIds.length} / ${game.round.pairs.length}`, "success");
+  saveMiniGameRuntime();
+  renderMiniGameBoard();
+  restoreMiniGameFocus("match-tile");
+  if (game.matchedPairIds.length === game.round.pairs.length) {
+    completeMiniGame(game.mode, miniGameScore());
+  }
+}
+
+function handleMiniGameBoardClick(event) {
+  const button = event.target.closest("button[data-mini-action]");
+  const game = state.miniGame;
+  if (!button || !game || game.completed) return;
+  if (!ensureCurrentMiniGameDate()) return;
+  const action = button.dataset.miniAction;
+  if (action === "match-tile") {
+    handleMatchingTile(button.dataset.tileId);
+    return;
+  }
+  if (action === "puzzle-token") {
+    const tokenIndex = Number(button.dataset.tokenIndex);
+    if (!game.selectedTokenIndexes.includes(tokenIndex)) game.selectedTokenIndexes.push(tokenIndex);
+    saveMiniGameRuntime();
+    renderMiniGameBoard();
+    restoreMiniGameFocus("puzzle-token", "tokenIndex", tokenIndex);
+    return;
+  }
+  if (action === "puzzle-remove") {
+    const [removedTokenIndex] = game.selectedTokenIndexes.splice(Number(button.dataset.answerIndex), 1);
+    saveMiniGameRuntime();
+    renderMiniGameBoard();
+    restoreMiniGameFocus("puzzle-token", "tokenIndex", removedTokenIndex);
+    return;
+  }
+  if (action === "puzzle-check") {
+    const answer = game.selectedTokenIndexes.map((index) => game.round.tokens[index].text);
+    if (answer.length !== game.round.targetTokens.length) {
+      setMiniGameStatus("詞塊還沒用完；先把所有詞放進答案區。", "warning");
+      return;
+    }
+    if (answer.join("\u0000") !== game.round.targetTokens.join("\u0000")) {
+      game.mistakes += 1;
+      setMiniGameStatus("語序還差一點。點答案區詞塊放回，再重新排列。", "error");
+      $("#miniGameScore").textContent = miniGameScore();
+      saveMiniGameRuntime();
+      return;
+    }
+    const card = allCards.find((item) => item.id === game.round.cardId);
+    if (card) recordMiniGameCardResult(card, game.mistakes === 0);
+    speakFrench(game.round.answer);
+    completeMiniGame(game.mode, miniGameScore());
+    return;
+  }
+  if (action === "listening-choice") {
+    const choice = game.round.choices.find((item) => item.id === button.dataset.choiceId);
+    if (!choice) return;
+    if (!choice.correct) {
+      game.mistakes += 1;
+      game.wrongChoiceIds.push(choice.id);
+      setMiniGameStatus("不是這個意思。可以重播法文，再比較剩下兩個選項。", "error");
+      saveMiniGameRuntime();
+      renderMiniGameBoard();
+      restoreMiniGameFocus("listening-choice");
+      return;
+    }
+    const card = allCards.find((item) => item.id === game.round.cardId);
+    if (card) {
+      recordMiniGameCardResult(
+        card,
+        game.mistakes === 0,
+        NOW(),
+        { updateReview: game.round.reviewable },
+      );
+    }
+    completeMiniGame(game.mode, miniGameScore());
+    return;
+  }
+  if (action === "error-token") {
+    const tokenIndex = Number(button.dataset.tokenIndex);
+    if (tokenIndex !== game.round.wrongIndex) {
+      game.mistakes += 1;
+      game.wrongTokenIndexes = [...new Set([...game.wrongTokenIndexes, tokenIndex])];
+      setMiniGameStatus("這個詞在句中是正確的；再找唯一需要修改的詞。", "error");
+      $("#miniGameScore").textContent = miniGameScore();
+      button.classList.add("not-error");
+      saveMiniGameRuntime();
+      return;
+    }
+    const wrongToken = game.round.tokens[tokenIndex].text.replace(/[.,!?;:]$/, "");
+    recordMiniGameCardResult(
+      { id: game.round.cardId, skill: game.round.skill },
+      game.mistakes === 0,
+      NOW(),
+      { updateReview: false },
+    );
+    setMiniGameStatus(
+      `${wrongToken} → ${game.round.correction}。${game.round.explanation}`,
+      "success",
+    );
+    button.classList.add("found-error");
+    completeMiniGame(game.mode, miniGameScore());
+  }
+}
+
+function closeMiniGame() {
+  const mode = state.miniGame?.mode || "";
+  state.miniGame = null;
+  $("#miniGameStage").hidden = true;
+  $("#rewardBurst").hidden = true;
+  renderMissionHub();
+  focusMissionPrimaryControl(mode);
+}
+
+function startBossChallenge() {
+  const boss = getBossMilestoneState(getCompletedModuleCount(), state.game.bossMilestones);
+  if (!boss.unlocked || !boss.pendingMilestone) {
+    showToast("完成下一個五課里程碑後，BOSS 才會解鎖。");
+    return;
+  }
+  state.sessionBossMilestone = boss.pendingMilestone;
+  startSession("boss");
 }
 
 function buildSession(setName, options = {}) {
@@ -2021,23 +3229,70 @@ function evaluateAndUnlockQuests({ totalCards, goodCount }) {
     state.game.daily.completedQuests.push("accuracy-4");
     newlyCompleted.push("accuracy-4");
   }
-  const rewardTotal = newlyCompleted.reduce((sum, questId) => {
+  let rewardTotal = 0;
+  newlyCompleted.forEach((questId) => {
     const quest = QUEST_DEFS.find((item) => item.id === questId);
-    if (!quest) return sum;
-    state.game.coins += quest.rewardCoins;
-    return sum + quest.rewardXp;
-  }, 0);
+    if (!quest) return;
+    const granted = grantRewardReceipt(
+      `quest:${getTodayKey()}:${questId}`,
+      quest.rewardXp,
+      quest.rewardCoins,
+    );
+    if (granted) rewardTotal += quest.rewardXp;
+  });
   if (newlyCompleted.length > 0) {
     logRun(`完成任務 ${newlyCompleted.join("、")}，獲得 ${rewardTotal} XP`);
   }
   return rewardTotal;
 }
 
+function syncRewardLedgerTotals() {
+  const totals = rewardLedgerTotals(state.game.rewardLedger);
+  state.game.xp = totals.xp;
+  state.game.coins = totals.coins;
+  state.game.level = Math.floor(totals.xp / XP_LEVEL_STEP) + 1;
+  return totals;
+}
+
+function grantRewardReceipt(eventId, xp, coins, earnedAt = NOW()) {
+  if (!eventId) return false;
+  const ledger = normalizeRewardLedger(
+    state.game.rewardLedger,
+    state.game.xp,
+    state.game.coins,
+  );
+  if (ledger.receipts[eventId]) return false;
+  ledger.receipts[eventId] = {
+    xp: Math.max(0, Math.floor(Number(xp) || 0)),
+    coins: Math.max(0, Math.floor(Number(coins) || 0)),
+    earnedAt: Math.max(0, Number(earnedAt) || 0),
+  };
+  state.game.rewardLedger = ledger;
+  syncRewardLedgerTotals();
+  return true;
+}
+
 function addXp(points) {
-  const prevLevel = Math.floor(state.game.xp / XP_LEVEL_STEP) + 1;
-  state.game.xp += points;
-  const nextLevel = Math.floor(state.game.xp / XP_LEVEL_STEP) + 1;
-  if (nextLevel > prevLevel) state.game.level = nextLevel;
+  const ledger = normalizeRewardLedger(
+    state.game.rewardLedger,
+    state.game.xp,
+    state.game.coins,
+  );
+  ledger.baseXp += Math.max(0, Math.floor(Number(points) || 0));
+  state.game.rewardLedger = ledger;
+  syncRewardLedgerTotals();
+  return points;
+}
+
+function addCoins(points) {
+  const ledger = normalizeRewardLedger(
+    state.game.rewardLedger,
+    state.game.xp,
+    state.game.coins,
+  );
+  ledger.baseCoins += Math.max(0, Math.floor(Number(points) || 0));
+  state.game.rewardLedger = ledger;
+  syncRewardLedgerTotals();
   return points;
 }
 
@@ -2090,8 +3345,20 @@ function showView(name) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function ensureCurrentSessionDate() {
+  if (!state.sessionDate || state.sessionDate === getTodayKey()) return true;
+  state.dailyTaskId = null;
+  state.sessionBossMilestone = null;
+  state.sessionDate = "";
+  resetDailyIfNeeded();
+  openMissionHub();
+  showToast("日期已更新；昨天未送出的答案沒有寫入今天，請從今日任務重新開始。");
+  return false;
+}
+
 function startSession(setName = "due", options = {}) {
   resetDailyIfNeeded();
+  state.sessionDate = getTodayKey();
   state.set = setName;
   state.index = 0;
   state.results = [];
@@ -2115,13 +3382,21 @@ function startSession(setName = "due", options = {}) {
     }
   }
   if (!state.session.length) return showToast("這次暫無題目，先做一次一般複習吧。");
+  const isBossSession = state.sessionMode === "boss";
+  $("#review-view").classList.toggle("boss-session", isBossSession);
+  $("#reviewEyebrow").textContent = isBossSession
+    ? `BOSS CHECKPOINT ${String(state.sessionBossMilestone || 0).padStart(2, "0")}`
+    : "RÉVISION ACTIVE";
+  $("#reviewHeading").textContent = isBossSession ? "五題決勝，拿下關卡。" : "先想，再揭曉。";
+  $("#sessionLabel").textContent = isBossSession ? "BOSS 回合" : "本回合";
   renderQuestion();
   showView("review");
 }
 
 function buildBossSession() {
   const targetSkill = getBossSkill();
-  const picked = [...allCards]
+  const pool = getMiniGameCardPool();
+  const priority = [...pool]
     .filter((card) => card.skill === targetSkill)
     .sort((a, b) => {
       const ar = reviewFor(a);
@@ -2129,12 +3404,15 @@ function buildBossSession() {
       const aRate = ar.attempts ? ar.wrong / ar.attempts : 0;
       const bRate = br.attempts ? br.wrong / br.attempts : 0;
       return bRate - aRate;
-    })
-    .slice(0, 3);
+    });
+  const picked = [...priority];
+  pool.forEach((card) => {
+    if (picked.length < 5 && !picked.some((item) => item.id === card.id)) picked.push(card);
+  });
   if (picked.length) {
     state.sessionMode = "boss";
     state.sessionSource = `boss:${targetSkill}`;
-    return picked;
+    return picked.slice(0, 5);
   }
   return [];
 }
@@ -2387,6 +3665,7 @@ function nextGoodInterval(streak) {
 }
 
 function gradeAnswer(grade) {
+  if (!ensureCurrentSessionDate()) return;
   if (!state.canGrade) return;
   state.canGrade = false;
   activeAiReviewRun += 1;
@@ -2443,14 +3722,22 @@ function gradeAnswer(grade) {
     return;
   }
 
+  const completedSessionDate = state.sessionDate;
   const completedDailyTask = state.dailyTaskId;
   const dailyCheckpoint = completedDailyTask ? getDailyTaskCheckpoint(completedDailyTask) : null;
   const summaryResults = dailyCheckpoint ? Object.values(dailyCheckpoint.results) : state.results;
   const good = summaryResults.filter((resultItem) => resultItem?.correct ?? resultItem?.score >= 75).length;
   const total = summaryResults.length;
-  const isBossWin = state.sessionMode === "boss" && good === total;
+  const bossMilestone = state.sessionBossMilestone;
+  const isBossRound = state.sessionMode === "boss";
+  const isBossWin = isBossRound && good >= Math.max(1, Math.ceil(total * 0.6));
   const baseXp = total * 10 + good * 4;
-  const shouldRewardSession = !dailyCheckpoint?.rewarded;
+  const sessionRewardId = completedDailyTask
+    ? `task:${getTodayKey()}:${completedDailyTask}`
+    : isBossRound && bossMilestone
+      ? `boss-session:${bossMilestone}`
+      : `session:${getTodayKey()}:${now}:${state.sessionSource}`;
+  const shouldRewardSession = !state.game.rewardLedger.receipts[sessionRewardId];
   if (shouldRewardSession) {
     if (dailyCheckpoint) {
       dailyCheckpoint.rewarded = true;
@@ -2458,18 +3745,32 @@ function gradeAnswer(grade) {
       state.game.daily.taskCheckpoints[completedDailyTask] = dailyCheckpoint;
       state.game.daily.updatedAt = Math.max(state.game.daily.updatedAt || 0, now);
     }
-    addXp(baseXp);
-    addXp(evaluateAndUnlockQuests({
+    grantRewardReceipt(sessionRewardId, baseXp, 0, now);
+    evaluateAndUnlockQuests({
       totalCards: total,
       goodCount: good,
-    }));
+    });
     state.game.sessionsDone += 1;
-    if (isBossWin) state.game.bossDefeated += 1;
     state.game.runStreak = good >= Math.max(1, Math.floor(total / 2)) ? state.game.runStreak + 1 : 0;
     recordStudySession(now);
     updateStreakForToday();
   }
-  const title = isBossWin ? "BOSS 戰全勝" : "完成一般練習";
+  let bossRewardGranted = false;
+  if (isBossWin && bossMilestone) {
+    bossRewardGranted = grantRewardReceipt(`boss:${bossMilestone}`, 60, 8, now);
+    if (!state.game.bossMilestones.includes(bossMilestone)) {
+      state.game.bossMilestones = normalizeBossMilestones([
+        ...state.game.bossMilestones,
+        bossMilestone,
+      ]);
+    }
+    if (bossRewardGranted) state.game.bossDefeated += 1;
+  }
+  const title = isBossWin
+    ? `BOSS CHECKPOINT ${String(bossMilestone).padStart(2, "0")} 通過`
+    : isBossRound
+      ? "BOSS 尚未通過"
+      : "完成一般練習";
   if (shouldRewardSession) {
     state.game.logs = [`${title}：${good}/${total} 題，+${baseXp} XP`, ...state.game.logs].slice(0, 6);
   }
@@ -2480,8 +3781,10 @@ function gradeAnswer(grade) {
   renderErrorDashboard();
   renderMemoryStats();
   state.dailyTaskId = null;
+  state.sessionBossMilestone = null;
+  state.sessionDate = "";
   if (completedDailyTask) {
-    finishDailyTask(completedDailyTask);
+    finishDailyTask(completedDailyTask, completedSessionDate);
     const nextTask = getNextDailyTask();
     if (nextTask) {
       showToast(`完成 ${good} / ${total} 題；接著進入「${nextTask.title}」`);
@@ -2494,11 +3797,21 @@ function gradeAnswer(grade) {
   }
   dailyTransitionTimer = setTimeout(() => {
     dailyTransitionTimer = null;
-    showView("today");
+    if (isBossRound || completedDailyTask) {
+      renderMissionHub();
+      renderPlayerHud();
+      showView("mission");
+    } else {
+      showView("today");
+    }
   }, 900);
   showToast(
     completedDailyTask
       ? `今日四段複習完成：${good} / ${total} 題達到 75% 以上`
+      : isBossWin
+        ? `BOSS 通過：${good} / ${total} 題，${bossRewardGranted ? "+60 XP、+8 枚" : "獎勵已領取"}`
+        : isBossRound
+          ? `BOSS：${good} / ${total} 題；答對 3 題即可通過`
       : `完成本回合：${good} / ${total} 題達到 75% 以上`
   );
 }
@@ -2511,16 +3824,17 @@ function renderProgress() {
   const weakSkill = cardsByIds(plan.weakCardIds)[0]?.skill || "助動詞 être";
   const locked = Boolean(state.game.daily.curriculumAdvanced);
   const answeredToday = normalizeStudyHistoryEntry(state.studyHistory[getTodayKey()]).answered;
-  $("#startReview").disabled = locked;
+  $("#startReview").disabled = false;
   $("#startReviewLabel").textContent = locked
-    ? `今日複習已完成 · 已答 ${answeredToday} 題`
+    ? `今日主線已完成 · 進入任務中心`
     : completed.size
-      ? `繼續今日複習 · 已答 ${answeredToday} 題 · ${completed.size} / ${tasks.length}`
+      ? `繼續今日任務 · 已答 ${answeredToday} 題 · ${completed.size} / ${tasks.length}`
       : answeredToday
-        ? `繼續今日複習 · 已答 ${answeredToday} 題`
-        : `開始今日 ${LEARNER_PROFILE.dailyMinutes} 分鐘複習`;
+        ? `繼續今日任務 · 已答 ${answeredToday} 題`
+        : `開啟今日任務 · ${LEARNER_PROFILE.dailyMinutes} 分鐘`;
 
   $("#dailyPlanIntro").innerHTML = `今天先修補 <strong>${weakSkill}</strong>，再超前 <strong>${module.title}</strong>。`;
+  renderPlayerHud();
   renderCurriculumRoadmap();
 }
 
@@ -2729,10 +4043,29 @@ $("#streakButton").addEventListener("click", () => {
   showView("today");
   requestAnimationFrame(() => $("#streakSection").scrollIntoView({ behavior: "smooth", block: "start" }));
 });
-$("#startReview").addEventListener("click", startDailyReview);
+$("#startReview").addEventListener("click", openMissionHub);
+$("#missionCoreStart").addEventListener("click", startDailyReview);
+$("#exitMission").addEventListener("click", () => showView("today"));
+$("#matchingGameStart").addEventListener("click", () => startMiniGame("matching"));
+$("#sentencePuzzleStart").addEventListener("click", () => startMiniGame("sentence-puzzle"));
+$("#listeningGameStart").addEventListener("click", () => startMiniGame("listening-choice"));
+$("#errorHunterStart").addEventListener("click", () => startMiniGame("error-hunter"));
+$("#bossChallengeStart").addEventListener("click", startBossChallenge);
+$("#miniGameBoard").addEventListener("click", handleMiniGameBoardClick);
+$("#miniGameAudio").addEventListener("click", () => {
+  const audioText = state.miniGame?.round?.audioText || state.miniGame?.round?.answer || "";
+  if (audioText) speakFrench(audioText);
+});
+$("#miniGameReset").addEventListener("click", () => {
+  if (state.miniGame?.mode) startMiniGame(state.miniGame.mode, { resume: false });
+});
+$("#miniGameClose").addEventListener("click", closeMiniGame);
 $("#exitReview").addEventListener("click", () => {
   activeAiReviewRun += 1;
-  showView("today");
+  state.sessionDate = "";
+  state.dailyTaskId = null;
+  state.sessionBossMilestone = null;
+  openMissionHub();
 });
 $("#typedAnswer").addEventListener("input", (event) => {
   const hasText = event.target.value.trim().length > 0;
