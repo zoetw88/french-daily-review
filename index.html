@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f2eee3" />
+    <meta
+      name="description"
+      content="依照法語課程與錯題安排的每日複習介面"
+    />
+    <title>Encore — 每日法語複習</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260724e" />
+    <script src="app.js?v=20260724e" defer></script>
+  </head>
+  <body>
+    <div class="paper-noise" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Encore 首頁">
+        <span class="brand-mark">E</span>
+        <span>
+          <strong>Encore</strong>
+          <small>法語複習手帳</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="主要導覽">
+        <button class="nav-link active" data-view="today">今日</button>
+        <button class="nav-link" data-view="mistakes">錯題簿</button>
+        <button class="nav-link" data-view="classes">課程</button>
+      </nav>
+
+      <div class="topbar-actions">
+        <button class="streak-pill" id="streakButton" aria-label="連續學習天數">
+          <span class="flame">✦</span>
+          <span><strong id="streakCount">4</strong> 天連續</span>
+        </button>
+        <button
+          class="settings-button"
+          id="settingsButton"
+          type="button"
+          aria-label="開啟同步設定"
+          aria-controls="settingsPanel"
+          aria-expanded="false"
+        >
+          <span aria-hidden="true">⚙</span>
+          <i id="settingsSyncDot" data-status="idle" aria-hidden="true"></i>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="view active" id="today-view">
+        <div class="hero-grid">
+          <div class="date-rail" aria-hidden="true">
+            <span id="monthLabel">JUIL.</span>
+            <strong id="dayLabel">23</strong>
+            <span id="weekdayLabel">JEU.</span>
+          </div>
+
+          <div class="hero-copy">
+            <p class="eyebrow">BONJOUR, ZOE <span>·</span> OBJECTIF TCF CANADA B2</p>
+            <h1>今天，再靠近<br /><em>法語一點點。</em></h1>
+            <p class="hero-intro" id="dailyPlanIntro">
+              正在依照你的程度、到期錯題與 TCF 目標安排今天的內容。
+            </p>
+            <button class="primary-button" id="startReview">
+              <span id="startReviewLabel">開始今日 35 分鐘複習</span>
+              <span class="button-arrow">↗</span>
+            </button>
+          </div>
+
+          <aside class="today-note">
+            <div class="tape"></div>
+            <span class="note-number" id="todayNoteDate">07 / 24</span>
+            <p class="handwriting">Petit à petit,<br />l’oiseau fait son nid.</p>
+            <span class="translation">積少成多。</span>
+            <div class="tiny-sketch" aria-hidden="true">⌁ ☕︎</div>
+          </aside>
+        </div>
+
+        <section class="goal-strip" aria-labelledby="goal-title">
+          <div class="goal-copy">
+            <p class="eyebrow light">CAP SUR LE B2</p>
+            <h2 id="goal-title">TCF Canada<br /><em>目標路線</em></h2>
+            <p>目標日：<strong>2027.02.28</strong></p>
+          </div>
+          <div class="level-route" aria-label="TCF Canada B2 學習路線">
+            <div class="level-node current">
+              <span>現在</span>
+              <strong>A1 → A2</strong>
+              <small>正在銜接 A2</small>
+            </div>
+            <div class="route-line"><span></span></div>
+            <div class="level-node">
+              <span>2026.09</span>
+              <strong>A2</strong>
+              <small>日常溝通穩定</small>
+            </div>
+            <div class="route-line"></div>
+            <div class="level-node">
+              <span>2026.11</span>
+              <strong>B1</strong>
+              <small>開始 TCF 題型訓練</small>
+            </div>
+            <div class="route-line"></div>
+            <div class="level-node target">
+              <span>2027.02</span>
+              <strong>B2</strong>
+              <small>完整限時模考</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="streak-section" id="streakSection" aria-labelledby="streak-title">
+          <div class="streak-copy">
+            <p class="eyebrow light">CONTINUITÉ</p>
+            <div class="streak-total">
+              <strong id="streakHeroCount">0</strong>
+              <span>天<br />連續</span>
+            </div>
+            <h2 id="streak-title">讓今天，<em>接上昨天。</em></h2>
+            <p id="streakMessage">完成今天的複習，開始第一段連續紀錄。</p>
+          </div>
+          <div class="streak-chart-panel">
+            <div class="streak-chart-heading">
+              <div>
+                <span>目前這段連續紀錄</span>
+                <strong>最近 7 天</strong>
+              </div>
+              <small id="streakWeekScore">0 / 7</small>
+            </div>
+            <div class="streak-chart" id="streakChart" aria-label="最近七天的目前連續紀錄"></div>
+            <p>只依目前的連續天數與最後學習日推算，不代表完整歷史活動。</p>
+          </div>
+        </section>
+
+        <section class="daily-plan curriculum-roadmap" aria-labelledby="daily-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">PARCOURS VERS LE B2</p>
+              <h2 id="daily-title">從現在，分章走到 B2</h2>
+            </div>
+            <p class="curriculum-progress-text" id="curriculumProgressText">正在讀取目前章節…</p>
+          </div>
+
+          <div class="memory-board" aria-label="複習記憶狀態">
+            <div>
+              <span class="metric-mark due-mark"></span>
+              <p>今天到期</p>
+              <strong id="dueCount">0</strong>
+              <small>張卡片等待回想</small>
+            </div>
+            <div>
+              <span class="metric-mark mastered-mark"></span>
+              <p>已穩定</p>
+              <strong id="masteredCount">0</strong>
+              <small>連續答對 3 次以上</small>
+            </div>
+            <div>
+              <span class="metric-mark weak-mark"></span>
+              <p>待加強</p>
+              <strong id="weakCount">0</strong>
+              <small>錯誤率超過一半</small>
+            </div>
+            <div class="next-review">
+              <p>系統策略</p>
+              <strong>先複習最容易忘的</strong>
+              <small id="nextReviewText">依你的作答紀錄自動排序</small>
+            </div>
+          </div>
+
+          <div class="curriculum-chapter-list" id="curriculumChapterList"></div>
+
+          <p class="method-note">
+            每天只從「開始今日複習」進入；系統會在背景安排回想、錯因回饋、新知與完整輸出。同一主題練滿 3 輪才進到下一課。
+          </p>
+        </section>
+
+        <section class="weakness-strip">
+          <div>
+            <p class="eyebrow light">À REVOIR</p>
+            <h2>你的易錯重點</h2>
+          </div>
+          <div class="weakness-list">
+            <div class="weakness-chip">
+              <span>01</span> boire 的變化 <b>12 次錯誤</b>
+            </div>
+            <div class="weakness-chip">
+              <span>02</span> 否定句冠詞 <b>9 次錯誤</b>
+            </div>
+            <div class="weakness-chip">
+              <span>03</span> 問句結構 <b>7 次錯誤</b>
+            </div>
+          </div>
+        </section>
+
+      </section>
+
+      <section class="view review-layout" id="review-view">
+        <div class="review-header">
+          <div>
+            <p class="eyebrow">RÉVISION ACTIVE</p>
+            <h1>先想，再揭曉。</h1>
+          </div>
+          <button class="ghost-button" id="exitReview">結束複習 ×</button>
+        </div>
+
+        <div class="review-workspace">
+          <aside class="session-rail">
+            <span class="session-label">本回合</span>
+            <strong><span id="questionNumber">1</span><small>/ <span id="sessionTotal">5</span></small></strong>
+            <div class="session-dots" id="sessionDots"></div>
+            <p>不急著答。先大聲說出完整句，再查看答案。</p>
+          </aside>
+
+          <article class="flashcard" id="flashcard">
+            <div class="flashcard-meta">
+              <span id="questionCategory">GRAMMAIRE</span>
+              <button id="speakPrompt" aria-label="朗讀題目">♪ 聽題目</button>
+            </div>
+            <p class="prompt-label" id="promptLabel">請翻譯成法文</p>
+            <h2 id="questionText">我早餐吃麵包。</h2>
+
+            <div class="response-box" id="responseBox">
+              <label for="typedAnswer">你的法文答案</label>
+              <textarea
+                id="typedAnswer"
+                rows="2"
+                autocomplete="off"
+                autocapitalize="sentences"
+                spellcheck="false"
+                placeholder="先在這裡寫下完整答案…"
+              ></textarea>
+            <div class="response-actions">
+              <span id="inputHint">輸入後才能核對答案</span>
+              <div class="response-actions-row">
+                <button id="checkAnswer" disabled>核對答案 ↗</button>
+                <button id="aiReviewButton" class="ghost-compact" type="button" disabled>AI 判別錯誤（OpenRouter）</button>
+              </div>
+            </div>
+            </div>
+
+            <div class="answer-area" id="answerArea">
+              <div class="answer-result">
+                <span id="resultLabel">正確答案</span>
+                <strong id="matchScore">—</strong>
+              </div>
+              <div class="answer-copy">
+                <strong id="answerText">Je mange du pain au petit déjeuner.</strong>
+                <button
+                  id="speakAnswer"
+                  class="answer-audio-button"
+                  type="button"
+                  aria-label="播放法文標準答案"
+                  disabled
+                >
+                  ♪ 聽標準答案
+                </button>
+              </div>
+              <p id="answerNote">食物前用 du；三餐前使用 au。</p>
+              <p class="user-answer-line">你的答案：<span id="userAnswerText"></span></p>
+            </div>
+
+            <p id="aiReviewOutput" class="ai-review-output" role="status" aria-live="polite">
+              可在本題核對後，點擊「AI 判別錯誤」取得語法建議。
+            </p>
+
+            <div class="grading" id="grading">
+              <p>這張卡片何時再出現？</p>
+              <div>
+                <button data-grade="again"><span>再練一次</span><small>10 分鐘</small></button>
+                <button data-grade="hard"><span>有點難</span><small>明天</small></button>
+                <button data-grade="good"><span>記住了</span><small id="goodInterval">3 天</small></button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view content-view" id="mistakes-view">
+        <div class="content-hero">
+          <p class="eyebrow">CARNET D’ERREURS</p>
+          <h1>錯過的字，<em>最值得再見一次。</em></h1>
+          <p>整理自你的課堂回答與 PPT 對照筆記。</p>
+        </div>
+        <div class="error-dashboard" id="errorDashboard"></div>
+        <div class="mistake-list" id="mistakeList"></div>
+      </section>
+
+      <section class="view content-view" id="classes-view">
+        <div class="content-hero class-hero">
+          <div>
+            <p class="eyebrow">MON PARCOURS</p>
+            <h1>從第一堂課，<em>一路走到今天。</em></h1>
+            <p>這裡保留課程紀錄；題目會由「今日複習」依弱點與進度自動安排。</p>
+          </div>
+          <aside class="class-count-card" aria-label="已記錄課程數">
+            <strong id="classCount">0</strong>
+            <span>堂課<br />已記錄</span>
+          </aside>
+        </div>
+        <div class="class-timeline" id="classTimeline"></div>
+      </section>
+    </main>
+
+    <div class="settings-shell" id="settingsShell" hidden>
+      <button class="settings-scrim" id="settingsScrim" type="button" tabindex="-1" aria-label="點擊背景關閉設定"></button>
+      <aside class="settings-panel" id="settingsPanel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <header class="settings-panel-header">
+          <div>
+            <p>PARAMÈTRES</p>
+            <h2 id="settingsTitle">設定與資料</h2>
+          </div>
+          <button class="settings-close" id="settingsClose" type="button" aria-label="關閉設定">×</button>
+        </header>
+
+        <div class="settings-panel-body">
+          <div class="settings-intro">
+            <p>AI 金鑰、備份與跨裝置同步都集中在這裡。</p>
+          </div>
+
+          <section class="settings-card openrouter-block" aria-labelledby="openRouterTitle">
+            <div class="settings-card-heading">
+              <span class="settings-block-number">01</span>
+              <div>
+                <span class="settings-card-kicker">AI REVIEW</span>
+                <p id="openRouterTitle">OpenRouter 金鑰</p>
+                <small>使用官方免費模型路由</small>
+              </div>
+            </div>
+            <label for="openRouterApiKey">API Key</label>
+            <div class="openrouter-row">
+              <input id="openRouterApiKey" type="password" placeholder="sk-or-v1-..." autocomplete="off" spellcheck="false" />
+              <button id="saveOpenRouterKey">本分頁使用</button>
+              <button id="clearOpenRouterKey" class="ghost-compact">清除</button>
+            </div>
+            <p class="security-note">
+              靜態網頁無法完全隱藏金鑰。這裡只存到本分頁的 sessionStorage；關閉分頁即清除，也不會寫入 Git、進度備份或雲端。
+              AI 判別會把本題、參考答案與你的作答傳給 OpenRouter 及其模型供應商，請勿輸入個人資料。
+            </p>
+            <p id="openRouterKeyStatus" role="status" aria-live="polite">尚未設定。本功能在 20 秒逾時後會自動重試一次。</p>
+          </section>
+
+          <section class="settings-card backup-block" aria-labelledby="backupTitle">
+            <div class="settings-card-heading">
+              <span class="settings-block-number">02</span>
+              <div>
+                <span class="settings-card-kicker">LOCAL BACKUP</span>
+                <p id="backupTitle">進度本機備份</p>
+                <small>手動下載或跨設備還原</small>
+              </div>
+            </div>
+            <div class="backup-action-grid">
+              <div>
+                <span>下載</span>
+                <button id="exportProgressJson" class="ghost-compact">進度備份（JSON）</button>
+                <button id="exportProgressMarkdown" class="ghost-compact">Obsidian 筆記（.md）</button>
+              </div>
+              <div>
+                <span>複製</span>
+                <button id="copyProgressJson">進度 JSON</button>
+                <button id="copyProgressMarkdown" class="ghost-compact">Obsidian 版面</button>
+              </div>
+              <div>
+                <span>還原</span>
+                <button id="importProgressBtn">選擇備份檔</button>
+                <button id="pasteProgressBtn" class="ghost-compact">貼上備份</button>
+              </div>
+            </div>
+            <p id="progressBackupStatus" role="status" aria-live="polite">每次完成題目都會存到本機；另外也可用複製/貼上跨設備同步。</p>
+            <input id="progressBackupFile" type="file" accept=".json,application/json" />
+          </section>
+
+          <section class="settings-card github-sync-block" aria-labelledby="githubSyncTitle">
+            <div class="settings-card-heading">
+              <span class="settings-block-number">03</span>
+              <div>
+                <span class="settings-card-kicker">PRIVATE CLOUD</span>
+                <p id="githubSyncTitle">GitHub 私有雲端同步</p>
+                <small>進度只存到獨立 private repo；Token 不會寫進程式、Git 或備份檔。</small>
+              </div>
+            </div>
+            <a class="settings-token-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">建立限權 Token ↗</a>
+            <div class="github-sync-grid">
+              <label>帳號<input id="githubOwner" autocomplete="username" /></label>
+              <label>私有 repo<input id="githubRepo" autocomplete="off" spellcheck="false" /></label>
+              <label>分支<input id="githubBranch" autocomplete="off" spellcheck="false" /></label>
+              <label>檔案路徑<input id="githubProgressPath" autocomplete="off" spellcheck="false" /></label>
+            </div>
+            <label class="github-token-label" for="githubToken">Fine-grained Token（只需該 repo 的 Contents：Read and write）</label>
+            <div class="github-token-row">
+              <input id="githubToken" type="password" placeholder="github_pat_..." autocomplete="off" spellcheck="false" />
+              <button id="connectGithubSync">連線並同步</button>
+            </div>
+            <div class="github-action-grid">
+              <button id="syncGithubNow" class="ghost-compact">立即同步</button>
+              <button id="loadGithubProgress" class="ghost-compact">載入雲端進度</button>
+              <button id="disconnectGithubSync" class="ghost-compact">登出並清除 Token</button>
+            </div>
+            <p id="githubSyncStatus" data-status="idle" role="status" aria-live="polite">尚未連線。Token 只保留到關閉這個分頁。</p>
+          </section>
+        </div>
+      </aside>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
