@@ -250,7 +250,8 @@ const OPENROUTER_TIMEOUT_MS = 20_000;
 const OPENROUTER_MAX_ATTEMPTS = 2;
 const OPENROUTER_RETRYABLE_STATUS = new Set([408, 425, 500, 502, 503, 504]);
 const PROGRESS_BACKUP_KEY = "encore-progress-backup";
-const PROGRESS_EXPORT_VERSION = 2;
+const STUDY_HISTORY_KEY = "encore-study-history-v1";
+const PROGRESS_EXPORT_VERSION = 3;
 const PROGRESS_FILE_PREFIX = "french-review-progress";
 const OPENROUTER_KEY_KEY = "encore-openrouter-key";
 const GITHUB_SYNC_CONFIG_KEY = "encore-github-sync-config";
@@ -276,7 +277,11 @@ const allCards = Object.entries(studySets).flatMap(([set, cards]) =>
 );
 
 function getTodayKey(date = new Date()) {
-  return date.toLocaleDateString("en-CA");
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
 }
 
 function readJsonSafe(rawValue, fallback = null) {
@@ -286,6 +291,163 @@ function readJsonSafe(rawValue, fallback = null) {
   } catch {
     return fallback;
   }
+}
+
+function normalizeStudyHistoryEntry(raw = {}) {
+  const safeRaw = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+  const answered = Math.max(0, Math.floor(Number(safeRaw.answered) || 0));
+  return {
+    answered,
+    correct: Math.min(answered, Math.max(0, Math.floor(Number(safeRaw.correct) || 0))),
+    sessions: Math.max(0, Math.floor(Number(safeRaw.sessions) || 0)),
+    updatedAt: Math.max(0, Number(safeRaw.updatedAt) || 0),
+  };
+}
+
+function isDateKey(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) return false;
+  const [year, month, day] = value.split("-").map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  return parsed.getUTCFullYear() === year
+    && parsed.getUTCMonth() === month - 1
+    && parsed.getUTCDate() === day;
+}
+
+function shiftDateKey(dateKey, dayOffset) {
+  if (!isDateKey(dateKey)) return "";
+  const [year, month, day] = dateKey.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day + dayOffset));
+  return [
+    date.getUTCFullYear(),
+    String(date.getUTCMonth() + 1).padStart(2, "0"),
+    String(date.getUTCDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+function normalizeStudyHistory(raw = {}, legacy = {}) {
+  const safeRaw = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+  const normalized = {};
+  Object.keys(safeRaw)
+    .filter(isDateKey)
+    .sort()
+    .forEach((dateKey) => {
+      normalized[dateKey] = normalizeStudyHistoryEntry(safeRaw[dateKey]);
+    });
+
+  if (!Object.keys(normalized).length) {
+    const lastStudyDate = isDateKey(legacy?.lastStudyDate) ? legacy.lastStudyDate : "";
+    const streak = Math.max(0, Math.floor(Number(legacy?.streak) || 0));
+    for (let offset = streak - 1; lastStudyDate && offset >= 0; offset -= 1) {
+      normalized[shiftDateKey(lastStudyDate, -offset)] = {
+        answered: 0,
+        correct: 0,
+        sessions: 1,
+        updatedAt: 0,
+      };
+    }
+  }
+  return normalized;
+}
+
+function recordStudyActivity(history, dateKey, activity = {}) {
+  const normalized = normalizeStudyHistory(history);
+  if (!isDateKey(dateKey)) return normalized;
+  const current = normalizeStudyHistoryEntry(normalized[dateKey]);
+  const answeredIncrement = activity.session ? 0 : 1;
+  const correctIncrement = !activity.session && activity.correct ? 1 : 0;
+  normalized[dateKey] = {
+    answered: current.answered + answeredIncrement,
+    correct: current.correct + correctIncrement,
+    sessions: current.sessions + (activity.session ? 1 : 0),
+    updatedAt: Math.max(current.updatedAt, Number(activity.updatedAt) || 0),
+  };
+  return normalized;
+}
+
+function mergeStudyHistories(localHistory, cloudHistory) {
+  const local = normalizeStudyHistory(localHistory);
+  const cloud = normalizeStudyHistory(cloudHistory);
+  const merged = {};
+  [...new Set([...Object.keys(local), ...Object.keys(cloud)])]
+    .sort()
+    .forEach((dateKey) => {
+      const localEntry = normalizeStudyHistoryEntry(local[dateKey]);
+      const cloudEntry = normalizeStudyHistoryEntry(cloud[dateKey]);
+      merged[dateKey] = {
+        answered: Math.max(localEntry.answered, cloudEntry.answered),
+        correct: Math.max(localEntry.correct, cloudEntry.correct),
+        sessions: Math.max(localEntry.sessions, cloudEntry.sessions),
+        updatedAt: Math.max(localEntry.updatedAt, cloudEntry.updatedAt),
+      };
+    });
+  return merged;
+}
+
+function calculateStudyStreak(history, endDateKey) {
+  const normalized = normalizeStudyHistory(history);
+  if (!isDateKey(endDateKey) || !normalized[endDateKey]) return 0;
+  let streak = 0;
+  let cursor = endDateKey;
+  while (normalized[cursor]) {
+    streak += 1;
+    cursor = shiftDateKey(cursor, -1);
+  }
+  return streak;
+}
+
+function normalizeReviewEntry(raw = {}) {
+  if (!raw || typeof raw !== "object") return null;
+  const attemptCount = Number(raw.attempts || 0);
+  const correct = Number(raw.correct || 0);
+  const wrong = Number(raw.wrong || 0);
+  return {
+    attempts: Math.max(0, attemptCount),
+    correct: Math.max(0, correct),
+    wrong: Math.max(0, wrong),
+    streak: Number(raw.streak || 0),
+    interval: Number(raw.interval || 0),
+    nextReview: Number(raw.nextReview || 0),
+    lastReviewed: raw.lastReviewed || 0,
+    lastScore: Number(raw.lastScore || 0),
+    skill: raw.skill || "",
+  };
+}
+
+function mergeReviewMaps(localReviews, cloudReviews) {
+  const merged = {};
+  const keys = new Set([...Object.keys(localReviews || {}), ...Object.keys(cloudReviews || {})]);
+  keys.forEach((key) => {
+    const local = normalizeReviewEntry(localReviews?.[key]);
+    const cloud = normalizeReviewEntry(cloudReviews?.[key]);
+    if (!local) {
+      merged[key] = cloud;
+      return;
+    }
+    if (!cloud) {
+      merged[key] = local;
+      return;
+    }
+    const localOrder = [Number(local.lastReviewed || 0), local.attempts];
+    const cloudOrder = [Number(cloud.lastReviewed || 0), cloud.attempts];
+    const localIsNewest = localOrder[0] > cloudOrder[0]
+      || (localOrder[0] === cloudOrder[0] && localOrder[1] >= cloudOrder[1]);
+    const newest = localIsNewest ? local : cloud;
+    const correct = Math.max(local.correct, cloud.correct);
+    const wrong = Math.max(local.wrong, cloud.wrong);
+    merged[key] = {
+      ...newest,
+      attempts: Math.max(local.attempts, cloud.attempts, correct + wrong),
+      correct,
+      wrong,
+    };
+  });
+  return merged;
+}
+
+function dailyPlansMatch(a, b) {
+  if (!a || !b || a.moduleId !== b.moduleId || a.round !== b.round) return false;
+  return a.dueCardIds.join("\u0000") === b.dueCardIds.join("\u0000")
+    && a.weakCardIds.join("\u0000") === b.weakCardIds.join("\u0000");
 }
 
 function loadStateFromBackup() {
@@ -312,25 +474,8 @@ function getProgressSnapshot() {
     streak: state.streak,
     reviews: state.reviews,
     lastStudyDate: state.lastStudyDate,
+    studyHistory: state.studyHistory,
     game: state.game,
-  };
-}
-
-function normalizeReviewEntry(raw = {}) {
-  if (!raw || typeof raw !== "object") return null;
-  const attemptCount = Number(raw.attempts || 0);
-  const correct = Number(raw.correct || 0);
-  const wrong = Number(raw.wrong || 0);
-  return {
-    attempts: Math.max(0, attemptCount),
-    correct: Math.max(0, correct),
-    wrong: Math.max(0, wrong),
-    streak: Number(raw.streak || 0),
-    interval: Number(raw.interval || 0),
-    nextReview: Number(raw.nextReview || 0),
-    lastReviewed: raw.lastReviewed || 0,
-    lastScore: Number(raw.lastScore || 0),
-    skill: raw.skill || "",
   };
 }
 
@@ -340,6 +485,7 @@ function normalizeProgressData(raw = {}) {
     streak: Math.max(0, Number(raw.streak) || 0),
     reviews: typeof raw.reviews === "object" && raw.reviews ? {} : {},
     lastStudyDate: typeof raw.lastStudyDate === "string" ? raw.lastStudyDate : "",
+    studyHistory: normalizeStudyHistory(raw.studyHistory, raw),
     game: normalizeGameState(raw.game || {}),
   };
   if (typeof raw.reviews === "object" && raw.reviews) {
@@ -357,6 +503,7 @@ function buildExportPayload(exportedAt = NOW()) {
     schema: "french-review-progress",
     version: PROGRESS_EXPORT_VERSION,
     exportedAt,
+    updatedAt: getLocalProgressUpdatedAt(),
     state: getProgressSnapshot(),
   };
 }
@@ -424,6 +571,93 @@ function normalizeDailyPlan(raw) {
   };
 }
 
+function getDailyPlanKey(plan) {
+  if (!plan) return "";
+  return [
+    plan.moduleId,
+    plan.round,
+    ...(plan.dueCardIds || []),
+    "|",
+    ...(plan.weakCardIds || []),
+  ].join("\u0000");
+}
+
+function normalizeTaskCheckpoint(raw = {}) {
+  const safeRaw = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+  const results = {};
+  if (safeRaw.results && typeof safeRaw.results === "object" && !Array.isArray(safeRaw.results)) {
+    Object.entries(safeRaw.results).forEach(([cardId, result]) => {
+      if (typeof cardId !== "string" || !result || typeof result !== "object") return;
+      results[cardId] = {
+        score: Math.max(0, Math.min(100, Number(result.score) || 0)),
+        correct: Boolean(result.correct),
+        updatedAt: Math.max(0, Number(result.updatedAt) || 0),
+      };
+    });
+  }
+  return {
+    planKey: typeof safeRaw.planKey === "string" ? safeRaw.planKey : "",
+    cardIds: normalizeStringArray(safeRaw.cardIds),
+    answeredCardIds: normalizeStringArray(safeRaw.answeredCardIds),
+    results,
+    rewarded: Boolean(safeRaw.rewarded),
+    updatedAt: Math.max(0, Number(safeRaw.updatedAt) || 0),
+  };
+}
+
+function normalizeTaskCheckpoints(raw = {}) {
+  const safeRaw = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+  const checkpoints = {};
+  Object.entries(safeRaw).forEach(([taskId, checkpoint]) => {
+    if (!DAILY_TASK_ID_SET.has(taskId)) return;
+    checkpoints[taskId] = normalizeTaskCheckpoint(checkpoint);
+  });
+  return checkpoints;
+}
+
+function mergeTaskCheckpoints(localRaw, cloudRaw) {
+  const local = normalizeTaskCheckpoints(localRaw);
+  const cloud = normalizeTaskCheckpoints(cloudRaw);
+  const merged = {};
+  new Set([...Object.keys(local), ...Object.keys(cloud)]).forEach((taskId) => {
+    const localCheckpoint = local[taskId];
+    const cloudCheckpoint = cloud[taskId];
+    if (!localCheckpoint) {
+      merged[taskId] = cloudCheckpoint;
+      return;
+    }
+    if (!cloudCheckpoint) {
+      merged[taskId] = localCheckpoint;
+      return;
+    }
+    if (localCheckpoint.planKey !== cloudCheckpoint.planKey) {
+      merged[taskId] = localCheckpoint.updatedAt >= cloudCheckpoint.updatedAt
+        ? localCheckpoint
+        : cloudCheckpoint;
+      return;
+    }
+    const results = { ...localCheckpoint.results };
+    Object.entries(cloudCheckpoint.results).forEach(([cardId, cloudResult]) => {
+      const localResult = results[cardId];
+      if (!localResult || cloudResult.updatedAt > localResult.updatedAt) results[cardId] = cloudResult;
+    });
+    merged[taskId] = {
+      planKey: localCheckpoint.planKey,
+      cardIds: localCheckpoint.cardIds.length >= cloudCheckpoint.cardIds.length
+        ? localCheckpoint.cardIds
+        : cloudCheckpoint.cardIds,
+      answeredCardIds: [...new Set([
+        ...localCheckpoint.answeredCardIds,
+        ...cloudCheckpoint.answeredCardIds,
+      ])],
+      results,
+      rewarded: localCheckpoint.rewarded || cloudCheckpoint.rewarded,
+      updatedAt: Math.max(localCheckpoint.updatedAt, cloudCheckpoint.updatedAt),
+    };
+  });
+  return merged;
+}
+
 function normalizeGameState(raw = {}) {
   const today = getTodayKey();
   const safeRaw = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
@@ -440,6 +674,8 @@ function normalizeGameState(raw = {}) {
         completedQuests: normalizeStringArray(rawDaily.completedQuests),
         completedTaskIds,
         plan: normalizedPlan,
+        taskCheckpoints: normalizeTaskCheckpoints(rawDaily.taskCheckpoints),
+        updatedAt: Math.max(0, Number(rawDaily.updatedAt) || 0),
         curriculumAdvanced: normalizedPlan
           && DAILY_TASK_IDS.every((taskId) => completedTaskIds.includes(taskId))
           && Boolean(rawDaily.curriculumAdvanced),
@@ -449,6 +685,8 @@ function normalizeGameState(raw = {}) {
         completedQuests: [],
         completedTaskIds: [],
         plan: null,
+        taskCheckpoints: {},
+        updatedAt: 0,
         curriculumAdvanced: false,
       };
   return {
@@ -466,6 +704,8 @@ function normalizeGameState(raw = {}) {
       completedQuests: [],
       completedTaskIds: [],
       plan: null,
+      taskCheckpoints: {},
+      updatedAt: 0,
     },
     ...safeRaw,
     curriculumIndex: Math.max(0, Math.floor(Number(safeRaw.curriculumIndex) || 0)),
@@ -507,6 +747,9 @@ if (backupState) {
   if (localStorage.getItem("encore-game-state") === null && backupState.game) {
     localStorage.setItem("encore-game-state", JSON.stringify(backupState.game));
   }
+  if (localStorage.getItem(STUDY_HISTORY_KEY) === null && backupState.studyHistory) {
+    localStorage.setItem(STUDY_HISTORY_KEY, JSON.stringify(backupState.studyHistory));
+  }
 }
 
 const state = {
@@ -523,7 +766,23 @@ const state = {
   dailyTaskId: null,
   canGrade: false,
   game: normalizeGameState(JSON.parse(localStorage.getItem("encore-game-state") || "{}")),
+  studyHistory: normalizeStudyHistory(
+    readJsonSafe(localStorage.getItem(STUDY_HISTORY_KEY), backupState?.studyHistory || {}),
+    {
+      streak: Math.max(0, Number(localStorage.getItem("encore-streak")) || 0),
+      lastStudyDate: localStorage.getItem("encore-last-study-date") || "",
+    },
+  ),
 };
+state.studyHistory = mergeStudyHistories(
+  state.studyHistory,
+  normalizeStudyHistory(backupState?.studyHistory || {}, backupState || {}),
+);
+const initialStudyDates = Object.keys(state.studyHistory).filter(isDateKey).sort();
+if (initialStudyDates.length) {
+  state.lastStudyDate = initialStudyDates.at(-1);
+  state.streak = calculateStudyStreak(state.studyHistory, state.lastStudyDate);
+}
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
@@ -543,15 +802,25 @@ function getLocalProgressUpdatedAt() {
   return Number(readJsonSafe(localStorage.getItem(PROGRESS_BACKUP_KEY), {})?.updatedAt || 0);
 }
 
-function saveAllProgress({ syncCloud = true, updatedAt = NOW() } = {}) {
+function getLocalProgressSyncedAt() {
+  return Number(readJsonSafe(localStorage.getItem(PROGRESS_BACKUP_KEY), {})?.syncedAt || 0);
+}
+
+function saveAllProgress({
+  syncCloud = true,
+  updatedAt = NOW(),
+  syncedAt = getLocalProgressSyncedAt(),
+} = {}) {
   localStorage.setItem("encore-completed", JSON.stringify(state.completed));
   localStorage.setItem("encore-streak", String(state.streak));
   localStorage.setItem("encore-reviews-v2", JSON.stringify(state.reviews));
   localStorage.setItem("encore-last-study-date", state.lastStudyDate || "");
   localStorage.setItem("encore-game-state", JSON.stringify(state.game));
+  localStorage.setItem(STUDY_HISTORY_KEY, JSON.stringify(state.studyHistory));
   const backup = {
     version: PROGRESS_EXPORT_VERSION,
     updatedAt,
+    syncedAt,
     state: getProgressSnapshot(),
   };
   localStorage.setItem(PROGRESS_BACKUP_KEY, JSON.stringify(backup));
@@ -579,7 +848,13 @@ function importProgressPayload(rawPayload, options = {}) {
   state.streak = normalized.streak;
   state.reviews = normalized.reviews;
   state.lastStudyDate = normalized.lastStudyDate;
+  state.studyHistory = normalized.studyHistory;
   state.game = normalized.game;
+  const latestHistoryDate = Object.keys(state.studyHistory).filter(isDateKey).sort().at(-1);
+  if (latestHistoryDate) {
+    state.lastStudyDate = latestHistoryDate;
+    state.streak = calculateStudyStreak(state.studyHistory, latestHistoryDate);
+  }
   saveAllProgress(options);
   renderProgress();
   renderStreakMotivation();
@@ -800,31 +1075,6 @@ async function writeGitHubProgress(config, token, payload, sha = "") {
   return response.json();
 }
 
-function mergeReviewMaps(localReviews, cloudReviews) {
-  const merged = {};
-  const keys = new Set([...Object.keys(localReviews || {}), ...Object.keys(cloudReviews || {})]);
-  keys.forEach((key) => {
-    const local = normalizeReviewEntry(localReviews?.[key]);
-    const cloud = normalizeReviewEntry(cloudReviews?.[key]);
-    if (!local) merged[key] = cloud;
-    else if (!cloud) merged[key] = local;
-    else {
-      const localOrder = [Number(local.lastReviewed || 0), local.attempts];
-      const cloudOrder = [Number(cloud.lastReviewed || 0), cloud.attempts];
-      merged[key] = localOrder[0] > cloudOrder[0] || (localOrder[0] === cloudOrder[0] && localOrder[1] >= cloudOrder[1])
-        ? local
-        : cloud;
-    }
-  });
-  return merged;
-}
-
-function dailyPlansMatch(a, b) {
-  if (!a || !b || a.moduleId !== b.moduleId || a.round !== b.round) return false;
-  return a.dueCardIds.join("\u0000") === b.dueCardIds.join("\u0000")
-    && a.weakCardIds.join("\u0000") === b.weakCardIds.join("\u0000");
-}
-
 function mergeGameStates(localGame, cloudGame, preferLocal) {
   const local = normalizeGameState(localGame || {});
   const cloud = normalizeGameState(cloudGame || {});
@@ -834,14 +1084,17 @@ function mergeGameStates(localGame, cloudGame, preferLocal) {
   let planOwner = newest;
   let planFallback = older;
   const curriculumIndexesDiffer = local.curriculumIndex !== cloud.curriculumIndex;
+  const samePlan = dailyPlansMatch(local.daily.plan, cloud.daily.plan);
   if (curriculumIndexesDiffer) {
     planOwner = local.curriculumIndex > cloud.curriculumIndex ? local : cloud;
+    planFallback = planOwner === local ? cloud : local;
+  } else if (!samePlan && local.daily.plan && cloud.daily.plan) {
+    planOwner = local.daily.updatedAt >= cloud.daily.updatedAt ? local : cloud;
     planFallback = planOwner === local ? cloud : local;
   }
   if (!curriculumIndexesDiffer && !planOwner.daily.plan && planFallback.daily.plan) {
     [planOwner, planFallback] = [planFallback, planOwner];
   }
-  const samePlan = dailyPlansMatch(local.daily.plan, cloud.daily.plan);
   const mergedDaily = {
     ...planOwner.daily,
     completedQuests: [...new Set([
@@ -855,6 +1108,10 @@ function mergeGameStates(localGame, cloudGame, preferLocal) {
         ])]
       : [...(planOwner.daily.completedTaskIds || [])],
     plan: planOwner.daily.plan || null,
+    taskCheckpoints: samePlan
+      ? mergeTaskCheckpoints(local.daily.taskCheckpoints, cloud.daily.taskCheckpoints)
+      : normalizeTaskCheckpoints(planOwner.daily.taskCheckpoints),
+    updatedAt: Math.max(local.daily.updatedAt || 0, cloud.daily.updatedAt || 0),
     curriculumAdvanced: samePlan
       ? Boolean(local.daily?.curriculumAdvanced || cloud.daily?.curriculumAdvanced)
       : Boolean(planOwner.daily.curriculumAdvanced),
@@ -879,8 +1136,8 @@ function mergeProgressPayloads(localPayload, cloudPayload) {
   if (!cloudPayload?.state) return localPayload;
   const local = normalizeProgressData(localPayload?.state || {});
   const cloud = normalizeProgressData(cloudPayload.state);
-  const localTime = Number(localPayload.exportedAt || 0);
-  const cloudTime = Number(cloudPayload.exportedAt || 0);
+  const localTime = Number(localPayload.updatedAt || localPayload.exportedAt || 0);
+  const cloudTime = Number(cloudPayload.updatedAt || cloudPayload.exportedAt || 0);
   const preferLocal = localTime >= cloudTime;
   const latestStudyDate = local.lastStudyDate >= cloud.lastStudyDate ? local.lastStudyDate : cloud.lastStudyDate;
   const latestStreak = local.lastStudyDate === cloud.lastStudyDate
@@ -891,12 +1148,17 @@ function mergeProgressPayloads(localPayload, cloudPayload) {
     app: "encore-french-review",
     schema: "french-review-progress",
     version: PROGRESS_EXPORT_VERSION,
-    exportedAt: Math.max(localTime, cloudTime),
+    exportedAt: Math.max(
+      Number(localPayload.exportedAt || 0),
+      Number(cloudPayload.exportedAt || 0),
+    ),
+    updatedAt: Math.max(localTime, cloudTime),
     state: {
       completed: [...new Set([...local.completed, ...cloud.completed])],
       streak: latestStreak,
       reviews: mergeReviewMaps(local.reviews, cloud.reviews),
       lastStudyDate: latestStudyDate,
+      studyHistory: mergeStudyHistories(local.studyHistory, cloud.studyHistory),
       game: mergeGameStates(local.game, cloud.game, preferLocal),
     },
   };
@@ -923,11 +1185,11 @@ async function syncGitHubProgress({ push = true, verify = false } = {}) {
       githubSyncVerified = true;
     }
     const cloudFile = await fetchGitHubProgress(config, token);
-    const localPayload = buildExportPayload(getLocalProgressUpdatedAt());
+    const localPayload = buildExportPayload();
     const merged = mergeProgressPayloads(localPayload, cloudFile?.payload);
     const syncedAt = NOW();
     merged.exportedAt = syncedAt;
-    importProgressPayload(merged, { syncCloud: false, updatedAt: syncedAt });
+    importProgressPayload(merged, { syncCloud: false, updatedAt: merged.updatedAt, syncedAt });
     if (push) {
       try {
         await writeGitHubProgress(config, token, merged, cloudFile?.sha);
@@ -935,8 +1197,13 @@ async function syncGitHubProgress({ push = true, verify = false } = {}) {
         if (error.status !== 409) throw error;
         const latestCloudFile = await fetchGitHubProgress(config, token);
         const retryPayload = mergeProgressPayloads(merged, latestCloudFile?.payload);
-        retryPayload.exportedAt = NOW();
-        importProgressPayload(retryPayload, { syncCloud: false, updatedAt: retryPayload.exportedAt });
+        const retrySyncedAt = NOW();
+        retryPayload.exportedAt = retrySyncedAt;
+        importProgressPayload(retryPayload, {
+          syncCloud: false,
+          updatedAt: retryPayload.updatedAt,
+          syncedAt: retrySyncedAt,
+        });
         await writeGitHubProgress(config, token, retryPayload, latestCloudFile?.sha);
       }
     }
@@ -1065,6 +1332,8 @@ function resetDailyIfNeeded() {
       completedQuests: [],
       completedTaskIds: [],
       plan: null,
+      taskCheckpoints: {},
+      updatedAt: 0,
     };
   }
 }
@@ -1141,6 +1410,8 @@ function ensureDailyPlan() {
     weakCardIds: weakCards.map((card) => card.id),
     createdAt: NOW(),
   };
+  state.game.daily.taskCheckpoints = {};
+  state.game.daily.updatedAt = state.game.daily.plan.createdAt;
   saveAllProgress({
     syncCloud: false,
     updatedAt: getLocalProgressUpdatedAt(),
@@ -1216,12 +1487,87 @@ function isModuleReady(module) {
   });
 }
 
+function getDailyTaskCheckpoint(taskId) {
+  if (!taskId) return null;
+  const checkpoint = normalizeTaskCheckpoint(state.game.daily.taskCheckpoints?.[taskId]);
+  if (!checkpoint.planKey || checkpoint.planKey !== getDailyPlanKey(state.game.daily.plan)) return null;
+  return checkpoint;
+}
+
+function recordDailyTaskAnswer(item, { score, correct, updatedAt }) {
+  const taskId = state.dailyTaskId;
+  if (!taskId || !item?.id) return;
+  const planKey = getDailyPlanKey(state.game.daily.plan);
+  const current = getDailyTaskCheckpoint(taskId) || normalizeTaskCheckpoint({
+    planKey,
+    cardIds: state.session.map((card) => card.id),
+  });
+  current.planKey = planKey;
+  current.cardIds = [...new Set([...current.cardIds, ...state.session.map((card) => card.id)])];
+  current.answeredCardIds = [...new Set([...current.answeredCardIds, item.id])];
+  current.results[item.id] = {
+    score,
+    correct,
+    updatedAt,
+  };
+  current.updatedAt = Math.max(current.updatedAt, Number(updatedAt) || 0);
+  state.game.daily.taskCheckpoints[taskId] = current;
+  state.game.daily.updatedAt = Math.max(state.game.daily.updatedAt || 0, current.updatedAt);
+}
+
+function dailyTaskCards(task) {
+  if (!task) return [];
+  if (task.action === "cards") return cardsByIds(task.cardIds);
+  const cards = buildSession(task.set);
+  if (task.phase === "learn") {
+    return cards.filter((card) => card.phase === "advance" || card.phase === "input");
+  }
+  if (task.phase === "output") {
+    return cards.filter((card) => card.phase === "output" || card.phase === "fluency");
+  }
+  return cards;
+}
+
+function checkpointResults(taskId) {
+  const checkpoint = getDailyTaskCheckpoint(taskId);
+  return checkpoint ? Object.values(checkpoint.results) : [];
+}
+
+function rewardDailyCheckpointIfNeeded(taskId) {
+  const checkpoint = getDailyTaskCheckpoint(taskId);
+  if (!checkpoint || checkpoint.rewarded) return;
+  const results = checkpointResults(taskId);
+  if (!results.length) return;
+  const good = results.filter((result) => result.correct ?? result.score >= 75).length;
+  const total = results.length;
+  const baseXp = total * 10 + good * 4;
+  const now = NOW();
+  checkpoint.rewarded = true;
+  checkpoint.updatedAt = Math.max(checkpoint.updatedAt, now);
+  state.game.daily.taskCheckpoints[taskId] = checkpoint;
+  state.game.daily.updatedAt = Math.max(state.game.daily.updatedAt || 0, now);
+  addXp(baseXp);
+  addXp(evaluateAndUnlockQuests({ totalCards: total, goodCount: good }));
+  state.game.sessionsDone += 1;
+  state.game.runStreak = good >= Math.max(1, Math.floor(total / 2))
+    ? state.game.runStreak + 1
+    : 0;
+  recordStudySession(now);
+  const title = "完成一般練習";
+  state.game.logs = [`${title}：${good}/${total} 題，+${baseXp} XP`, ...state.game.logs].slice(0, 6);
+  refreshAchievements();
+  saveGameState();
+  logRun(title);
+}
+
 function finishDailyTask(taskId) {
   if (!taskId) return;
   resetDailyIfNeeded();
   const completed = new Set(state.game.daily.completedTaskIds || []);
   completed.add(taskId);
   state.game.daily.completedTaskIds = [...completed];
+  delete state.game.daily.taskCheckpoints[taskId];
+  state.game.daily.updatedAt = NOW();
 
   const allDone = getDailyTasks().every((task) => completed.has(task.id));
   if (allDone && !state.game.daily.curriculumAdvanced) {
@@ -1263,15 +1609,19 @@ function getNextDailyTask() {
 
 function launchDailyTask(task) {
   if (!task) return;
-  if (task.action === "cards") {
-    startSession("daily", {
-      cards: cardsByIds(task.cardIds),
-      dailyTaskId: task.id,
-    });
+  const cards = dailyTaskCards(task);
+  const checkpoint = getDailyTaskCheckpoint(task.id);
+  const answeredCardIds = new Set(checkpoint?.answeredCardIds || []);
+  const remainingCards = cards.filter((card) => !answeredCardIds.has(card.id));
+  if (!remainingCards.length && cards.length) {
+    rewardDailyCheckpointIfNeeded(task.id);
+    finishDailyTask(task.id);
+    const nextTask = getNextDailyTask();
+    if (nextTask) launchDailyTask(nextTask);
     return;
   }
-  startSession(task.set, {
-    phase: task.phase,
+  startSession("daily", {
+    cards: remainingCards,
     dailyTaskId: task.id,
   });
 }
@@ -1323,14 +1673,18 @@ function getBossSkill() {
 function awardAchievement(id) {
   if (!state.game.achievements.includes(id)) {
     state.game.achievements.push(id);
+    return true;
   }
+  return false;
 }
 
 function refreshAchievements() {
+  let changed = false;
   ACHIEVEMENTS.forEach((achievement) => {
-    if (achievement.condition(state.game)) awardAchievement(achievement.id);
+    if (achievement.condition(state.game)) changed = awardAchievement(achievement.id) || changed;
   });
-  saveGameState();
+  if (changed) saveGameState();
+  return changed;
 }
 
 function logRun(entry) {
@@ -1373,13 +1727,41 @@ function addXp(points) {
   return points;
 }
 
+function syncLegacyStreakFromHistory(dateKey = getTodayKey()) {
+  const historyDates = Object.keys(state.studyHistory).filter(isDateKey).sort();
+  const latestDate = historyDates.at(-1) || "";
+  state.lastStudyDate = latestDate;
+  state.streak = latestDate ? calculateStudyStreak(state.studyHistory, latestDate) : 0;
+  if (dateKey && state.studyHistory[dateKey]) {
+    state.lastStudyDate = dateKey;
+    state.streak = calculateStudyStreak(state.studyHistory, dateKey);
+  }
+}
+
+function recordStudyAnswer({ correct, updatedAt }) {
+  const today = getTodayKey();
+  state.studyHistory = recordStudyActivity(state.studyHistory, today, { correct, updatedAt });
+  syncLegacyStreakFromHistory(today);
+}
+
+function recordStudySession(updatedAt = NOW()) {
+  const today = getTodayKey();
+  state.studyHistory = recordStudyActivity(state.studyHistory, today, {
+    session: true,
+    updatedAt,
+  });
+  syncLegacyStreakFromHistory(today);
+}
+
 function updateStreakForToday() {
   const today = getTodayKey();
-  const yesterday = getTodayKey(new Date(NOW() - DAY));
-  if (state.lastStudyDate === today) return;
-  state.streak = state.lastStudyDate === yesterday ? state.streak + 1 : 1;
-  state.lastStudyDate = today;
-  saveAllProgress();
+  if (!state.studyHistory[today]) {
+    state.studyHistory = recordStudyActivity(state.studyHistory, today, {
+      session: true,
+      updatedAt: NOW(),
+    });
+  }
+  syncLegacyStreakFromHistory(today);
   $("#streakCount").textContent = state.streak;
 }
 
@@ -1735,6 +2117,8 @@ function gradeAnswer(grade) {
     skill: item.skill,
   };
   state.results[state.index] = { ...result, score: assessedScore, correct };
+  recordStudyAnswer({ correct, updatedAt: now });
+  recordDailyTaskAnswer(item, { score: assessedScore, correct, updatedAt: now });
   saveReviews();
   renderMemoryStats();
   renderErrorDashboard();
@@ -1745,28 +2129,42 @@ function gradeAnswer(grade) {
     return;
   }
 
-  const good = state.results.filter((resultItem) => resultItem?.correct ?? resultItem?.score >= 75).length;
-  const total = state.results.length;
+  const completedDailyTask = state.dailyTaskId;
+  const dailyCheckpoint = completedDailyTask ? getDailyTaskCheckpoint(completedDailyTask) : null;
+  const summaryResults = dailyCheckpoint ? Object.values(dailyCheckpoint.results) : state.results;
+  const good = summaryResults.filter((resultItem) => resultItem?.correct ?? resultItem?.score >= 75).length;
+  const total = summaryResults.length;
   const isBossWin = state.sessionMode === "boss" && good === total;
   const baseXp = total * 10 + good * 4;
-  addXp(baseXp);
-  addXp(evaluateAndUnlockQuests({
-    totalCards: total,
-    goodCount: good,
-  }));
-  state.game.sessionsDone += 1;
-  if (isBossWin) state.game.bossDefeated += 1;
-  state.game.runStreak = good >= Math.max(1, Math.floor(total / 2)) ? state.game.runStreak + 1 : 0;
-  updateStreakForToday();
+  const shouldRewardSession = !dailyCheckpoint?.rewarded;
+  if (shouldRewardSession) {
+    if (dailyCheckpoint) {
+      dailyCheckpoint.rewarded = true;
+      dailyCheckpoint.updatedAt = Math.max(dailyCheckpoint.updatedAt, now);
+      state.game.daily.taskCheckpoints[completedDailyTask] = dailyCheckpoint;
+      state.game.daily.updatedAt = Math.max(state.game.daily.updatedAt || 0, now);
+    }
+    addXp(baseXp);
+    addXp(evaluateAndUnlockQuests({
+      totalCards: total,
+      goodCount: good,
+    }));
+    state.game.sessionsDone += 1;
+    if (isBossWin) state.game.bossDefeated += 1;
+    state.game.runStreak = good >= Math.max(1, Math.floor(total / 2)) ? state.game.runStreak + 1 : 0;
+    recordStudySession(now);
+    updateStreakForToday();
+  }
   const title = isBossWin ? "BOSS 戰全勝" : "完成一般練習";
-  state.game.logs = [`${title}：${good}/${total} 題，+${baseXp} XP`, ...state.game.logs].slice(0, 6);
+  if (shouldRewardSession) {
+    state.game.logs = [`${title}：${good}/${total} 題，+${baseXp} XP`, ...state.game.logs].slice(0, 6);
+  }
   refreshAchievements();
   saveGameState();
-  logRun(title);
+  if (shouldRewardSession) logRun(title);
   renderStreakMotivation();
   renderErrorDashboard();
   renderMemoryStats();
-  const completedDailyTask = state.dailyTaskId;
   state.dailyTaskId = null;
   if (completedDailyTask) {
     finishDailyTask(completedDailyTask);
@@ -1798,12 +2196,15 @@ function renderProgress() {
   const completed = new Set(state.game.daily.completedTaskIds || []);
   const weakSkill = cardsByIds(plan.weakCardIds)[0]?.skill || "助動詞 être";
   const locked = Boolean(state.game.daily.curriculumAdvanced);
+  const answeredToday = normalizeStudyHistoryEntry(state.studyHistory[getTodayKey()]).answered;
   $("#startReview").disabled = locked;
   $("#startReviewLabel").textContent = locked
-    ? "今日複習已完成"
+    ? `今日複習已完成 · 已答 ${answeredToday} 題`
     : completed.size
-      ? `繼續今日複習 · ${completed.size} / ${tasks.length}`
-      : `開始今日 ${LEARNER_PROFILE.dailyMinutes} 分鐘複習`;
+      ? `繼續今日複習 · 已答 ${answeredToday} 題 · ${completed.size} / ${tasks.length}`
+      : answeredToday
+        ? `繼續今日複習 · 已答 ${answeredToday} 題`
+        : `開始今日 ${LEARNER_PROFILE.dailyMinutes} 分鐘複習`;
 
   $("#dailyPlanIntro").innerHTML = `今天先修補 <strong>${weakSkill}</strong>，再超前 <strong>${module.title}</strong>。`;
   renderCurriculumRoadmap();
@@ -1874,17 +2275,27 @@ function renderStreakMotivation() {
   today.setHours(0, 0, 0, 0);
   const lastStudyDate = parseLocalDateKey(state.lastStudyDate);
   const dayGap = lastStudyDate ? Math.round((today - lastStudyDate) / DAY) : Number.POSITIVE_INFINITY;
-  const storedStreak = Math.max(0, state.streak);
+  const history = state.studyHistory && typeof state.studyHistory === "object"
+    ? state.studyHistory
+    : null;
+  const storedStreak = Math.max(0, Number(state.streak) || 0);
   const chainIsCurrent = (dayGap === 0 || dayGap === 1) && storedStreak > 0;
   const currentStreak = chainIsCurrent ? storedStreak : 0;
   const chainEnd = chainIsCurrent ? lastStudyDate : null;
   const chainStart = chainEnd ? new Date(chainEnd) : null;
   if (chainStart) chainStart.setDate(chainEnd.getDate() - Math.max(0, currentStreak - 1));
+  const localDateKey = (date) => [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
 
   const days = Array.from({ length: 7 }, (_, index) => {
     const date = new Date(today);
     date.setDate(today.getDate() - (6 - index));
-    const active = Boolean(chainStart && date >= chainStart && date <= chainEnd);
+    const active = history
+      ? Boolean(history[localDateKey(date)])
+      : Boolean(chainStart && date >= chainStart && date <= chainEnd);
     const isToday = date.getTime() === today.getTime();
     return { date, active, isToday };
   });

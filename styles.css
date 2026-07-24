@@ -363,6 +363,258 @@ h1 em {
   font-size: 24px;
 }
 
+.exam-target {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(180px, 0.65fr) minmax(250px, 0.9fr) minmax(320px, 1.2fr);
+  margin: -32px 4.5vw 72px;
+  border: 1px solid var(--ink);
+  background: #f8f4eb;
+  box-shadow: 10px 10px 0 rgba(40, 76, 69, 0.2);
+}
+
+.exam-target-heading,
+.exam-target-primary,
+.exam-target-backups {
+  min-width: 0;
+  padding: 27px 28px;
+}
+
+.exam-target-heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.exam-target-heading .eyebrow {
+  margin-bottom: 11px;
+}
+
+.exam-target-heading h2 {
+  margin: 0;
+  font: 600 clamp(29px, 3vw, 43px)/0.98 var(--serif);
+  letter-spacing: -0.035em;
+}
+
+.exam-target-heading h2 em {
+  color: var(--coral);
+  font-weight: 600;
+}
+
+.exam-target-heading > p:last-child {
+  max-width: 250px;
+  margin: 15px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.exam-target-primary {
+  color: var(--paper);
+  background: var(--coral);
+}
+
+.exam-target-label,
+.exam-target-place,
+.exam-target-backup-heading,
+.exam-target-backup-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.exam-target-label span,
+.exam-target-label small,
+.exam-target-backup-heading span {
+  font: 9px var(--mono);
+  letter-spacing: 0.13em;
+}
+
+.exam-target-label span {
+  border: 1px solid rgba(242, 238, 227, 0.72);
+  padding: 5px 8px;
+}
+
+.exam-target-label small {
+  color: rgba(242, 238, 227, 0.68);
+}
+
+.exam-target-place {
+  margin-top: 19px;
+}
+
+.exam-target-place h3 {
+  margin: 0;
+  font: 600 34px/1 var(--serif);
+}
+
+.exam-target-place span {
+  color: rgba(242, 238, 227, 0.65);
+  font: 9px var(--mono);
+  letter-spacing: 0.13em;
+}
+
+.exam-target-primary time {
+  display: block;
+  margin-top: 14px;
+  font: 600 clamp(27px, 3vw, 41px)/1 var(--serif);
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+
+.exam-target-primary > p {
+  margin: 16px 0 0;
+  color: rgba(242, 238, 227, 0.74);
+  font-size: 10px;
+}
+
+.exam-target-primary > p strong {
+  color: var(--paper);
+  font: 500 11px var(--mono);
+}
+
+.exam-target-backups {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.exam-target-backup-heading {
+  margin-bottom: 8px;
+}
+
+.exam-target-backup-heading span {
+  color: var(--coral);
+}
+
+.exam-target-backup-heading strong {
+  font: 600 19px var(--serif);
+}
+
+.exam-target-backup-row {
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.exam-target-backup-row time {
+  font: 600 18px var(--serif);
+  white-space: nowrap;
+}
+
+.exam-target-backup-row > span {
+  border: 1px solid var(--line);
+  padding: 4px 7px;
+  font: 9px var(--mono);
+  white-space: nowrap;
+}
+
+.exam-target-backup-row small {
+  color: var(--muted);
+  font: 9px var(--mono);
+  text-align: right;
+}
+
+.exam-other-dates {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+  background: rgba(248, 244, 235, 0.72);
+}
+
+.exam-other-dates summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 22px;
+  cursor: pointer;
+  color: var(--ink);
+  font: 500 10px var(--mono);
+  letter-spacing: 0.08em;
+}
+
+.exam-other-dates summary::before {
+  content: "＋";
+  color: var(--coral);
+  font-size: 14px;
+}
+
+.exam-other-dates[open] summary::before {
+  content: "−";
+}
+
+.exam-other-dates summary::marker {
+  content: "";
+}
+
+.exam-other-dates-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+}
+
+.exam-other-dates-grid > div {
+  min-width: 0;
+  padding: 15px 22px;
+  border-right: 1px solid var(--line);
+}
+
+.exam-other-dates-grid > div:last-child {
+  border-right: 0;
+}
+
+.exam-other-dates-grid strong,
+.exam-other-dates-grid time {
+  display: block;
+}
+
+.exam-other-dates-grid strong {
+  margin-bottom: 8px;
+  font: 600 17px var(--serif);
+}
+
+.exam-other-dates-grid time {
+  margin-top: 4px;
+  color: var(--muted);
+  font: 9px/1.5 var(--mono);
+}
+
+.exam-other-dates > p {
+  margin: 0;
+  border-top: 1px solid var(--line);
+  padding: 10px 22px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.exam-target-note {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding: 12px 22px;
+  color: var(--muted);
+  background: rgba(231, 224, 208, 0.42);
+}
+
+.exam-target-note > span {
+  color: var(--coral);
+  font: 16px var(--serif);
+}
+
+.exam-target-note p {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.exam-target-note strong {
+  color: var(--ink);
+}
+
 .daily-plan {
   padding: 75px 4.5vw 90px;
   background: #e6dfd0;
@@ -2406,6 +2658,14 @@ body.settings-open {
     gap: 30px;
   }
   .today-note { display: none; }
+  .exam-target {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: -24px;
+  }
+  .exam-target-heading { grid-column: 1 / -1; }
+  .exam-other-dates-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .exam-other-dates-grid > div:nth-child(2) { border-right: 0; }
+  .exam-other-dates-grid > div:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
   .daily-prescription { grid-template-columns: 1fr 1fr; }
   .daily-prescription > div:nth-child(2) { border-right: 0; }
   .daily-prescription > div:nth-child(-n + 2) { border-bottom: 1px solid rgba(242, 238, 227, 0.22); }
@@ -2476,6 +2736,47 @@ body.settings-open {
     font-size: 51px;
   }
   .hero-intro { font-size: 14px; }
+  .exam-target {
+    grid-template-columns: 1fr;
+    margin: -22px 18px 55px;
+    box-shadow: 7px 7px 0 rgba(40, 76, 69, 0.2);
+  }
+  .exam-target-heading,
+  .exam-target-primary,
+  .exam-target-backups {
+    grid-column: 1;
+    padding: 19px 18px;
+  }
+  .exam-target-heading > p:last-child { display: none; }
+  .exam-target-heading h2 { font-size: 32px; }
+  .exam-target-primary,
+  .exam-target-backups {
+    border-top: 1px solid var(--ink);
+  }
+  .exam-target-note { padding: 12px 17px; }
+  .exam-other-dates summary,
+  .exam-other-dates > p { padding-right: 17px; padding-left: 17px; }
+  .exam-other-dates-grid { grid-template-columns: 1fr; }
+  .exam-other-dates-grid > div {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding-right: 17px;
+    padding-left: 17px;
+  }
+  .exam-other-dates-grid > div:last-child { border-bottom: 0; }
+  .exam-target-place { margin-top: 14px; }
+  .exam-target-primary time { margin-top: 10px; font-size: 32px; }
+  .exam-target-primary > p { margin-top: 12px; }
+  .exam-target-backup-row { padding: 11px 0; }
+  .exam-target-backup-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 12px;
+  }
+  .exam-target-backup-row small {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
   .daily-plan { padding: 55px 18px 65px; }
   .goal-strip { padding: 50px 22px; }
   .streak-section { padding: 55px 22px 65px; }

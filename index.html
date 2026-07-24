@@ -15,8 +15,8 @@
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260724e" />
-    <script src="app.js?v=20260724e" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260724f" />
+    <script src="app.js?v=20260724f" defer></script>
   </head>
   <body>
     <div class="paper-noise" aria-hidden="true"></div>
@@ -85,11 +85,81 @@
           </aside>
         </div>
 
+        <section class="exam-target" aria-labelledby="examTargetTitle">
+          <header class="exam-target-heading">
+            <p class="eyebrow">PROCHAIN EXAMEN</p>
+            <h2 id="examTargetTitle">TCF Canada<br /><em>考試目標</em></h2>
+            <p>先鎖定主目標，再保留兩個可執行備案。</p>
+          </header>
+
+          <article class="exam-target-primary">
+            <div class="exam-target-label">
+              <span>主目標</span>
+              <small>紙本</small>
+            </div>
+            <div class="exam-target-place">
+              <h3>台北</h3>
+              <span>TAIPEI</span>
+            </div>
+            <time datetime="2026-12-20">2026 / 12 / 20</time>
+            <p>報名 <strong>11 / 05 — 11 / 15</strong></p>
+          </article>
+
+          <div class="exam-target-backups">
+            <div class="exam-target-backup-heading">
+              <span>備選</span>
+              <strong>昆明 · KUNMING</strong>
+            </div>
+            <div class="exam-target-backup-row">
+              <time datetime="2027-01-12">2027 / 01 / 12</time>
+              <span>電腦</span>
+              <small>截止 01 / 04</small>
+            </div>
+            <div class="exam-target-backup-row">
+              <time datetime="2027-01-26">2027 / 01 / 26</time>
+              <span>紙本</span>
+              <small>截止 2026 / 12 / 14</small>
+            </div>
+          </div>
+
+          <details class="exam-other-dates">
+            <summary>查看其他亞洲固定場次</summary>
+            <div class="exam-other-dates-grid">
+              <div>
+                <strong>印尼</strong>
+                <time datetime="2026-12-01">2026 / 12 / 01</time>
+              </div>
+              <div>
+                <strong>北京</strong>
+                <time datetime="2026-12-02">12 / 02–03</time>
+                <time datetime="2027-01-13">2027 / 01 / 13–14</time>
+              </div>
+              <div>
+                <strong>上海</strong>
+                <time datetime="2026-12-03">12 / 03</time>
+                <time datetime="2026-12-17">12 / 17</time>
+                <time datetime="2027-01-14">2027 / 01 / 14</time>
+              </div>
+              <div>
+                <strong>成都</strong>
+                <time datetime="2026-12-10">12 / 10</time>
+                <time datetime="2026-12-17">12 / 17</time>
+              </div>
+            </div>
+            <p>香港、馬來西亞、新加坡：目前無該期間公告。</p>
+          </details>
+
+          <footer class="exam-target-note">
+            <span aria-hidden="true">↳</span>
+            <p><strong>京都／大阪</strong>：電腦預約制，至少提前 10 天聯絡；日期需考場確認。</p>
+          </footer>
+        </section>
+
         <section class="goal-strip" aria-labelledby="goal-title">
           <div class="goal-copy">
             <p class="eyebrow light">CAP SUR LE B2</p>
             <h2 id="goal-title">TCF Canada<br /><em>目標路線</em></h2>
-            <p>目標日：<strong>2027.02.28</strong></p>
+            <p>主考日：<strong>2026.12.20</strong></p>
           </div>
           <div class="level-route" aria-label="TCF Canada B2 學習路線">
             <div class="level-node current">
@@ -111,9 +181,9 @@
             </div>
             <div class="route-line"></div>
             <div class="level-node target">
-              <span>2027.02</span>
+              <span>2026.12</span>
               <strong>B2</strong>
-              <small>完整限時模考</small>
+              <small>TCF Canada 正式考試</small>
             </div>
           </div>
         </section>
@@ -137,7 +207,7 @@
               <small id="streakWeekScore">0 / 7</small>
             </div>
             <div class="streak-chart" id="streakChart" aria-label="最近七天的目前連續紀錄"></div>
-            <p>只依目前的連續天數與最後學習日推算，不代表完整歷史活動。</p>
+            <p>每答一題就會保存；這裡顯示最近 7 天實際有練習的日期。</p>
           </div>
         </section>
 
