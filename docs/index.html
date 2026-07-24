@@ -15,8 +15,8 @@
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260724b" />
-    <script src="app.js?v=20260724b" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260724c" />
+    <script src="app.js?v=20260724c" defer></script>
   </head>
   <body>
     <div class="paper-noise" aria-hidden="true"></div>
@@ -286,10 +286,25 @@
                 <span id="resultLabel">正確答案</span>
                 <strong id="matchScore">—</strong>
               </div>
-              <strong id="answerText">Je mange du pain au petit déjeuner.</strong>
+              <div class="answer-copy">
+                <strong id="answerText">Je mange du pain au petit déjeuner.</strong>
+                <button
+                  id="speakAnswer"
+                  class="answer-audio-button"
+                  type="button"
+                  aria-label="播放法文標準答案"
+                  disabled
+                >
+                  ♪ 聽標準答案
+                </button>
+              </div>
               <p id="answerNote">食物前用 du；三餐前使用 au。</p>
               <p class="user-answer-line">你的答案：<span id="userAnswerText"></span></p>
             </div>
+
+            <p id="aiReviewOutput" class="ai-review-output" role="status" aria-live="polite">
+              可在本題核對後，點擊「AI 判別錯誤」取得語法建議。
+            </p>
 
             <div class="grading" id="grading">
               <p>這張卡片何時再出現？</p>
@@ -299,10 +314,6 @@
                 <button data-grade="good"><span>記住了</span><small id="goodInterval">3 天</small></button>
               </div>
             </div>
-
-            <p id="aiReviewOutput" class="ai-review-output">
-              可在本題核對後，點擊「AI 判別錯誤」取得語法建議。
-            </p>
           </article>
         </div>
       </section>

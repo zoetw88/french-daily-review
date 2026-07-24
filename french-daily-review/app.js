@@ -1489,6 +1489,7 @@ function buildBossSession() {
 
 function renderQuestion() {
   activeAiReviewRun += 1;
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
   state.canGrade = false;
   $$("[data-grade]").forEach((button) => {
     button.disabled = false;
@@ -1511,6 +1512,8 @@ function renderQuestion() {
   $("#typedAnswer").disabled = false;
   $("#checkAnswer").disabled = true;
   $("#aiReviewButton").disabled = true;
+  $("#speakAnswer").hidden = !/[A-Za-zÀ-ÖØ-öø-ÿŒœÆæ]/.test(item.a);
+  $("#speakAnswer").disabled = true;
   setAiReviewStatus("先核對完答案，再點 AI 判別。");
   $("#inputHint").textContent = "輸入後才能核對答案";
   $("#goodInterval").textContent = `${nextGoodInterval(review.streak)} 天`;
@@ -1565,6 +1568,7 @@ function checkTypedAnswer() {
   $("#typedAnswer").disabled = true;
   $("#checkAnswer").disabled = true;
   $("#aiReviewButton").disabled = false;
+  $("#speakAnswer").disabled = $("#speakAnswer").hidden;
   $("#aiReviewOutput").textContent = "可點選 AI 判別錯誤，或先挑選複習頻率。";
   $("#inputHint").textContent = item.openEnded
     ? "開放題不逐字評分；可用 AI 檢查文法與是否切題"
@@ -1579,6 +1583,25 @@ function getOpenRouterApiKey() {
 
 function setAiReviewStatus(message) {
   $("#aiReviewOutput").textContent = message;
+}
+
+function speakFrench(text) {
+  const phrase = String(text || "").trim();
+  if (!phrase) return showToast("目前沒有可播放的法文");
+  if (!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined") {
+    return showToast("此瀏覽器不支援語音播放");
+  }
+
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(phrase);
+  utterance.lang = "fr-FR";
+  utterance.rate = 0.92;
+  const voices = speechSynthesis.getVoices();
+  const frenchVoice =
+    voices.find((voice) => String(voice.lang || "").toLowerCase().replace("_", "-") === "fr-fr") ||
+    voices.find((voice) => String(voice.lang || "").toLowerCase().startsWith("fr"));
+  if (frenchVoice) utterance.voice = frenchVoice;
+  speechSynthesis.speak(utterance);
 }
 
 function setOpenRouterKeyStatus(message) {
@@ -2083,12 +2106,13 @@ $$("[data-grade]").forEach((button) =>
 );
 
 $("#speakPrompt").addEventListener("click", () => {
-  if (!("speechSynthesis" in window)) return showToast("此瀏覽器不支援語音播放");
-  speechSynthesis.cancel();
   const item = state.session[state.index];
-  const utterance = new SpeechSynthesisUtterance(item.audioText || item.q);
-  utterance.lang = "fr-FR";
-  speechSynthesis.speak(utterance);
+  if (item) speakFrench(item.audioText || item.q);
+});
+
+$("#speakAnswer").addEventListener("click", () => {
+  const item = state.session[state.index];
+  if (item) speakFrench(item.a);
 });
 
 $("#mistakeList").addEventListener("click", (event) => {

@@ -1137,10 +1137,45 @@ h1 em {
   font: 600 29px var(--serif);
 }
 
+.answer-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 8px 0;
+}
+
 .answer-area strong {
   display: block;
   margin: 8px 0;
   font: 600 22px var(--serif);
+}
+
+.answer-copy #answerText {
+  flex: 1;
+  margin: 0;
+}
+
+.answer-audio-button {
+  flex: 0 0 auto;
+  border: 1px solid var(--ink);
+  padding: 8px 11px;
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+  font: 500 10px var(--mono);
+  letter-spacing: 0.08em;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.answer-audio-button:hover {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.answer-audio-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 .answer-area p {
@@ -1241,10 +1276,14 @@ h1 em {
 }
 
 .ai-review-output {
-  margin: 10px 0 0;
-  color: var(--muted);
+  margin: 16px 0 0;
+  border-left: 3px solid var(--coral);
+  padding: 12px 14px;
+  color: var(--ink);
+  background: rgba(237, 104, 85, 0.07);
   font-size: 12px;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
   line-height: 1.6;
 }
 
@@ -1969,6 +2008,8 @@ body.settings-open {
   .flashcard { min-height: 470px; padding: 25px 23px; }
   .prompt-label { margin-top: 55px; }
   .flashcard h2 { font-size: 35px; }
+  .answer-copy { align-items: stretch; flex-direction: column; gap: 10px; }
+  .answer-audio-button { width: 100%; }
   .content-view { padding: 50px 20px 70px; }
   .content-hero h1 { font-size: 48px; }
   .mistake-row { grid-template-columns: 35px 1fr 20px; gap: 10px; }
