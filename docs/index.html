@@ -32,7 +32,6 @@
 
       <nav class="main-nav" aria-label="主要導覽">
         <button class="nav-link active" data-view="today">今日</button>
-        <button class="nav-link" data-view="review">複習</button>
         <button class="nav-link" data-view="mistakes">錯題簿</button>
         <button class="nav-link" data-view="classes">課程</button>
         <button class="nav-link" data-view="game">遊戲</button>
@@ -69,19 +68,18 @@
           <div class="hero-copy">
             <p class="eyebrow">BONJOUR, ZOE <span>·</span> OBJECTIF TCF CANADA B2</p>
             <h1>今天，再靠近<br /><em>法語一點點。</em></h1>
-            <p class="hero-intro">
-              依照你的課堂進度與常見錯誤，今天專注在
-              <strong>飲食冠詞</strong>與<strong>動詞變化</strong>。
+            <p class="hero-intro" id="dailyPlanIntro">
+              正在依照你的程度、到期錯題與 TCF 目標安排今天的內容。
             </p>
             <button class="primary-button" id="startReview">
-              <span>開始今日複習</span>
+              <span id="startReviewLabel">開始今日 35 分鐘複習</span>
               <span class="button-arrow">↗</span>
             </button>
           </div>
 
           <aside class="today-note">
             <div class="tape"></div>
-            <span class="note-number">07 / 23</span>
+            <span class="note-number" id="todayNoteDate">07 / 24</span>
             <p class="handwriting">Petit à petit,<br />l’oiseau fait son nid.</p>
             <span class="translation">積少成多。</span>
             <div class="tiny-sketch" aria-hidden="true">⌁ ☕︎</div>
@@ -128,7 +126,7 @@
               <h2 id="daily-title">今日複習計畫</h2>
             </div>
             <div class="plan-progress">
-              <span><strong id="completedCount">0</strong> / 3 完成</span>
+              <span><strong id="completedCount">0</strong> / <span id="dailyTaskTotal">4</span> 完成</span>
               <div class="progress-track">
                 <span id="progressBar"></span>
               </div>
@@ -161,49 +159,13 @@
             </div>
           </div>
 
-          <div class="task-grid">
-            <article class="task-card coral" data-task="words">
-              <div class="task-topline">
-                <span class="task-index">01</span>
-                <button class="task-check" aria-label="標記單字複習完成">✓</button>
-              </div>
-              <div class="card-glyph">Aa</div>
-              <p class="task-kicker">8 MIN · VOCABULAIRE</p>
-              <h3>飲食與三餐</h3>
-              <p>du pain、de l’eau、des légumes，以及三餐的說法。</p>
-              <button class="text-action task-launch" data-set="food">
-                練習 8 個單字 <span>→</span>
-              </button>
-            </article>
+          <div class="daily-prescription" id="dailyPrescription"></div>
 
-            <article class="task-card blue" data-task="grammar">
-              <div class="task-topline">
-                <span class="task-index">02</span>
-                <button class="task-check" aria-label="標記文法複習完成">✓</button>
-              </div>
-              <div class="card-glyph">ne<br />pas</div>
-              <p class="task-kicker">10 MIN · GRAMMAIRE</p>
-              <h3>否定句的 de</h3>
-              <p>把 un / une / des 變成 de，並練習母音前的省音。</p>
-              <button class="text-action task-launch" data-set="negative">
-                做 5 道題目 <span>→</span>
-              </button>
-            </article>
+          <div class="task-grid" id="dailyTaskGrid"></div>
 
-            <article class="task-card yellow" data-task="speaking">
-              <div class="task-topline">
-                <span class="task-index">03</span>
-                <button class="task-check" aria-label="標記口說複習完成">✓</button>
-              </div>
-              <div class="card-glyph sound-glyph">)))</div>
-              <p class="task-kicker">5 MIN · EXPRESSION</p>
-              <h3>回答早餐吃什麼</h3>
-              <p>用完整句回答，特別留意 boire、prendre、manger。</p>
-              <button class="text-action task-launch" data-set="speaking">
-                開始口說提示 <span>→</span>
-              </button>
-            </article>
-          </div>
+          <p class="method-note">
+            流程：無提示回想 → 錯因回饋 → 超前新知 → 完整輸出。同一新主題至少練 3 輪，未穩定就不前進；連連看只作暖身。
+          </p>
         </section>
 
         <section class="weakness-strip">
@@ -212,15 +174,15 @@
             <h2>你的易錯重點</h2>
           </div>
           <div class="weakness-list">
-            <button class="weakness-chip" data-set="verbs">
+            <div class="weakness-chip">
               <span>01</span> boire 的變化 <b>12 次錯誤</b>
-            </button>
-            <button class="weakness-chip" data-set="negative">
+            </div>
+            <div class="weakness-chip">
               <span>02</span> 否定句冠詞 <b>9 次錯誤</b>
-            </button>
-            <button class="weakness-chip" data-set="questions">
+            </div>
+            <div class="weakness-chip">
               <span>03</span> 問句結構 <b>7 次錯誤</b>
-            </button>
+            </div>
           </div>
         </section>
 
@@ -254,10 +216,9 @@
             <article class="game-card" id="bossCard">
               <p class="task-kicker">BOSS戰</p>
               <h3>薄弱點總決戰：<span id="bossSkill">載入中…</span></h3>
-              <p id="bossReady">完成本日一題以上錯題後解鎖</p>
+              <p id="bossReady">弱點題已自動混入每日複習，不需另外開一場。</p>
               <div class="tiny-action-row">
-                <button class="text-action" id="bossStart">開始 BOSS 戰 →</button>
-                <small id="bossBadge">未解鎖</small>
+                <small id="bossBadge">自動追蹤</small>
               </div>
             </article>
 
@@ -339,28 +300,49 @@
               </div>
             </div>
 
-            <div class="openrouter-block">
-              <label for="openRouterApiKey">OpenRouter 金鑰（免費模型可用）</label>
-              <div class="openrouter-row">
-                <input id="openRouterApiKey" type="password" placeholder="sk-or-v1-..." autocomplete="off" spellcheck="false" />
-                <button id="saveOpenRouterKey">儲存金鑰</button>
-              </div>
-              <p id="aiReviewOutput">可在本題核對後，點擊「AI 判別錯誤」取得語法建議。</p>
-              <div class="backup-block">
-                <p>進度本機備份（不外流）</p>
-                <div class="backup-row">
-                  <button id="exportProgressJson" class="ghost-compact">下載進度備份(JSON)</button>
-                  <button id="exportProgressMarkdown" class="ghost-compact">下載備份到 Obsidian(.md)</button>
-                  <button id="copyProgressJson">複製進度 JSON</button>
-                  <button id="copyProgressMarkdown" class="ghost-compact">複製到 Obsidian 版面</button>
-                  <button id="importProgressBtn">還原備份</button>
-                  <button id="pasteProgressBtn" class="ghost-compact">貼上備份還原</button>
-                </div>
-                <p id="progressBackupStatus">每次完成題目都會存到本機；另外也可用複製/貼上跨設備同步。</p>
-                <input id="progressBackupFile" type="file" accept=".json,application/json" />
-              </div>
-            </div>
+            <p id="aiReviewOutput" class="ai-review-output">
+              可在本題核對後，點擊「AI 判別錯誤」取得語法建議。
+            </p>
           </article>
+        </div>
+      </section>
+
+      <section class="view matching-layout" id="matching-view">
+        <div class="review-header">
+          <div>
+            <p class="eyebrow">ASSOCIATION · PASSÉ COMPOSÉ</p>
+            <h1>把動詞和過去分詞連起來。</h1>
+          </div>
+          <button class="ghost-button" id="exitMatching">結束連連看 ×</button>
+        </div>
+
+        <div class="matching-shell">
+          <div class="matching-topline">
+            <div>
+              <span>完成配對</span>
+              <strong id="matchingProgress">0 / 9</strong>
+            </div>
+            <div>
+              <span>錯誤次數</span>
+              <strong id="matchingMistakes">0</strong>
+            </div>
+            <button id="restartMatching" type="button">重新洗牌</button>
+          </div>
+
+          <p class="matching-feedback" id="matchingFeedback">
+            先選左邊的動詞原形，再選右邊的過去分詞。
+          </p>
+
+          <div class="matching-board" id="matchingBoard">
+            <div class="matching-column">
+              <p>INFINITIF · 動詞原形</p>
+              <div id="matchingInfinitives"></div>
+            </div>
+            <div class="matching-column">
+              <p>PARTICIPE PASSÉ · 過去分詞</p>
+              <div id="matchingParticiples"></div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -378,7 +360,7 @@
         <div class="content-hero class-hero">
           <p class="eyebrow">MON PARCOURS</p>
           <h1>從第一堂課，<em>一路走到今天。</em></h1>
-          <p>點選任一課程，立即用該主題開始複習。</p>
+          <p>這裡保留課程紀錄；題目會由「今日複習」依弱點與進度自動安排。</p>
         </div>
         <div class="class-timeline" id="classTimeline"></div>
       </section>
@@ -415,7 +397,7 @@
         <header class="settings-panel-header">
           <div>
             <p>PARAMÈTRES</p>
-            <h2 id="settingsTitle">同步設定</h2>
+            <h2 id="settingsTitle">設定與資料</h2>
           </div>
           <button class="settings-close" id="settingsClose" type="button" aria-label="關閉設定">×</button>
         </header>
@@ -423,8 +405,49 @@
         <div class="settings-panel-body">
           <div class="settings-intro">
             <span>01</span>
-            <p>讓學習進度跟著你，而不是跟著某一台電腦。</p>
+            <p>AI 金鑰、備份與跨裝置同步都集中在這裡。</p>
           </div>
+
+          <section class="settings-block openrouter-block" aria-labelledby="openRouterTitle">
+            <div class="settings-block-heading">
+              <div>
+                <span>AI REVIEW</span>
+                <p id="openRouterTitle">OpenRouter 金鑰</p>
+              </div>
+              <small>使用官方免費模型路由</small>
+            </div>
+            <label for="openRouterApiKey">API Key</label>
+            <div class="openrouter-row">
+              <input id="openRouterApiKey" type="password" placeholder="sk-or-v1-..." autocomplete="off" spellcheck="false" />
+              <button id="saveOpenRouterKey">本分頁使用</button>
+              <button id="clearOpenRouterKey" class="ghost-compact">清除</button>
+            </div>
+            <p class="security-note">
+              靜態網頁無法完全隱藏金鑰。這裡只存到本分頁的 sessionStorage；關閉分頁即清除，也不會寫入 Git、進度備份或雲端。
+              AI 判別會把本題、參考答案與你的作答傳給 OpenRouter 及其模型供應商，請勿輸入個人資料。
+            </p>
+            <p id="openRouterKeyStatus">尚未設定。本功能在 20 秒逾時後會自動重試一次。</p>
+          </section>
+
+          <section class="settings-block backup-block" aria-labelledby="backupTitle">
+            <div class="settings-block-heading">
+              <div>
+                <span>LOCAL BACKUP</span>
+                <p id="backupTitle">進度本機備份</p>
+              </div>
+              <small>手動下載或跨設備還原</small>
+            </div>
+            <div class="backup-row">
+              <button id="exportProgressJson" class="ghost-compact">下載進度備份(JSON)</button>
+              <button id="exportProgressMarkdown" class="ghost-compact">下載備份到 Obsidian(.md)</button>
+              <button id="copyProgressJson">複製進度 JSON</button>
+              <button id="copyProgressMarkdown" class="ghost-compact">複製到 Obsidian 版面</button>
+              <button id="importProgressBtn">還原備份</button>
+              <button id="pasteProgressBtn" class="ghost-compact">貼上備份還原</button>
+            </div>
+            <p id="progressBackupStatus">每次完成題目都會存到本機；另外也可用複製/貼上跨設備同步。</p>
+            <input id="progressBackupFile" type="file" accept=".json,application/json" />
+          </section>
 
           <section class="github-sync-block" aria-labelledby="githubSyncTitle">
             <div class="github-sync-heading">
