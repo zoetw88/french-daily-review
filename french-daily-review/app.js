@@ -69,12 +69,157 @@ const classes = [
 
 const DAY = 86_400_000;
 const NOW = () => Date.now();
+const OPENROUTER_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
+const OPENROUTER_MODEL = "mistralai/mistral-7b-instruct:free";
+const PROGRESS_BACKUP_KEY = "encore-progress-backup";
+const PROGRESS_EXPORT_VERSION = 2;
+const PROGRESS_FILE_PREFIX = "french-review-progress";
+const OPENROUTER_KEY_KEY = "encore-openrouter-key";
+const GITHUB_SYNC_CONFIG_KEY = "encore-github-sync-config";
+const GITHUB_SYNC_TOKEN_KEY = "encore-github-sync-token";
+const GITHUB_API_ENDPOINT = "https://api.github.com";
+const GITHUB_API_VERSION = "2022-11-28";
+const GITHUB_SYNC_DELAY = 1_500;
+const DEFAULT_GITHUB_SYNC_CONFIG = Object.freeze({
+  owner: "zoetw88",
+  repo: "french-review-progress-private",
+  branch: "main",
+  path: "progress.json",
+});
+let githubSyncTimer = null;
+let githubSyncInFlight = false;
+let githubSyncPending = false;
+let githubSyncVerified = false;
 const allCards = Object.entries(studySets).flatMap(([set, cards]) =>
   cards.map((card, index) => ({ ...card, set, id: `${set}-${index}` }))
 );
 
 function getTodayKey(date = new Date()) {
   return date.toLocaleDateString("en-CA");
+}
+
+function readJsonSafe(rawValue, fallback = null) {
+  if (rawValue === null || rawValue === undefined) return fallback;
+  try {
+    return JSON.parse(rawValue);
+  } catch {
+    return fallback;
+  }
+}
+
+function loadStateFromBackup() {
+  const backup = readJsonSafe(localStorage.getItem(PROGRESS_BACKUP_KEY), null);
+  if (!backup || typeof backup !== "object") return null;
+  if (backup.state && typeof backup.state === "object") return backup.state;
+  if (backup.completed || backup.reviews || backup.streak || backup.game) {
+    return {
+      completed: backup.completed,
+      streak: backup.streak,
+      reviews: backup.reviews,
+      lastStudyDate: backup.lastStudyDate,
+      game: backup.game,
+    };
+  }
+  return null;
+}
+
+const backupState = loadStateFromBackup();
+
+function getProgressSnapshot() {
+  return {
+    completed: state.completed,
+    streak: state.streak,
+    reviews: state.reviews,
+    lastStudyDate: state.lastStudyDate,
+    game: state.game,
+  };
+}
+
+function normalizeReviewEntry(raw = {}) {
+  if (!raw || typeof raw !== "object") return null;
+  const attemptCount = Number(raw.attempts || 0);
+  const correct = Number(raw.correct || 0);
+  const wrong = Number(raw.wrong || 0);
+  return {
+    attempts: Math.max(0, attemptCount),
+    correct: Math.max(0, correct),
+    wrong: Math.max(0, wrong),
+    streak: Number(raw.streak || 0),
+    interval: Number(raw.interval || 0),
+    nextReview: Number(raw.nextReview || 0),
+    lastReviewed: raw.lastReviewed || 0,
+    lastScore: Number(raw.lastScore || 0),
+    skill: raw.skill || "",
+  };
+}
+
+function normalizeProgressData(raw = {}) {
+  const result = {
+    completed: Array.isArray(raw.completed) ? [...new Set(raw.completed)] : [],
+    streak: Number(raw.streak || 4),
+    reviews: typeof raw.reviews === "object" && raw.reviews ? {} : {},
+    lastStudyDate: typeof raw.lastStudyDate === "string" ? raw.lastStudyDate : "",
+    game: normalizeGameState(raw.game || {}),
+  };
+  if (typeof raw.reviews === "object" && raw.reviews) {
+    Object.entries(raw.reviews).forEach(([key, value]) => {
+      const normalized = normalizeReviewEntry(value);
+      if (normalized) result.reviews[key] = normalized;
+    });
+  }
+  return result;
+}
+
+function buildExportPayload(exportedAt = NOW()) {
+  return {
+    app: "encore-french-review",
+    schema: "french-review-progress",
+    version: PROGRESS_EXPORT_VERSION,
+    exportedAt,
+    state: getProgressSnapshot(),
+  };
+}
+
+function buildObsidianMarkdownPayload(payload) {
+  const stamp = new Date(payload.exportedAt).toLocaleString("zh-TW", { hour12: false });
+  const game = payload.state?.game || {};
+  const reviews = Object.entries(payload.state?.reviews || {}).filter(([, item]) => item && item.attempts > 0);
+
+  return `# 法語複習進度備份
+
+- 匯出時間：${stamp}
+- 連續天數：${payload.state?.streak ?? 0}
+- 今日累積 XP：${game.xp ?? 0}
+- 金幣：${game.coins ?? 0}
+- 已完成課程：${(payload.state?.completed || []).length}
+
+## 進度資料（可直接匯入）
+\`\`\`json
+${JSON.stringify(payload.state, null, 2)}
+\`\`\`
+
+## 錯誤較多題目 Top 8（含錯題數）
+\`\`\`text
+${reviews
+    .sort((a, b) => (b[1].wrong || 0) - (a[1].wrong || 0))
+    .slice(0, 8)
+    .map(([cardId, info]) => `${cardId}: wrong=${info.wrong}, attempts=${info.attempts}, streak=${info.streak || 0}`)
+    .join("\n") || "尚無題目紀錄"}
+\`\`\`
+`;
+}
+
+function downloadText(filename, content, type = "application/json") {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.style.display = "none";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
 function normalizeGameState(raw = {}) {
@@ -116,6 +261,24 @@ const ACHIEVEMENTS = [
 
 const XP_LEVEL_STEP = 120;
 
+if (backupState) {
+  if (localStorage.getItem("encore-completed") === null && backupState.completed) {
+    localStorage.setItem("encore-completed", JSON.stringify(backupState.completed));
+  }
+  if (localStorage.getItem("encore-streak") === null && backupState.streak !== undefined) {
+    localStorage.setItem("encore-streak", String(backupState.streak));
+  }
+  if (localStorage.getItem("encore-reviews-v2") === null && backupState.reviews) {
+    localStorage.setItem("encore-reviews-v2", JSON.stringify(backupState.reviews));
+  }
+  if (localStorage.getItem("encore-last-study-date") === null && backupState.lastStudyDate) {
+    localStorage.setItem("encore-last-study-date", backupState.lastStudyDate);
+  }
+  if (localStorage.getItem("encore-game-state") === null && backupState.game) {
+    localStorage.setItem("encore-game-state", JSON.stringify(backupState.game));
+  }
+}
+
 const state = {
   set: "due",
   session: [],
@@ -145,12 +308,438 @@ function reviewFor(card) {
   };
 }
 
+function getLocalProgressUpdatedAt() {
+  return Number(readJsonSafe(localStorage.getItem(PROGRESS_BACKUP_KEY), {})?.updatedAt || 0);
+}
+
+function saveAllProgress({ syncCloud = true, updatedAt = NOW() } = {}) {
+  localStorage.setItem("encore-completed", JSON.stringify(state.completed));
+  localStorage.setItem("encore-streak", String(state.streak));
+  localStorage.setItem("encore-reviews-v2", JSON.stringify(state.reviews));
+  localStorage.setItem("encore-last-study-date", state.lastStudyDate || "");
+  localStorage.setItem("encore-game-state", JSON.stringify(state.game));
+  const backup = {
+    version: PROGRESS_EXPORT_VERSION,
+    updatedAt,
+    state: getProgressSnapshot(),
+  };
+  localStorage.setItem(PROGRESS_BACKUP_KEY, JSON.stringify(backup));
+  if (syncCloud) scheduleGitHubSync();
+}
+
+function exportProgressAsJson() {
+  const payload = buildExportPayload();
+  const filename = `${PROGRESS_FILE_PREFIX}-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+  downloadText(filename, JSON.stringify(payload, null, 2), "application/json");
+  return payload;
+}
+
+function exportProgressAsMarkdown() {
+  const payload = buildExportPayload();
+  const stamp = new Date(payload.exportedAt).toISOString().slice(0, 10);
+  const filename = `${PROGRESS_FILE_PREFIX}-${stamp}.md`;
+  downloadText(filename, buildObsidianMarkdownPayload(payload), "text/markdown; charset=utf-8");
+  return payload;
+}
+
+function importProgressPayload(rawPayload, options = {}) {
+  const normalized = normalizeProgressData(rawPayload?.state || rawPayload || {});
+  state.completed = normalized.completed;
+  state.streak = normalized.streak;
+  state.reviews = normalized.reviews;
+  state.lastStudyDate = normalized.lastStudyDate;
+  state.game = normalized.game;
+  saveAllProgress(options);
+  renderProgress();
+  renderGameDashboard();
+  renderMemoryStats();
+  renderErrorDashboard();
+  setDate();
+}
+
+function importProgressFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const payload = readJsonSafe(event.target.result, null);
+    if (!payload || (typeof payload !== "object")) {
+      setProgressBackupStatus("備份格式不正確，請選擇正確的進度 JSON 檔。");
+      return;
+    }
+    if (!payload.state && !payload.completed && !payload.reviews && !payload.game && !payload.lastStudyDate) {
+      setProgressBackupStatus("備份缺少必要欄位，請確認是法語複習進度檔。");
+      return;
+    }
+    importProgressPayload(payload);
+    setProgressBackupStatus("已還原備份，進度同步完成。");
+    showToast("已還原備份。");
+  };
+  reader.onerror = () => {
+    setProgressBackupStatus("檔案讀取失敗，請再試一次。");
+  };
+  reader.readAsText(file);
+}
+
+function setProgressBackupStatus(text) {
+  $("#progressBackupStatus").textContent = text;
+}
+
+async function copyTextToClipboard(text, label) {
+  if (!text) return;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      setProgressBackupStatus(`${label}，已複製到剪貼簿。`);
+      showToast(`${label}已複製`);
+      return;
+    }
+  } catch (error) {
+    // fallback below
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  const success = document.execCommand("copy");
+  textarea.remove();
+  setProgressBackupStatus(success ? `${label}，已複製到剪貼簿。` : `${label}，請手動複製。`);
+  if (success) showToast(`${label}已複製`);
+}
+
+function parseProgressPayloadFromText(rawText) {
+  const trimmed = (rawText || "").trim();
+  if (!trimmed) return null;
+  const direct = readJsonSafe(trimmed, null);
+  if (direct && typeof direct === "object") return direct;
+
+  const markdownJsonMatch = trimmed.match(/```json\\s*([\\s\\S]*?)\\s*```/i);
+  if (markdownJsonMatch?.[1]) {
+    const fromBlock = readJsonSafe(markdownJsonMatch[1], null);
+    if (fromBlock && typeof fromBlock === "object") return fromBlock;
+  }
+  return null;
+}
+
+async function importProgressFromText(rawText) {
+  const payload = parseProgressPayloadFromText(rawText);
+  if (!payload) {
+    setProgressBackupStatus("貼上內容不是合法 JSON 或備份檔格式。");
+    showToast("還原失敗：貼上內容格式不符");
+    return;
+  }
+  if (!payload.state && !payload.completed && !payload.reviews && !payload.game && !payload.lastStudyDate) {
+    setProgressBackupStatus("貼上資料缺少必要欄位，請確認是法語複習進度備份。");
+    return;
+  }
+  importProgressPayload(payload);
+  setProgressBackupStatus("已從剪貼簿還原備份，進度同步完成。");
+  showToast("已還原備份。");
+}
+
+async function pasteProgressFromClipboard() {
+  if (!navigator.clipboard?.readText) {
+    setProgressBackupStatus("目前環境無法直接讀取剪貼簿，請改用「還原備份」選擇 JSON 檔。");
+    showToast("無法直接貼上，請改用還原備份檔。");
+    return;
+  }
+  try {
+    const text = await navigator.clipboard.readText();
+    await importProgressFromText(text);
+  } catch (error) {
+    setProgressBackupStatus("讀取剪貼簿失敗，請稍後再試或改用匯入檔案。");
+    showToast("讀取剪貼簿失敗");
+  }
+}
+
+function getGitHubSyncConfig() {
+  const saved = readJsonSafe(localStorage.getItem(GITHUB_SYNC_CONFIG_KEY), {});
+  return { ...DEFAULT_GITHUB_SYNC_CONFIG, ...(saved && typeof saved === "object" ? saved : {}) };
+}
+
+function getGitHubSyncToken() {
+  return sessionStorage.getItem(GITHUB_SYNC_TOKEN_KEY) || "";
+}
+
+function setGitHubSyncStatus(message, status = "idle") {
+  const output = $("#githubSyncStatus");
+  if (!output) return;
+  output.textContent = message;
+  output.dataset.status = status;
+}
+
+function validateGitHubSyncConfig(config) {
+  const ownerRepoPattern = /^[A-Za-z0-9_.-]+$/;
+  const branchPattern = /^[A-Za-z0-9._/-]+$/;
+  if (!ownerRepoPattern.test(config.owner) || !ownerRepoPattern.test(config.repo)) {
+    throw new Error("GitHub 帳號或 repo 名稱格式不正確。");
+  }
+  if (!branchPattern.test(config.branch) || config.branch.includes("..")) {
+    throw new Error("分支名稱格式不正確。");
+  }
+  if (!config.path || config.path.startsWith("/") || config.path.includes("..")) {
+    throw new Error("進度檔路徑格式不正確。");
+  }
+}
+
+function githubHeaders(token) {
+  return {
+    Accept: "application/vnd.github+json",
+    Authorization: `Bearer ${token}`,
+    "X-GitHub-Api-Version": GITHUB_API_VERSION,
+  };
+}
+
+async function readGitHubError(response) {
+  const body = await response.json().catch(() => ({}));
+  return body?.message || `GitHub API 回傳 ${response.status}`;
+}
+
+async function verifyPrivateGitHubRepo(config, token) {
+  const response = await fetch(
+    `${GITHUB_API_ENDPOINT}/repos/${encodeURIComponent(config.owner)}/${encodeURIComponent(config.repo)}`,
+    { headers: githubHeaders(token) }
+  );
+  if (!response.ok) throw new Error(await readGitHubError(response));
+  const repo = await response.json();
+  if (!repo.private) throw new Error("同步已停止：指定的 GitHub repo 不是 private。");
+  if (!repo.permissions?.push) throw new Error("Token 沒有寫入這個 private repo 的權限。");
+}
+
+function encodeGitHubFilePath(path) {
+  return path.split("/").map((part) => encodeURIComponent(part)).join("/");
+}
+
+function decodeBase64Utf8(content) {
+  const binary = atob((content || "").replace(/\s/g, ""));
+  const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+function encodeBase64Utf8(content) {
+  const bytes = new TextEncoder().encode(content);
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+  }
+  return btoa(binary);
+}
+
+async function fetchGitHubProgress(config, token) {
+  const url = `${GITHUB_API_ENDPOINT}/repos/${encodeURIComponent(config.owner)}/${encodeURIComponent(config.repo)}/contents/${encodeGitHubFilePath(config.path)}?ref=${encodeURIComponent(config.branch)}`;
+  const response = await fetch(url, { headers: githubHeaders(token) });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(await readGitHubError(response));
+  const file = await response.json();
+  const payload = readJsonSafe(decodeBase64Utf8(file.content), null);
+  if (!payload?.state) throw new Error("雲端 progress.json 格式不正確。");
+  return { payload, sha: file.sha };
+}
+
+async function writeGitHubProgress(config, token, payload, sha = "") {
+  const url = `${GITHUB_API_ENDPOINT}/repos/${encodeURIComponent(config.owner)}/${encodeURIComponent(config.repo)}/contents/${encodeGitHubFilePath(config.path)}`;
+  const body = {
+    message: `sync: update French progress ${new Date(payload.exportedAt).toISOString()}`,
+    content: encodeBase64Utf8(`${JSON.stringify(payload, null, 2)}\n`),
+    branch: config.branch,
+  };
+  if (sha) body.sha = sha;
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: { ...githubHeaders(token), "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    const error = new Error(await readGitHubError(response));
+    error.status = response.status;
+    throw error;
+  }
+  return response.json();
+}
+
+function mergeReviewMaps(localReviews, cloudReviews) {
+  const merged = {};
+  const keys = new Set([...Object.keys(localReviews || {}), ...Object.keys(cloudReviews || {})]);
+  keys.forEach((key) => {
+    const local = normalizeReviewEntry(localReviews?.[key]);
+    const cloud = normalizeReviewEntry(cloudReviews?.[key]);
+    if (!local) merged[key] = cloud;
+    else if (!cloud) merged[key] = local;
+    else {
+      const localOrder = [Number(local.lastReviewed || 0), local.attempts];
+      const cloudOrder = [Number(cloud.lastReviewed || 0), cloud.attempts];
+      merged[key] = localOrder[0] > cloudOrder[0] || (localOrder[0] === cloudOrder[0] && localOrder[1] >= cloudOrder[1])
+        ? local
+        : cloud;
+    }
+  });
+  return merged;
+}
+
+function mergeGameStates(localGame, cloudGame, preferLocal) {
+  const local = normalizeGameState(localGame || {});
+  const cloud = normalizeGameState(cloudGame || {});
+  const newest = preferLocal ? local : cloud;
+  const older = preferLocal ? cloud : local;
+  return normalizeGameState({
+    ...older,
+    ...newest,
+    xp: Math.max(local.xp || 0, cloud.xp || 0),
+    level: Math.max(local.level || 1, cloud.level || 1),
+    coins: Math.max(local.coins || 0, cloud.coins || 0),
+    runStreak: Math.max(local.runStreak || 0, cloud.runStreak || 0),
+    sessionsDone: Math.max(local.sessionsDone || 0, cloud.sessionsDone || 0),
+    bossDefeated: Math.max(local.bossDefeated || 0, cloud.bossDefeated || 0),
+    achievements: [...new Set([...(local.achievements || []), ...(cloud.achievements || [])])],
+    logs: [...new Set([...(newest.logs || []), ...(older.logs || [])])].slice(0, 12),
+  });
+}
+
+function mergeProgressPayloads(localPayload, cloudPayload) {
+  if (!cloudPayload?.state) return localPayload;
+  const local = normalizeProgressData(localPayload?.state || {});
+  const cloud = normalizeProgressData(cloudPayload.state);
+  const localTime = Number(localPayload.exportedAt || 0);
+  const cloudTime = Number(cloudPayload.exportedAt || 0);
+  const preferLocal = localTime >= cloudTime;
+  const latestStudyDate = local.lastStudyDate >= cloud.lastStudyDate ? local.lastStudyDate : cloud.lastStudyDate;
+  const latestStreak = local.lastStudyDate === cloud.lastStudyDate
+    ? Math.max(local.streak, cloud.streak)
+    : latestStudyDate === local.lastStudyDate ? local.streak : cloud.streak;
+
+  return {
+    app: "encore-french-review",
+    schema: "french-review-progress",
+    version: PROGRESS_EXPORT_VERSION,
+    exportedAt: Math.max(localTime, cloudTime),
+    state: {
+      completed: [...new Set([...local.completed, ...cloud.completed])],
+      streak: latestStreak,
+      reviews: mergeReviewMaps(local.reviews, cloud.reviews),
+      lastStudyDate: latestStudyDate,
+      game: mergeGameStates(local.game, cloud.game, preferLocal),
+    },
+  };
+}
+
+async function syncGitHubProgress({ push = true, verify = false } = {}) {
+  const token = getGitHubSyncToken();
+  const config = getGitHubSyncConfig();
+  if (!token) {
+    setGitHubSyncStatus("尚未連線。Token 只保留到關閉這個分頁。");
+    return false;
+  }
+  if (githubSyncInFlight) {
+    githubSyncPending = githubSyncPending || push;
+    return false;
+  }
+
+  githubSyncInFlight = true;
+  setGitHubSyncStatus(push ? "正在安全同步到 GitHub…" : "正在讀取 GitHub 雲端進度…", "working");
+  try {
+    validateGitHubSyncConfig(config);
+    if (verify || !githubSyncVerified) {
+      await verifyPrivateGitHubRepo(config, token);
+      githubSyncVerified = true;
+    }
+    const cloudFile = await fetchGitHubProgress(config, token);
+    const localPayload = buildExportPayload(getLocalProgressUpdatedAt() || NOW());
+    const merged = mergeProgressPayloads(localPayload, cloudFile?.payload);
+    const syncedAt = NOW();
+    merged.exportedAt = syncedAt;
+    importProgressPayload(merged, { syncCloud: false, updatedAt: syncedAt });
+    if (push) {
+      try {
+        await writeGitHubProgress(config, token, merged, cloudFile?.sha);
+      } catch (error) {
+        if (error.status !== 409) throw error;
+        const latestCloudFile = await fetchGitHubProgress(config, token);
+        const retryPayload = mergeProgressPayloads(merged, latestCloudFile?.payload);
+        retryPayload.exportedAt = NOW();
+        importProgressPayload(retryPayload, { syncCloud: false, updatedAt: retryPayload.exportedAt });
+        await writeGitHubProgress(config, token, retryPayload, latestCloudFile?.sha);
+      }
+    }
+    setGitHubSyncStatus(
+      `${push ? "已同步" : "已載入"}：${new Date(syncedAt).toLocaleString("zh-TW", { hour12: false })}`,
+      "success"
+    );
+    return true;
+  } catch (error) {
+    githubSyncVerified = false;
+    setGitHubSyncStatus(`同步失敗：${error.message}`, "error");
+    return false;
+  } finally {
+    githubSyncInFlight = false;
+    if (githubSyncPending) {
+      githubSyncPending = false;
+      scheduleGitHubSync();
+    }
+  }
+}
+
+function scheduleGitHubSync() {
+  if (!getGitHubSyncToken() || !githubSyncVerified) return;
+  clearTimeout(githubSyncTimer);
+  githubSyncTimer = setTimeout(() => syncGitHubProgress({ push: true }), GITHUB_SYNC_DELAY);
+  setGitHubSyncStatus("本機已儲存，等待同步…", "working");
+}
+
+async function connectGitHubSync() {
+  const config = {
+    owner: $("#githubOwner").value.trim(),
+    repo: $("#githubRepo").value.trim(),
+    branch: $("#githubBranch").value.trim(),
+    path: $("#githubProgressPath").value.trim(),
+  };
+  const token = $("#githubToken").value.trim();
+  try {
+    validateGitHubSyncConfig(config);
+    if (!token) throw new Error("請輸入 fine-grained GitHub Token。");
+    localStorage.setItem(GITHUB_SYNC_CONFIG_KEY, JSON.stringify(config));
+    sessionStorage.setItem(GITHUB_SYNC_TOKEN_KEY, token);
+    $("#githubToken").value = "";
+    githubSyncVerified = false;
+    const success = await syncGitHubProgress({ push: true, verify: true });
+    if (success) showToast("GitHub 私有進度同步已連線");
+  } catch (error) {
+    setGitHubSyncStatus(`連線失敗：${error.message}`, "error");
+  }
+}
+
+function disconnectGitHubSync() {
+  clearTimeout(githubSyncTimer);
+  sessionStorage.removeItem(GITHUB_SYNC_TOKEN_KEY);
+  githubSyncVerified = false;
+  setGitHubSyncStatus("已登出。Token 已從這個分頁清除。");
+  showToast("GitHub 同步已登出");
+}
+
+function initializeGitHubSyncUi() {
+  const config = getGitHubSyncConfig();
+  $("#githubOwner").value = config.owner;
+  $("#githubRepo").value = config.repo;
+  $("#githubBranch").value = config.branch;
+  $("#githubProgressPath").value = config.path;
+  if (getGitHubSyncToken()) {
+    syncGitHubProgress({ push: false, verify: true });
+  } else {
+    setGitHubSyncStatus("尚未連線。Token 只保留到關閉這個分頁。");
+  }
+}
+
 function saveReviews() {
   localStorage.setItem("encore-reviews-v2", JSON.stringify(state.reviews));
+  saveAllProgress();
 }
 
 function saveGameState() {
   localStorage.setItem("encore-game-state", JSON.stringify(state.game));
+  saveAllProgress();
 }
 
 function resetDailyIfNeeded() {
@@ -261,8 +850,7 @@ function updateStreakForToday() {
   if (state.lastStudyDate === today) return;
   state.streak = state.lastStudyDate === yesterday ? state.streak + 1 : 1;
   state.lastStudyDate = today;
-  localStorage.setItem("encore-streak", String(state.streak));
-  localStorage.setItem("encore-last-study-date", state.lastStudyDate);
+  saveAllProgress();
   $("#streakCount").textContent = state.streak;
 }
 
@@ -331,6 +919,8 @@ function renderQuestion() {
   $("#typedAnswer").value = "";
   $("#typedAnswer").disabled = false;
   $("#checkAnswer").disabled = true;
+  $("#aiReviewButton").disabled = true;
+  setAiReviewStatus("先核對完答案，再點 AI 判別。");
   $("#inputHint").textContent = "輸入後才能核對答案";
   $("#goodInterval").textContent = `${nextGoodInterval(review.streak)} 天`;
   $("#sessionDots").innerHTML = state.session.map((_, i) =>
@@ -381,8 +971,80 @@ function checkTypedAnswer() {
   $("#grading").classList.add("visible");
   $("#typedAnswer").disabled = true;
   $("#checkAnswer").disabled = true;
+  $("#aiReviewButton").disabled = false;
+  $("#aiReviewOutput").textContent = "可點選 AI 判別錯誤，或先挑選複習頻率。";
   $("#inputHint").textContent = score >= 90 ? "很好，檢查冠詞與拼字" : `重點檢查：${item.skill}`;
   state.results[state.index] = { score, input };
+}
+
+function getOpenRouterApiKey() {
+  const keyInput = $("#openRouterApiKey").value.trim();
+  if (keyInput) {
+    localStorage.setItem(OPENROUTER_KEY_KEY, keyInput);
+    return keyInput;
+  }
+  return localStorage.getItem(OPENROUTER_KEY_KEY) || "";
+}
+
+function setAiReviewStatus(message) {
+  $("#aiReviewOutput").textContent = message;
+}
+
+async function runOpenRouterReview() {
+  const item = state.session[state.index];
+  const current = state.results[state.index] || { score: 0, input: "" };
+  if (!current.input) {
+    checkTypedAnswer();
+    return;
+  }
+  const key = getOpenRouterApiKey();
+  if (!key) {
+    setAiReviewStatus("請先在下方輸入 OpenRouter API Key 再使用 AI 判斷。");
+    return;
+  }
+
+  setAiReviewStatus("AI 判斷中…");
+  $("#aiReviewButton").disabled = true;
+
+  try {
+    const response = await fetch(OPENROUTER_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${key}`,
+        "HTTP-Referer": "https://encore-french-review.local",
+        "X-Title": "Encore French Review",
+      },
+      body: JSON.stringify({
+        model: OPENROUTER_MODEL,
+        messages: [
+          {
+            role: "system",
+            content: "你是法語學習助教。請用繁體中文回覆，只指出學生答案的錯誤點、正確寫法與一句可直接記憶的重點。",
+          },
+          {
+            role: "user",
+            content: `題目: ${item.q}\n建議答案: ${item.a}\n學生答案: ${current.input}\n題目類型: ${item.category} · ${item.skill}。請用以下格式回覆：\n1) 判斷（正確/有錯）\n2) 為什麼錯/哪裡不精準\n3) 建議修改後答案`,
+          },
+        ],
+        temperature: 0.2,
+        max_tokens: 350,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`OpenRouter API 錯誤：${response.status} ${errorText}`);
+    }
+    const data = await response.json();
+    const suggestion = data?.choices?.[0]?.message?.content;
+    if (!suggestion) throw new Error("回傳內容異常，請稍後再試。");
+    setAiReviewStatus(suggestion);
+  } catch (error) {
+    setAiReviewStatus(`AI 判別失敗：${error.message}`);
+  } finally {
+    $("#aiReviewButton").disabled = false;
+  }
 }
 
 function nextGoodInterval(streak) {
@@ -462,7 +1124,7 @@ function gradeAnswer(grade) {
 
 function markCompleted(task) {
   if (!state.completed.includes(task)) state.completed.push(task);
-  localStorage.setItem("encore-completed", JSON.stringify(state.completed));
+  saveAllProgress();
   renderProgress();
 }
 
@@ -609,6 +1271,46 @@ $("#typedAnswer").addEventListener("keydown", (event) => {
   if ((event.ctrlKey || event.metaKey) && event.key === "Enter" && !$("#checkAnswer").disabled) checkTypedAnswer();
 });
 $("#checkAnswer").addEventListener("click", checkTypedAnswer);
+$("#aiReviewButton").addEventListener("click", runOpenRouterReview);
+$("#exportProgressJson").addEventListener("click", () => {
+  exportProgressAsJson();
+  setProgressBackupStatus(`已下載 JSON 備份（${new Date().toLocaleString("zh-TW", { hour12: false })}）。`);
+});
+$("#copyProgressJson").addEventListener("click", async () => {
+  const payload = buildExportPayload();
+  await copyTextToClipboard(JSON.stringify(payload, null, 2), "法語進度 JSON");
+});
+$("#exportProgressMarkdown").addEventListener("click", () => {
+  exportProgressAsMarkdown();
+  setProgressBackupStatus("已下載 Obsidian 用的 .md 備份，直接貼到「LLM使用情況.md」即可。");
+});
+$("#copyProgressMarkdown").addEventListener("click", async () => {
+  const payload = buildExportPayload();
+  await copyTextToClipboard(buildObsidianMarkdownPayload(payload), "Obsidian 進度文字");
+});
+$("#importProgressBtn").addEventListener("click", () => {
+  $("#progressBackupFile").click();
+});
+$("#progressBackupFile").addEventListener("change", (event) => {
+  const [file] = event.target.files || [];
+  if (!file) return;
+  importProgressFile(file);
+  event.target.value = "";
+});
+$("#pasteProgressBtn").addEventListener("click", pasteProgressFromClipboard);
+$("#connectGithubSync").addEventListener("click", connectGitHubSync);
+$("#syncGithubNow").addEventListener("click", () => syncGitHubProgress({ push: true, verify: true }));
+$("#loadGithubProgress").addEventListener("click", () => syncGitHubProgress({ push: false, verify: true }));
+$("#disconnectGithubSync").addEventListener("click", disconnectGitHubSync);
+$("#saveOpenRouterKey").addEventListener("click", () => {
+  const key = getOpenRouterApiKey();
+  if (!key) {
+    setAiReviewStatus("請先輸入 OpenRouter API Key。");
+    return;
+  }
+  setAiReviewStatus("已儲存金鑰，現在可用 AI 判別。");
+  localStorage.setItem(OPENROUTER_KEY_KEY, key);
+});
 
 $$("[data-grade]").forEach((button) =>
   button.addEventListener("click", () => gradeAnswer(button.dataset.grade))
@@ -623,7 +1325,7 @@ $$(".task-check").forEach((button) =>
     const task = button.closest(".task-card").dataset.task;
     if (state.completed.includes(task)) {
       state.completed = state.completed.filter((item) => item !== task);
-      localStorage.setItem("encore-completed", JSON.stringify(state.completed));
+      saveAllProgress();
       renderProgress();
     } else {
       markCompleted(task);
@@ -663,3 +1365,7 @@ renderErrorDashboard();
 refreshAchievements();
 renderGameDashboard();
 setDate();
+$("#openRouterApiKey").value = localStorage.getItem(OPENROUTER_KEY_KEY) || "";
+if (!localStorage.getItem(PROGRESS_BACKUP_KEY)) saveAllProgress({ syncCloud: false });
+initializeGitHubSyncUi();
+setProgressBackupStatus("每次完成題目都會寫入本機，同步可用複製/貼上備份跨設備還原。");
