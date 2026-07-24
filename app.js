@@ -148,6 +148,210 @@ const studySets = {
     { id: "tcf-task3-b2-output", phase: "output", openEnded: true, category: "TCF · ÉCRIT", skill: "完整寫作任務 3", label: "25 分鐘內寫 120–180 字：先綜合，再表達並論證立場", q: "Document 1 — Une salariée affirme qu’en quatre jours elle accomplit le même travail, se repose davantage et revient plus concentrée. Document 2 — Un dirigeant craint des journées trop longues, une disponibilité réduite pour les clients et une organisation difficile dans les petites équipes. Rédigez les deux parties demandées.", a: "Le premier document présente la semaine de quatre jours comme un moyen d’améliorer l’équilibre entre vie professionnelle et vie privée sans réduire la productivité. Le second craint au contraire une intensification du travail et des difficultés d’organisation, surtout dans les petites entreprises.\n\nÀ mon avis, cette organisation mérite d’être testée, mais elle ne devrait pas être imposée partout de la même manière. Si une entreprise maintient ses objectifs tout en réduisant réellement le temps de travail, les salariés peuvent être plus reposés et mieux concentrés. Cependant, certains services doivent rester accessibles cinq jours sur sept. Il faudrait donc prévoir des équipes alternées et évaluer les résultats après plusieurs mois. Une expérimentation progressive permettrait de mesurer la satisfaction des employés, la qualité du service et la charge réelle de travail. Ainsi, la semaine de quatre jours peut être bénéfique à condition que son application soit adaptée au secteur et régulièrement révisée.", note: "範例共約 150 字；第一部分 40–60 字，第二部分 80–120 字，且必須清楚區分來源觀點與自己的立場。" },
     { id: "tcf-task3-b2-fluency", phase: "fluency", openEnded: true, category: "TCF · ORAL", skill: "口說任務 3", label: "不看範例、無準備，正式計時 4 分 30 秒", q: "À votre avis, faudrait-il interdire les voitures dans le centre des grandes villes ?", a: "Je suis favorable à une forte limitation, mais pas à une interdiction absolue. D’abord, réduire la circulation améliorerait la qualité de l’air et rendrait les rues plus sûres. Par exemple, les familles pourraient davantage marcher ou utiliser le vélo. Ensuite, les transports publics deviendraient plus attractifs si la ville renforçait leur fréquence. Certes, certaines personnes, notamment celles qui travaillent de nuit ou ont une mobilité réduite, ont besoin d’une voiture. Il faudrait donc prévoir des exceptions, des stationnements périphériques et une mise en œuvre progressive. En somme, la mesure serait efficace à condition d’offrir des alternatives fiables et abordables.", note: "正式任務 3 無準備、目標 4 分 30 秒。依序擴展立場、兩個理由與例子、讓步與回應、可行方案、結論；參考答案只示範骨架，不代表足夠長度。" },
   ],
+  presentRegular: [
+    { id: "present-regular-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "現在式規則動詞", label: "填入三種規則動詞的正確變化", q: "Nous ___ français, nous ___ nos exercices et nous ___ le professeur. (parler / finir / attendre)", a: "Nous parlons français, nous finissons nos exercices et nous attendons le professeur.", note: "nous 的規則字尾：-er → -ons、-ir → -issons、-re → -ons。" },
+    { id: "present-regular-input", phase: "input", category: "A2 · LECTURE", skill: "現在式規則動詞", label: "閱讀後找出三個日常動作", q: "Élodie travaille dans une librairie. Elle répond aux clients et finit sa journée à dix-huit heures. Que fait-elle ?", a: "Elle travaille dans une librairie, répond aux clients et finit sa journée à dix-huit heures.", note: "先找主詞 elle，再辨認 travaille、répond、finit 的字尾。" },
+    { id: "present-regular-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "現在式規則動詞", label: "各用一個 -er、-ir、-re 動詞描述日常生活", q: "工作或學習 → 結束時間 → 等待某人或交通工具", a: "Je travaille le matin. Je finis mes cours à dix-sept heures. Ensuite, j’attends le bus.", note: "答案可替換成真實生活；每句先確認主詞與動詞字尾。" },
+    { id: "present-regular-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "現在式自動化", label: "不看提示連續說 45 秒", q: "Décris une journée habituelle : où travailles-tu, quand finis-tu et qu’est-ce que tu fais ensuite ?", a: "Je travaille à la maison le matin. Je finis vers midi, puis je déjeune. L’après-midi, j’étudie le français et j’attends parfois le début de mon cours.", note: "使用現在式描述固定習慣，不要改用 futur proche。" },
+  ],
+  presentIrregular: [
+    { id: "present-irregular-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "現在式不規則動詞", label: "填入正確的不規則動詞", q: "Chaque matin, je ___ un café, je ___ au bureau et je ___ ma liste de tâches. (prendre / aller / faire)", a: "Chaque matin, je prends un café, je vais au bureau et je fais ma liste de tâches.", note: "je prends、je vais、je fais 必須整組記憶，不能套規則字尾。" },
+    { id: "present-irregular-input", phase: "input", category: "A2 · LECTURE", skill: "現在式不規則動詞", label: "閱讀後重述他的早晨", q: "Lucas vient au bureau en métro, prend un café et va directement à son bureau. Comment commence-t-il sa journée ?", a: "Il vient au bureau en métro, prend un café et va directement à son bureau.", note: "venir、prendre、aller 的 il 形式分別是 vient、prend、va。" },
+    { id: "present-irregular-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "現在式不規則動詞", label: "用四個不規則動詞說明今天的情況", q: "avoir、être、faire、venir 各使用一次", a: "Aujourd’hui, j’ai beaucoup de travail. Je suis à la maison, je fais mes exercices et une amie vient me voir ce soir.", note: "先說完整短句，再檢查 ai、suis、fais、vient。" },
+    { id: "present-irregular-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "不規則動詞自動化", label: "立即回答並延伸兩個細節", q: "Que fais-tu avant et après ton cours de français ?", a: "Avant mon cours, je prends un café et je relis mes notes. Après le cours, je vais marcher ou je fais quelques exercices.", note: "刻意使用 prendre、faire、aller，不要只使用規則動詞。" },
+  ],
+  articlesGenderNumber: [
+    { id: "articles-gender-number-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "冠詞與性數", label: "依性別、數量與上下文填冠詞", q: "Dans mon sac, il y a ___ livre, ___ trousse et ___ clés. ___ livre est neuf.", a: "Dans mon sac, il y a un livre, une trousse et des clés. Le livre est neuf.", note: "首次提到用 un、une、des；再次提到已知事物用 le、la、les。" },
+    { id: "articles-gender-number-input", phase: "input", category: "A2 · LECTURE", skill: "冠詞與性數", label: "判斷哪些物品已經被提過", q: "Sur la table, il y a une pomme et des biscuits. La pomme est rouge et les biscuits sont au chocolat. Quels articles introduisent les objets, puis les reprennent ?", a: "Les articles « une » et « des » introduisent les objets ; « la » et « les » servent ensuite à les reprendre.", note: "冠詞不只表示性數，也表示聽者是否已經知道這個名詞。" },
+    { id: "articles-gender-number-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "冠詞與性數", label: "描述房間並再次提到其中兩件物品", q: "至少使用 un、une、des，再使用 le、la 或 les", a: "Dans ma chambre, il y a un bureau, une chaise et des étagères. Le bureau est près de la fenêtre et les étagères sont blanches.", note: "第一次介紹物品用不定冠詞，後面再次描述時換成定冠詞。" },
+    { id: "articles-gender-number-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "冠詞自動化", label: "環顧四周，連續說 45 秒", q: "Qu’est-ce qu’il y a autour de toi ? Décris ensuite deux objets.", a: "Il y a une table, un ordinateur et des livres. La table est grande et l’ordinateur est devant moi.", note: "說名詞時連冠詞一起記，不要只背孤立單字。" },
+  ],
+  adjectiveAgreementPosition: [
+    { id: "adjective-agreement-position-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "形容詞性數與位置", label: "調整形容詞並放到自然位置", q: "Zoe porte une ___ robe ___ avec des chaussures ___. (beau / bleu / blanc)", a: "Zoe porte une belle robe bleue avec des chaussures blanches.", note: "beau 在陰性名詞前變 belle；顏色通常放名詞後，並配合陰性與複數。" },
+    { id: "adjective-agreement-position-input", phase: "input", category: "A2 · LECTURE", skill: "形容詞性數與位置", label: "找出形容詞修飾的名詞", q: "Nous visitons un petit appartement lumineux avec une grande cuisine moderne. Quels adjectifs décrivent l’appartement et la cuisine ?", a: "Petit et lumineux décrivent l’appartement ; grande et moderne décrivent la cuisine.", note: "petit、grand 常放名詞前；lumineux、moderne 通常放名詞後。" },
+    { id: "adjective-agreement-position-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "形容詞性數與位置", label: "用至少四個形容詞描述一套服裝", q: "長短、顏色、大小、風格", a: "Je porte une longue veste noire, un petit sac beige et des chaussures confortables.", note: "先判斷名詞性數，再決定形容詞字尾及前後位置。" },
+    { id: "adjective-agreement-position-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "人物與服裝描述", label: "不準備描述一個人 45 秒", q: "Décris sa tenue, son apparence et deux qualités.", a: "Elle porte une jolie chemise blanche et un pantalon noir. Elle est souriante, calme et très organisée.", note: "避免每句只說 c’est bien；改用準確且配合正確的形容詞。" },
+  ],
+  possessiveDemonstrative: [
+    { id: "possessive-demonstrative-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "所有詞與指示詞", label: "依名詞選擇正確限定詞", q: "Zoe cherche ___ écharpe et ___ chaussures, puis elle essaie ___ veste. (elle / ce)", a: "Zoe cherche son écharpe et ses chaussures, puis elle essaie cette veste.", note: "所有詞配合後面的物品，不配合擁有者；陰性母音開頭用 son écharpe。" },
+    { id: "possessive-demonstrative-input", phase: "input", category: "A2 · LECTURE", skill: "所有詞與指示詞", label: "閱讀後找出物品與位置", q: "Paul cherche ses clés. Zoe lui montre cette table et dit : « Tes clés sont sous ce journal. » Où sont les clés de Paul ?", a: "Les clés de Paul sont sous ce journal.", note: "ses 表示 Paul 的複數物品；ce、cette 指向當下所說的東西。" },
+    { id: "possessive-demonstrative-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "所有詞與指示詞", label: "介紹包裡的物品並指出其中兩件", q: "使用 mon、ma 或 mes，以及 ce、cet、cette 或 ces", a: "Dans mon sac, il y a mes clés, mon portefeuille et ma bouteille. Cette bouteille est vide et ces clés ouvrent la porte de chez moi.", note: "先看名詞的性數與開頭音，再選限定詞。" },
+    { id: "possessive-demonstrative-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "購物情境", label: "在商店中比較並選擇商品", q: "Quelle veste préfères-tu et avec quoi veux-tu la porter ?", a: "Je préfère cette veste parce que sa couleur correspond à mon style. Ces chaussures vont aussi très bien avec mon pantalon.", note: "指眼前商品用 ce、cette、ces；談歸屬用 mon、ma、mes 或 son、sa、ses。" },
+  ],
+  contractionsPlaces: [
+    { id: "contractions-places-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "地點介系詞與縮合", label: "填入正確的地點介系詞", q: "Je vais ___ musée, puis ___ gare ; je reviens ___ musée.", a: "Je vais au musée, puis à la gare ; je reviens du musée.", note: "à + le = au，de + le = du；à la、de la 不縮合。" },
+    { id: "contractions-places-input", phase: "input", category: "A2 · LECTURE", skill: "城市與國家介系詞", label: "閱讀後重述完整行程", q: "Emma part de France, passe une semaine au Canada, puis va aux États-Unis. Elle séjourne à Montréal et à New York. Quel est son itinéraire ?", a: "Elle part de France, va au Canada, puis aux États-Unis ; elle séjourne à Montréal et à New York.", note: "城市前用 à；陰性國家多用 en，陽性國家用 au，複數國家用 aux。" },
+    { id: "contractions-places-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "旅行路線", label: "用介系詞說明一段跨國行程", q: "台北出發 → 日本 → 法國巴黎 → 回台灣", a: "Je pars de Taipei, je vais au Japon, puis en France. Je passe deux jours à Paris avant de rentrer à Taïwan.", note: "來源用 de、du、des；目的地依城市或國家選 à、en、au、aux。" },
+    { id: "contractions-places-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "居住與旅行", label: "連續回答三個地點問題", q: "Où habites-tu, d’où viens-tu et où aimerais-tu voyager ?", a: "J’habite à Taipei, à Taïwan. Je viens de Taïwan et j’aimerais aller au Canada, surtout à Montréal.", note: "把「住在哪裡、來自哪裡、要去哪裡」當成三組固定搭配練習。" },
+  ],
+  cEstIlEst: [
+    { id: "c-est-il-est-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "c’est / il est / elle est", label: "選擇正確的介紹或描述句型", q: "Voici Léa : ___ une collègue française et ___ très organisée. Son cours ? ___ intéressant.", a: "C’est une collègue française, elle est très organisée et il est intéressant.", note: "c’est + 限定詞與名詞；il/elle est + 形容詞，或不加冠詞的職業。" },
+    { id: "c-est-il-est-input", phase: "input", category: "A2 · LECTURE", skill: "c’est / il est / elle est", label: "分辨介紹資訊與後續描述", q: "C’est un hôtel familial. Il est calme, propre et proche de la gare. Quelle phrase présente l’hôtel et quelle phrase le décrit ?", a: "« C’est un hôtel familial » présente l’hôtel ; « Il est calme, propre et proche de la gare » le décrit.", note: "先用 c’est 指出「它是什麼」，再用 il/elle est 描述特徵。" },
+    { id: "c-est-il-est-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "介紹人物與事物", label: "介紹一位老師並描述她的課", q: "身分、兩項個性、課程特色", a: "C’est ma professeure de français. Elle est patiente et très précise. Son cours est exigeant, mais il est utile.", note: "不要在 elle est professeure 中加入 une；有形容修飾時可說 c’est une excellente professeure。" },
+    { id: "c-est-il-est-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "即席介紹", label: "選一個熟悉的地方介紹 45 秒", q: "Qu’est-ce que c’est, où est-ce et comment est cet endroit ?", a: "C’est un café près de chez moi. Il est petit, lumineux et généralement calme. C’est un endroit agréable pour étudier.", note: "交替使用 c’est 與 il/elle est，避免整段都用同一個句型。" },
+  ],
+  questionsRegisters: [
+    { id: "questions-registers-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "三種問句語域", label: "把口語問句改成中性與正式形式", q: "Vous habitez où ?", a: "Où est-ce que vous habitez ? / Où habitez-vous ?", note: "語調問句較口語；est-ce que 中性常用；主詞倒裝較正式。" },
+    { id: "questions-registers-input", phase: "input", category: "A2 · LECTURE", skill: "三種問句語域", label: "判斷三個問句的語域", q: "1. Vous partez quand ? 2. Quand est-ce que vous partez ? 3. Quand partez-vous ?", a: "1 是口語；2 是中性；3 是正式。", note: "三句意思相同，差別在情境與句型，不是時間不同。" },
+    { id: "questions-registers-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "主動詢問資訊", label: "向語言中心提出四個完整問題", q: "上課時間、費用、教材、試聽課", a: "Quels sont les horaires ? Combien coûte le cours ? Est-ce que le matériel est inclus ? Puis-je suivre un cours d’essai ?", note: "TCF 互動題需要主動追問；混用自然的中性與正式問句即可。" },
+    { id: "questions-registers-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "TCF 互動問句", label: "準備 30 秒後連續提出五個問題", q: "Vous téléphonez pour louer une chambre. Demandez les informations nécessaires.", a: "La chambre est-elle disponible en décembre ? Quel est le loyer ? Est-ce que les charges sont comprises ? Où se trouve l’appartement ? Pourrais-je le visiter samedi ?", note: "先準備疑問詞清單：quand、combien、où、comment、est-ce que。" },
+  ],
+  negationExpanded: [
+    { id: "negation-expanded-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "延伸否定句", label: "使用 jamais、plus、personne 改寫", q: "Il travaille toujours le dimanche. / Il voit encore quelqu’un au bureau.", a: "Il ne travaille jamais le dimanche. Il ne voit plus personne au bureau.", note: "toujours ↔ jamais、encore ↔ plus、quelqu’un ↔ personne。" },
+    { id: "negation-expanded-input", phase: "input", category: "A2 · LECTURE", skill: "延伸否定句", label: "閱讀後找出三項否定資訊", q: "Depuis son déménagement, Anna ne prend plus le bus, ne voit personne le matin et ne sort jamais le soir. Qu’est-ce qui a changé ?", a: "Elle ne prend plus le bus, ne voit personne le matin et ne sort jamais le soir.", note: "ne…plus 表示不再；ne…personne 表示沒有人；ne…jamais 表示從不。" },
+    { id: "negation-expanded-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "延伸否定句", label: "各用一次 jamais、plus、rien、personne", q: "飲食、改變的習慣、一天中的空檔、人際活動", a: "Je ne bois jamais de soda. Je ne regarde plus la télévision le matin. Je ne prends rien entre les repas. Je ne vois personne avant mon premier cours.", note: "否定詞放在變化動詞兩側；rien、personne 不需要再加 pas。" },
+    { id: "negation-expanded-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "否定表達自動化", label: "立即回答並補充原因", q: "Qu’est-ce que tu ne fais jamais ? Qu’est-ce que tu ne fais plus ?", a: "Je ne me couche jamais très tard parce que je travaille le matin. Je ne bois plus de café le soir, car je veux mieux dormir.", note: "用 parce que 或 car 補理由，避免只回答一個否定短句。" },
+  ],
+  quantityPartitives: [
+    { id: "quantity-partitives-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "部分冠詞與數量", label: "填入部分冠詞或數量後的 de", q: "Au petit déjeuner, je bois ___ eau et je mange ___ pain, mais je ne prends pas beaucoup ___ sucre.", a: "Au petit déjeuner, je bois de l’eau et je mange du pain, mais je ne prends pas beaucoup de sucre.", note: "不可數食物用 du、de la、de l’；數量詞 beaucoup 後固定用 de。" },
+    { id: "quantity-partitives-input", phase: "input", category: "A2 · LECTURE", skill: "部分冠詞與數量", label: "閱讀食譜後列出材料", q: "Pour la soupe, il faut des carottes, de l’oignon, un peu de crème et une cuillère d’huile. Quels ingrédients et quelles quantités faut-il ?", a: "Il faut des carottes, de l’oignon, un peu de crème et une cuillère d’huile.", note: "部分冠詞表示未指定數量；un peu de、une cuillère de 表示具體數量。" },
+    { id: "quantity-partitives-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "餐點與數量", label: "描述一餐並加入兩個數量表達", q: "至少使用 du、de la、de l’或 des，以及 beaucoup de、un peu de 或 trop de", a: "Au dîner, je mange de la soupe, du riz et des légumes. Je bois beaucoup d’eau et je mets seulement un peu de sel.", note: "先說食物種類，再用數量詞讓回答更精確。" },
+    { id: "quantity-partitives-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "飲食習慣", label: "連續說 45 秒，不列單字清單", q: "Qu’est-ce que tu manges et bois pendant une journée normale ?", a: "Le matin, je bois du thé et je mange du pain. À midi, je prends des légumes avec un peu de viande. Le soir, je bois beaucoup d’eau.", note: "用三餐或時間順序組織答案，並注意否定句與數量後的 de。" },
+  ],
+  modalInfinitive: [
+    { id: "modal-infinitive-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "情態動詞＋原形", label: "填入 devoir 與 pouvoir", q: "Pour progresser, je ___ pratiquer chaque jour, mais je ___ aussi me reposer.", a: "Pour progresser, je dois pratiquer chaque jour, mais je peux aussi me reposer.", note: "devoir、pouvoir、vouloir 後直接接動詞原形，不加 à 或 de。" },
+    { id: "modal-infinitive-input", phase: "input", category: "A2 · LECTURE", skill: "義務、許可與禁止", label: "分辨必須、可以與不可以做的事", q: "Pour entrer, vous devez présenter une pièce d’identité. Vous pouvez laisser votre sac à l’accueil, mais vous ne pouvez pas prendre de photos.", a: "Il faut présenter une pièce d’identité ; il est permis de laisser son sac à l’accueil ; il est interdit de prendre des photos.", note: "devoir 表義務；pouvoir 表能力或許可；本句中的 ne pas pouvoir 表示不允許，也可能在其他語境表示無法。" },
+    { id: "modal-infinitive-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "計畫與義務", label: "用 vouloir、devoir、pouvoir 規劃旅行", q: "目的地、行前準備、抵達後可做的事", a: "Je veux visiter Montréal. Je dois réserver mon billet et préparer mes documents. Sur place, je peux utiliser le métro pour me déplacer.", note: "情態動詞負責表達態度，真正的動作維持原形。" },
+    { id: "modal-infinitive-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "建議與規則", label: "給第一次來台北的朋友三項建議", q: "Que doit-il préparer, que peut-il faire et que veut-il peut-être découvrir ?", a: "Il doit préparer une carte de transport. Il peut prendre le métro pour visiter la ville et il veut peut-être découvrir les marchés de nuit et goûter leurs spécialités.", note: "每個情態動詞後接一個清楚的動作原形。" },
+  ],
+  compoundPastFoundations: [
+    { id: "compound-past-foundations-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "passé composé 基礎", label: "選助動詞並完成過去分詞", q: "Hier, Zoe ___ au musée et elle ___ des photos. (aller / prendre)", a: "Hier, Zoe est allée au musée et elle a pris des photos.", note: "aller 使用 être，Zoe 是女性所以用 allée；prendre 使用 avoir，過去分詞是 pris。" },
+    { id: "compound-past-foundations-input", phase: "input", category: "A2 · LECTURE", skill: "passé composé 基礎", label: "閱讀後依序重述四個事件", q: "Samedi, Zoe a quitté la maison à neuf heures. Elle a pris le métro, est arrivée au centre-ville et a retrouvé ses amis. Qu’a-t-elle fait ?", a: "Elle a quitté la maison, a pris le métro, est arrivée au centre-ville et a retrouvé ses amis.", note: "完成的事件用 passé composé；arriver 使用 être，其他三個動詞使用 avoir。" },
+    { id: "compound-past-foundations-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "過去事件", label: "用四個完成事件描述昨天", q: "早上 → 移動到某地 → 一項活動 → 回家", a: "Hier, j’ai travaillé le matin. Ensuite, je suis allée au centre-ville, j’ai déjeuné avec une amie et je suis rentrée chez moi vers dix-huit heures.", note: "Zoe 使用 allée、rentrée；用 ensuite、puis 串起事件。" },
+    { id: "compound-past-foundations-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "過去敘事", label: "不準備說一分鐘，再寫下最完整版本", q: "Raconte ta dernière sortie : où es-tu allée, avec qui et qu’est-ce que tu as fait ?", a: "La semaine dernière, je suis allée au marché de nuit avec une amie. Nous avons goûté plusieurs plats, puis nous avons pris le métro. Je suis rentrée chez moi assez tard.", note: "先建立事件順序，再檢查 être 動詞的女性配合。" },
+  ],
+  indirectObjectPronouns: [
+    { id: "indirect-object-pronouns-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "COI 代名詞 lui / leur", label: "用代名詞避免重複 à＋人", q: "Je téléphone à mes parents. → Je ___ téléphone.", a: "Je leur téléphone.", note: "à une personne 用 lui；à plusieurs personnes用 leur，放在變化動詞前。" },
+    { id: "indirect-object-pronouns-input", phase: "input", category: "A2 · LECTURE", skill: "COI 代名詞 lui / leur", label: "判斷 lui 與 leur 指的是誰", q: "Nora écrit à Paul chaque semaine. Elle lui raconte son travail. Elle téléphone aussi à ses parents et leur donne des nouvelles.", a: "« Lui » désigne Paul ; « leur » désigne les parents de Nora.", note: "lui、leur 不表示性別，只表示單數或複數的間接受詞。" },
+    { id: "indirect-object-pronouns-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "COI 代名詞 lui / leur", label: "用 lui 或 leur 改寫三句", q: "Je parle à ma professeure. / J’envoie un message à mes amis. / Nous répondons à nos voisins.", a: "Je lui parle. Je leur envoie un message. Nous leur répondons.", note: "先確認動詞搭配 à quelqu’un，再把 à＋人換成 lui 或 leur。" },
+    { id: "indirect-object-pronouns-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "人際互動", label: "回答後用代名詞延伸兩句", q: "Quand tu as une question, à qui demandes-tu de l’aide ?", a: "Je demande de l’aide à ma professeure. Je lui explique mon problème et je lui pose des questions précises. J’écris aussi à mes amis et je leur demande parfois leur avis.", note: "第一次說出人物，後續改用 lui 或 leur，讓表達不重複。" },
+  ],
+  adverbPosition: [
+    { id: "adverb-position-form", phase: "advance", category: "A2 · GRAMMAIRE", skill: "副詞位置", label: "把副詞放到自然位置", q: "Je prends le métro. (souvent) / J’ai compris la consigne. (bien)", a: "Je prends souvent le métro. J’ai bien compris la consigne.", note: "簡短副詞通常放在變化動詞後；passé composé 中常放在助動詞與過去分詞之間。" },
+    { id: "adverb-position-input", phase: "input", category: "A2 · LECTURE", skill: "副詞位置", label: "找出頻率與完成狀態", q: "Zoe révise souvent le soir. Elle travaille généralement une heure et elle a déjà terminé les exercices de cette semaine. Quand et comment étudie-t-elle ?", a: "Elle révise souvent le soir, travaille généralement une heure et a déjà terminé les exercices de la semaine.", note: "souvent、généralement 修飾習慣；déjà 放在助動詞與過去分詞之間。" },
+    { id: "adverb-position-output", phase: "output", openEnded: true, category: "A2 · EXPRESSION", skill: "學習頻率", label: "使用四個副詞描述你的複習方式", q: "toujours、souvent、rarement、déjà 或 bien 任選四個", a: "Je révise toujours après mon cours. Je relis souvent mes notes et j’écris rarement une traduction complète. J’ai déjà commencé à enregistrer mes réponses et je comprends mieux les corrections.", note: "副詞要靠近它修飾的動詞；mieux 是 bien 的比較級。" },
+    { id: "adverb-position-fluency", phase: "fluency", openEnded: true, category: "A2 · FLUIDITÉ", skill: "副詞自動化", label: "連續說一分鐘，至少使用四個副詞", q: "Comment révises-tu le français et qu’est-ce qui t’aide le plus ?", a: "Je révise généralement le soir. Je relis toujours mes notes et j’essaie souvent de parler à voix haute. J’ai déjà commencé à enregistrer mes réponses, et cela m’aide beaucoup.", note: "不要把所有副詞放句尾；依現在式或複合過去式選擇位置。" },
+  ],
+  futureSimple: [
+    { id: "future-simple-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "futur simple", label: "完成兩個未來式動詞", q: "Demain, nous ___ plus tôt et nous ___ le train de huit heures. (partir / prendre)", a: "Demain, nous partirons plus tôt et nous prendrons le train de huit heures.", note: "futur simple 使用不定詞字幹；prendre 去掉最後的 e，再加 -ons：prendr-ons。" },
+    { id: "future-simple-input", phase: "input", category: "B1 · LECTURE", skill: "futur simple", label: "讀預測後回答", q: "En 2030, davantage de salariés travailleront à distance, mais les bureaux ne disparaîtront pas. Que prévoit l’auteur ?", a: "Il prévoit que davantage de salariés travailleront à distance, mais que les bureaux ne disparaîtront pas.", note: "futur simple 可表達預測；travailleront、disparaîtront 都指未來。" },
+    { id: "future-simple-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "未來計畫", label: "用三句描述未來幾個月的具體計畫", q: "持續上法文課 → 十二月考 TCF Canada → 每天練口說", a: "Dans les prochains mois, je continuerai à suivre des cours de français. Je passerai le TCF Canada en décembre et je pratiquerai l’oral tous les jours.", note: "已決定或較遠的未來計畫可用 futur simple；注意 passerai、pratiquerai 的字尾。" },
+    { id: "future-simple-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "未來投射", label: "不看提示連續說 60 秒", q: "Comment votre vie changera-t-elle dans cinq ans ?", a: "Dans cinq ans, je parlerai français avec confiance. Je pourrai travailler dans un environnement international et je voyagerai plus facilement au Canada.", note: "先用 Dans cinq ans 定位時間，再連續使用 futur simple，不必逐字翻譯。" },
+  ],
+  conditionnelPresent: [
+    { id: "conditionnel-present-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "conditionnel présent", label: "把建議改成條件式", q: "À ta place, je ___ conseil et je ne ___ rien aujourd’hui. (demander / signer)", a: "À ta place, je demanderais conseil et je ne signerais rien aujourd’hui.", note: "conditionnel présent 使用 futur simple 字幹＋imparfait 字尾：-ais、-ais、-ait、-ions、-iez、-aient。" },
+    { id: "conditionnel-present-input", phase: "input", category: "B1 · LECTURE", skill: "conditionnel présent", label: "找出寄件人的兩項禮貌要求", q: "Nous aimerions louer l’appartement dès septembre. Pourriez-vous nous envoyer le contrat ?", a: "Les locataires aimeraient louer l’appartement dès septembre et demandent qu’on leur envoie le contrat.", note: "aimerions、pourriez-vous 以條件式降低要求的直接程度。" },
+    { id: "conditionnel-present-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "提出建議", label: "用三種條件式句型給學法文的建議", q: "可以每天聽法文 → 最好記錄錯誤 → 換作是我會多說", a: "Tu pourrais écouter du français chaque jour. Il serait utile de noter tes erreurs. À ta place, je parlerais davantage pendant les cours.", note: "pourrais 提議、il serait utile de 表示建議、à ta place 表示個人意見。" },
+    { id: "conditionnel-present-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "想像情境", label: "想像六個月假期並說 60–90 秒", q: "Vous disposez de six mois libres. Quels seraient vos projets ?", a: "Je voyagerais au Canada, je suivrais un cours intensif de français et je consacrerais du temps à un projet personnel.", note: "先設定想像情境，再用 conditionnel présent 列出會做的事情。" },
+  ],
+  siPatterns: [
+    { id: "si-patterns-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "si 條件句", label: "完成真實與假設條件句", q: "Si j’ai le temps, je t’___. Si j’avais plus de temps, je ___ un cours intensif. (appeler / suivre)", a: "Si j’ai le temps, je t’appellerai. Si j’avais plus de temps, je suivrais un cours intensif.", note: "可能實現：si＋présent，主句用 futur；現在假設：si＋imparfait，主句用 conditionnel présent。" },
+    { id: "si-patterns-input", phase: "input", category: "B1 · LECTURE", skill: "si 條件句", label: "讀通知後找出條件與結果", q: "Si vous réservez avant vendredi, vous bénéficierez d’une réduction. Si vous hésitez, appelez-nous. Que se passera-t-il en cas de réservation anticipée ?", a: "Le client bénéficiera d’une réduction s’il réserve avant vendredi.", note: "si＋présent 後可接 futur，也可用 impératif 提出指示。" },
+    { id: "si-patterns-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "條件與假設", label: "依提示各寫一個 si 句", q: "明天天氣好／去爬山；累的時候／早點休息；有更多時間／每天閱讀", a: "S’il fait beau demain, j’irai faire une randonnée. Si je suis fatiguée, je me couche plus tôt. Si j’avais plus de temps, je lirais en français tous les jours.", note: "先判斷是具體可能、一般情況，還是與目前情況相反的假設，再選時態。" },
+    { id: "si-patterns-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "即席假設", label: "用至少三個 si 句說 90 秒", q: "Si vous pouviez changer trois choses dans votre ville, que feriez-vous ?", a: "Si je pouvais changer ma ville, j’améliorerais les transports publics. S’ils étaient plus fréquents, davantage de personnes les utiliseraient. Je créerais aussi plus d’espaces verts si le budget le permettait.", note: "si 子句不用 conditionnel；維持 si＋imparfait、conditionnel présent 的配對。" },
+  ],
+  plusQueParfait: [
+    { id: "plus-que-parfait-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "plus-que-parfait", label: "完成較早發生的過去事件", q: "Quand je suis arrivée à la gare, le train ___ déjà ___. (partir)", a: "Quand je suis arrivée à la gare, le train était déjà parti.", note: "plus-que-parfait＝avoir／être 的 imparfait＋過去分詞；表示另一過去事件之前已完成的事。" },
+    { id: "plus-que-parfait-input", phase: "input", category: "B1 · LECTURE", skill: "plus-que-parfait", label: "讀故事後找出先發生的原因", q: "Léa n’a pas pu entrer chez elle parce qu’elle avait oublié ses clés à l’intérieur. Pourquoi est-elle restée dehors ?", a: "Elle est restée dehors parce qu’elle avait oublié ses clés à l’intérieur.", note: "avait oublié 先於 n’a pas pu entrer，說明後來問題的原因。" },
+    { id: "plus-que-parfait-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "過去先後順序", label: "用一句話表達準備與出發的先後", q: "去蒙特婁以前：已訂旅館、已買車票；後來出發", a: "Quand je suis partie pour Montréal, j’avais déjà réservé mon hôtel et acheté mon billet.", note: "後發生的出發用 passé composé；更早完成的準備用 plus-que-parfait。" },
+    { id: "plus-que-parfait-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "解釋過去問題", label: "說一個因為先前疏忽而發生的小問題", q: "Racontez un problème en utilisant déjà, parce que et le plus-que-parfait.", a: "Une fois, je suis arrivée au mauvais endroit parce que j’avais mal noté l’adresse. Cela faisait déjà dix minutes que j’attendais quand j’ai compris mon erreur.", note: "用 plus-que-parfait 補充另一過去事件之前已完成的原因或事件；持續到當時的狀態可用 cela faisait…que＋imparfait。" },
+  ],
+  pronounOrder: [
+    { id: "pronoun-order-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "代名詞順序", label: "用兩個代名詞改寫", q: "Je donne les documents à ma professeure. → Je ___ ___ donne.", a: "Je les lui donne.", note: "陳述句中 COD le／la／les 放在 COI lui／leur 前：je les lui donne。" },
+    { id: "pronoun-order-input", phase: "input", category: "B1 · LECTURE", skill: "代名詞順序", label: "找出兩個代名詞的指涉", q: "Zoe a besoin de ces informations. Son professeur les lui envoie par courriel. Qu’envoie-t-il, et à qui ?", a: "Il envoie les informations à Zoe.", note: "les＝ces informations；lui＝à Zoe。先還原名詞，再理解句意。" },
+    { id: "pronoun-order-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "多重代名詞", label: "改寫三句，不重複名詞", q: "Je montre les photos à mes amis. / Tu prêtes ta voiture à Léa. / Nous parlons du projet à Paul.", a: "Je les leur montre. Tu la lui prêtes. Nous lui en parlons.", note: "基本順序是 me／te／se／nous／vous＋le／la／les＋lui／leur＋y＋en。" },
+    { id: "pronoun-order-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "代名詞自動化", label: "立即回應，不重複「報告」與「主管」", q: "Votre collègue vous demande d’envoyer le rapport à sa responsable. Que répondez-vous ?", a: "Je vais le lui envoyer cet après-midi. Si certains points ne sont pas clairs, je les lui expliquerai demain.", note: "先想「什麼」與「給誰」，再依 COD＋COI 的順序說出來。" },
+  ],
+  precedingCodAgreement: [
+    { id: "preceding-cod-agreement-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "前置 COD 配合", label: "完成過去分詞的性數配合", q: "Les lettres que j’ai ___ hier sont sur la table. (écrire)", a: "Les lettres que j’ai écrites hier sont sur la table.", note: "avoir 的過去分詞通常不配合；但 COD les lettres 位於過去分詞前，所以寫 écrites。" },
+    { id: "preceding-cod-agreement-input", phase: "input", category: "B1 · LECTURE", skill: "前置 COD 配合", label: "解釋為什麼使用 prises", q: "J’ai retrouvé les photos que Zoe avait prises à Kyoto. Pourquoi écrit-on « prises » ?", a: "Parce que le COD « les photos » est placé avant le participe passé et qu’il est féminin pluriel.", note: "關係代名詞 que 是 prendre 的 COD，指向前面的 les photos。" },
+    { id: "preceding-cod-agreement-output", phase: "output", openEnded: true, category: "B1 · CORRECTION", skill: "前置 COD 配合", label: "修正兩個過去分詞", q: "La robe que j’ai acheté est trop grande. Les erreurs que j’ai corrigé étaient fréquentes.", a: "La robe que j’ai achetée est trop grande. Les erreurs que j’ai corrigées étaient fréquentes.", note: "先找 que 取代的名詞，再依其陰陽性與單複數修改過去分詞。" },
+    { id: "preceding-cod-agreement-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "自然使用配合", label: "介紹最近買的兩樣東西", q: "Parlez de deux choses que vous avez achetées ou choisies récemment.", a: "Les chaussures que j’ai achetées sont très confortables. Le livre que j’ai choisi présente des exercices utiles.", note: "口說時先確定先行詞，再讓 que 後面的過去分詞自然配合。" },
+  ],
+  gerundParticiple: [
+    { id: "gerund-participle-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "gérondif", label: "用 gérondif 合併同主詞動作", q: "Elle répète chaque phrase et améliore sa prononciation.", a: "Elle améliore sa prononciation en répétant chaque phrase.", note: "gérondif＝en＋participe présent，通常表示同一主詞同時做的動作或採用的方法。" },
+    { id: "gerund-participle-input", phase: "input", category: "B1 · LECTURE", skill: "gérondif／participe présent", label: "分辨兩種 -ant 結構", q: "En travaillant régulièrement, Léa progresse. Les étudiants vivant loin suivent le cours en ligne. Quel est le rôle de chaque forme ?", a: "« En travaillant » exprime la manière de progresser ; « vivant loin » décrit les étudiants.", note: "gérondif 前有 en；participe présent 可直接補充名詞資訊，且形式不變。" },
+    { id: "gerund-participle-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "句子壓縮", label: "各用一個 gérondif 與 participe présent 改寫", q: "Je marche et j’écoute un podcast. / Les personnes qui souhaitent participer doivent s’inscrire.", a: "J’écoute un podcast en marchant. Les personnes souhaitant participer doivent s’inscrire.", note: "同主詞並行動作用 en＋-ant；關係子句可用 participe présent 精簡。" },
+    { id: "gerund-participle-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "描述學習方法", label: "用至少兩個 gérondif 說 60 秒", q: "Comment apprenez-vous le français en dehors des cours ?", a: "J’apprends du vocabulaire en écoutant des podcasts. En répétant les phrases à voix haute, j’améliore aussi ma prononciation.", note: "每個 gérondif 的隱含主詞要與主句主詞相同。" },
+  ],
+  passiveVoice: [
+    { id: "passive-voice-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "voix passive", label: "把主動句改成被動句", q: "La mairie organise le festival. →", a: "Le festival est organisé par la mairie.", note: "被動式＝être＋過去分詞；過去分詞與被動句主詞 le festival 配合。" },
+    { id: "passive-voice-input", phase: "input", category: "B1 · LECTURE", skill: "voix passive", label: "分辨已完成與尚未發生的被動事件", q: "Une nouvelle bibliothèque a été inaugurée hier. Elle sera ouverte au public lundi. Que s’est-il déjà passé, et que se passera-t-il lundi ?", a: "La bibliothèque a déjà été inaugurée ; elle sera ouverte au public lundi.", note: "被動式的時態由 être 承擔：a été inaugurée 是過去，sera ouverte 是未來。" },
+    { id: "passive-voice-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "主被動改寫", label: "把兩句改成被動式", q: "On a annulé la réunion. / La ville construira une piste cyclable.", a: "La réunion a été annulée. Une piste cyclable sera construite par la ville.", note: "施事者不重要時可以省略 par＋施事者；注意 réunion、piste 都是陰性。" },
+    { id: "passive-voice-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "新聞式表達", label: "用兩個被動式口頭報導城市新措施", q: "市中心限制車流；增設接駁車", a: "La circulation sera limitée dans le centre-ville. Des navettes supplémentaires seront mises en service pour faciliter les déplacements.", note: "被動式適合把焦點放在措施或結果，而不是執行者。" },
+  ],
+  reportedSpeech: [
+    { id: "reported-speech-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "discours rapporté", label: "把未來直述句改成間接引語", q: "Léa a dit : « Je viendrai demain. » →", a: "Léa a dit qu’elle viendrait le lendemain.", note: "轉述動詞在過去時，futur simple 通常後移為 conditionnel présent；demain 依情境變成 le lendemain。" },
+    { id: "reported-speech-input", phase: "input", category: "B1 · LECTURE", skill: "discours rapporté", label: "轉述陳述與開放式問句", q: "Paul : « Je n’ai pas reçu le lien. Où dois-je me connecter ? » Que rapporte sa collègue ?", a: "Paul a expliqué qu’il n’avait pas reçu le lien et a demandé où il devait se connecter.", note: "陳述句用 que；保留疑問詞 où，但間接問句不再倒裝。" },
+    { id: "reported-speech-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "三種間接引語", label: "轉述陳述、是非問句與原因問句", q: "Léa : « Je suis disponible. Le cours commence-t-il à neuf heures ? Pourquoi l’administration a-t-elle changé la salle ? »", a: "Léa a dit qu’elle était disponible. Elle a demandé si le cours commençait à neuf heures et pourquoi l’administration avait changé la salle.", note: "陳述用 que，是非問句用 si，有疑問詞時保留疑問詞；注意過去時態呼應。" },
+    { id: "reported-speech-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "口頭轉述", label: "用三個轉述句重述一次談話", q: "Racontez une conversation récente avec votre professeure.", a: "Ma professeure a dit que ma prononciation s’améliorait. Elle m’a demandé si je révisais chaque jour, puis elle a expliqué pourquoi je devais parler davantage.", note: "依序使用 a dit que、a demandé si、a expliqué pourquoi，避免逐句模仿直接引語。" },
+  ],
+  subjunctiveFoundations: [
+    { id: "subjunctive-foundations-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "subjonctif présent", label: "先從規則動詞建立變化規則", q: "Ils parlent → Il faut que je ___. Nous finissons / ils finissent → Il faut que nous ___.", a: "Il faut que je parle. Il faut que nous finissions.", note: "je／tu／il／ils 多取 ils 現在式去掉 -ent 的字幹；nous／vous 多取 nous 現在式去掉 -ons，再加 -ions／-iez。" },
+    { id: "subjunctive-foundations-input", phase: "input", category: "B1 · LECTURE", skill: "subjonctif présent", label: "辨認觸發 subjonctif 的語意", q: "Je veux que tu parles davantage. Il est essentiel que nous finissions aujourd’hui. Je suis ravie que vous participiez.", a: "Les phrases expriment respectivement une volonté, une nécessité et une émotion.", note: "意願、必要性與情緒等主句表達會觸發 subjonctif；使用 subjonctif 不代表從句內容一定不真實。" },
+    { id: "subjunctive-foundations-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "意願與必要性", label: "用三個觸發句型談學習", q: "我希望老師立即糾錯；每天練習很重要；我很高興進步看得見", a: "Je veux que mon professeur me corrige immédiatement. Il est important que je pratique chaque jour. Je suis contente que mes progrès soient visibles.", note: "兩個不同主詞常用 que＋subjonctif；同主詞時通常優先用不定詞。" },
+    { id: "subjunctive-foundations-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "給考生建議", label: "用至少三個 subjonctif 句型說 60 秒", q: "Que faut-il faire pour progresser avant un examen ?", a: "Il faut que tu t’entraînes régulièrement. Il est essentiel que tu apprennes à gérer ton temps et je souhaite que tu gardes confiance pendant l’épreuve.", note: "先熟練 il faut que、il est essentiel que、je souhaite que，再擴充更多觸發語。" },
+  ],
+  causeConsequence: [
+    { id: "cause-consequence-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "cause et conséquence", label: "補上原因與結果連接詞", q: "___ le métro était en panne, j’ai pris le bus ; je suis ___ arrivée en retard.", a: "Comme le métro était en panne, j’ai pris le bus ; je suis donc arrivée en retard.", note: "comme 常置於句首引出原因；donc 放在結果句中。" },
+    { id: "cause-consequence-input", phase: "input", category: "B1 · LECTURE", skill: "cause et conséquence", label: "找出社會問題的原因與結果", q: "Puisque les loyers ont fortement augmenté, de nombreuses familles quittent le centre. C’est pourquoi les trajets quotidiens s’allongent. Quelle est la chaîne logique ?", a: "La hausse des loyers pousse les familles à quitter le centre ; leur éloignement allonge ensuite les trajets quotidiens.", note: "puisque 提出視為已知的原因；c’est pourquoi 明確引出結果。" },
+    { id: "cause-consequence-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "邏輯連接", label: "依提示寫三種因果句", q: "課程取消／老師生病；圖書館提早關／讀者必須離開；大家已知道施工／改走別條路", a: "Le cours a été annulé parce que la professeure était malade. La bibliothèque ferme plus tôt ; par conséquent, les lecteurs doivent partir. Puisque tout le monde est au courant des travaux, nous emprunterons un autre itinéraire.", note: "parce que 回答原因；par conséquent 較正式地引出結果；puisque 表示原因已知或明顯。" },
+    { id: "cause-consequence-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "因果論述", label: "以原因→影響→結論說 90 秒", q: "Pourquoi faut-il améliorer les transports publics ?", a: "Il faut les améliorer car ils réduisent la dépendance à la voiture. Des services plus fréquents faciliteraient les déplacements ; par conséquent, davantage de personnes abandonneraient leur véhicule.", note: "不要只列意見；用 car、par conséquent 或 c’est pourquoi 清楚呈現推論。" },
+  ],
+  purposeExpression: [
+    { id: "purpose-expression-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "expression du but", label: "依主詞與肯否定選擇結構", q: "Je note les mots ___ les mémoriser. Je parle lentement ___ mon partenaire me comprenne. Je vérifie mon sac ___ oublier mon passeport.", a: "Je note les mots pour les mémoriser. Je parle lentement pour que mon partenaire me comprenne. Je vérifie mon sac pour ne pas oublier mon passeport.", note: "同主詞用 pour＋infinitif；主詞不同用 pour que＋subjonctif；避免某事可用 pour ne pas＋infinitif。" },
+    { id: "purpose-expression-input", phase: "input", category: "B1 · LECTURE", skill: "expression du but", label: "找出城市措施的兩個目的", q: "La ville plante des arbres afin de réduire la chaleur et aménage des pistes pour que les habitants puissent circuler à vélo.", a: "Elle veut réduire la chaleur et permettre aux habitants de circuler à vélo.", note: "afin de＋infinitif 與 pour que＋subjonctif 都引出目的，不是已發生的結果。" },
+    { id: "purpose-expression-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "行動與目的", label: "用三種目的結構說明備考計畫", q: "錄下口說／發現錯誤；計時寫作／提高速度；請老師模考／適應壓力", a: "J’enregistre mes réponses pour repérer mes erreurs. Je fais des rédactions chronométrées afin d’écrire plus vite. Je demande à ma professeure d’organiser des simulations pour que je m’habitue à la pression.", note: "輪流使用 pour、afin de、pour que，並確認 pour que 後使用 subjonctif。" },
+    { id: "purpose-expression-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "提出方案", label: "用三個目的句說 90 秒", q: "Que pourrait faire une ville pour aider les nouveaux arrivants ?", a: "Elle pourrait créer un guichet unique pour les aider dans leurs démarches, organiser des rencontres afin qu’ils fassent connaissance avec leurs voisins et publier un guide multilingue pour faciliter leur installation.", note: "提出每項措施後立刻補充目的，使答案比單純列舉更完整。" },
+  ],
+  concessionOpposition: [
+    { id: "concession-opposition-form", phase: "advance", category: "B1 · GRAMMAIRE", skill: "concession et opposition", label: "完成兩種讓步結構", q: "Bien que ce cours ___ exigeant, je continue. Même s’il ___ exigeant, je continue. (être)", a: "Bien que ce cours soit exigeant, je continue. Même s’il est exigeant, je continue.", note: "bien que 後用 subjonctif；même si 後用 indicatif，不能寫 même si＋conditionnel。" },
+    { id: "concession-opposition-input", phase: "input", category: "B1 · LECTURE", skill: "concession et opposition", label: "找出承認的優點與真正立場", q: "Certes, le télétravail offre plus de liberté. Cependant, il peut isoler les salariés, tandis que le travail au bureau facilite les échanges. Quelle est la nuance ?", a: "L’auteur reconnaît la liberté offerte par le télétravail, mais insiste sur le risque d’isolement et l’avantage des échanges au bureau.", note: "certes 承認一點；cependant 轉折到主要限制；tandis que 對照兩種情況。" },
+    { id: "concession-opposition-output", phase: "output", openEnded: true, category: "B1 · EXPRESSION", skill: "細緻立場", label: "用讓步、轉折與對照寫一小段", q: "線上課：彈性高但互動少；實體課時間固定但交流直接", a: "Bien que les cours en ligne soient flexibles, les échanges y sont parfois limités. Cependant, ce format convient aux personnes très occupées, alors que les cours en présentiel offrent un contact plus direct.", note: "讓步不是否定前半句，而是承認事實後提出仍然成立的主張。" },
+    { id: "concession-opposition-fluency", phase: "fluency", openEnded: true, category: "B1 · FLUIDITÉ", skill: "TCF 細緻論述", label: "無準備說 2 分鐘：優點、限制、立場", q: "Les réseaux sociaux sont-ils utiles pour apprendre une langue ?", a: "Bien qu’ils puissent donner accès à beaucoup de contenus, leur qualité est inégale. En revanche, ils permettent d’entendre un français varié. Je les trouve donc utiles, même si une méthode structurée reste indispensable.", note: "使用 bien que、en revanche、même si 表達非黑即白的立場，為 TCF 任務 3 建立論證層次。" },
+  ],
+  subjunctiveChoice: [
+    { id: "subjunctive-choice-form", phase: "advance", category: "B2 · GRAMMAIRE", skill: "indicatif / subjonctif", label: "依語意選擇正確語氣", q: "Il est certain qu’elle ___ disponible, mais je doute qu’elle ___ venir. (être / pouvoir)", a: "Il est certain qu’elle est disponible, mais je doute qu’elle puisse venir.", note: "確定事實通常用 indicatif；懷疑、必要、情感或未實現目的通常觸發 subjonctif。" },
+    { id: "subjunctive-choice-input", phase: "input", category: "B2 · LECTURE", skill: "語氣與立場", label: "說明兩個動詞為何使用不同語氣", q: "Je pense que ce projet est utile, mais je ne pense pas qu’il suffise à résoudre tous les problèmes.", a: "est 使用 indicatif，因為說話者肯定項目的作用；suffise 使用 subjonctif，因為否定意見表達不確定或保留。", note: "關鍵不是背連接詞清單，而是辨認說話者把內容視為事實、可能、願望或疑問。" },
+    { id: "subjunctive-choice-output", phase: "output", openEnded: true, category: "B2 · EXPRESSION", skill: "讓步與必要性", label: "用 bien que、je crois que、il faut que 回應", q: "城市準備改善大眾運輸。計畫很昂貴，但可能改善通勤；市府必須先諮詢居民。", a: "Bien que le projet soit coûteux, je crois qu’il améliorera les déplacements. Il faut toutefois que la ville consulte les habitants avant de le mettre en œuvre.", note: "合理變體都可接受；bien que 與 il faut que 後用 subjonctif，肯定的 je crois que 後通常用 indicatif。" },
+    { id: "subjunctive-choice-fluency", phase: "fluency", openEnded: true, category: "TCF · ORAL", skill: "細緻立場", label: "連續說 90 秒，至少使用一個 indicatif 與兩個 subjonctifs", q: "Les villes doivent-elles limiter l’usage de la voiture ?", a: "Je crois qu’une limitation est nécessaire, bien qu’elle puisse compliquer certains trajets. Il faut que les transports publics soient renforcés pour que la mesure soit acceptable.", note: "參考答案只示範核心結構；正式練習需加入背景、細節、例子與結論，說滿 90 秒。" },
+  ],
+  compoundRelatives: [
+    { id: "compound-relatives-form", phase: "advance", category: "B2 · GRAMMAIRE", skill: "lequel 系列", label: "補上正確的複合關係代名詞", q: "Le centre près ___ j’habite propose un programme ___ je participe.", a: "Le centre près duquel j’habite propose un programme auquel je participe.", note: "près de + lequel → près duquel；participer à + lequel → auquel。介系詞決定代名詞形式。" },
+    { id: "compound-relatives-input", phase: "input", category: "B2 · LECTURE", skill: "先行詞與介系詞", label: "指出兩個關係代名詞的先行詞及其結構", q: "Le règlement auquel les employés doivent se conformer prévoit un comité au sein duquel chaque service sera représenté.", a: "auquel 指 le règlement，來自 se conformer à；au sein duquel 指 le comité，來自 au sein de。", note: "先找動詞或介系詞要求的 à／de，再依先行詞的性數選 lequel、laquelle、lesquels 或 lesquelles。" },
+    { id: "compound-relatives-output", phase: "output", openEnded: true, category: "B2 · EXPRESSION", skill: "資訊整合", label: "合併四句並避免重複", q: "Nous avons visité un centre. Je travaille près de ce centre. Le centre mène un projet. Plusieurs associations participent à ce projet.", a: "Nous avons visité un centre près duquel je travaille et qui mène un projet auquel plusieurs associations participent.", note: "可有其他自然改寫；至少正確保留 près de 與 participer à 的介系詞關係。" },
+    { id: "compound-relatives-fluency", phase: "fluency", openEnded: true, category: "B2 · FLUIDITÉ", skill: "複雜句自動化", label: "說 90 秒：介紹一個組織、活動與規則", q: "Présente une organisation, un projet auquel tu participes et une règle à laquelle les membres doivent se conformer.", a: "Je suis membre d’une association au sein de laquelle plusieurs ateliers sont organisés. Elle mène un projet auquel je participe et applique des règles auxquelles tous les membres doivent se conformer.", note: "參考答案只示範核心結構；正式練習需加入背景、細節、例子與結論，說滿 90 秒。" },
+  ],
+  tenseSequence: [
+    { id: "tense-sequence-form", phase: "advance", category: "B2 · GRAMMAIRE", skill: "間接引語時態", label: "把直接引語改成過去的間接引語", q: "Elle a dit : « J’ai terminé le rapport et je présenterai les résultats demain. »", a: "Elle a dit qu’elle avait terminé le rapport et qu’elle présenterait les résultats le lendemain.", note: "過去敘述點之前用 plus-que-parfait；從過去看未來用 conditionnel présent；demain 改為 le lendemain。" },
+    { id: "tense-sequence-input", phase: "input", category: "B2 · LECTURE", skill: "時間關係", label: "判斷三個事件相對於 expliquait 的時間", q: "Le responsable expliquait qu’il avait reçu les plaintes la veille, qu’il préparait une réponse et qu’il publierait sa décision le lendemain.", a: "avait reçu 發生得更早；préparait 與 expliquait 同時進行；publierait 是從當時看尚未發生的未來事件。", note: "以主要過去敘述點為中心判斷先前、同時與之後，不要只背時態名稱。" },
+    { id: "tense-sequence-output", phase: "output", openEnded: true, category: "B2 · ÉCRIT", skill: "消息轉述", label: "改寫成正式報導句", q: "Hier, la directrice a annoncé : « Nous avons réduit les délais. Nous testons une nouvelle procédure et nous publierons les résultats le mois prochain. »", a: "Hier, la directrice a annoncé que son équipe avait réduit les délais, qu’elle testait une nouvelle procédure et qu’elle publierait les résultats le mois suivant.", note: "主詞可依上下文改寫；先前、同時、未來三層時間關係要保持清楚。" },
+    { id: "tense-sequence-fluency", phase: "fluency", openEnded: true, category: "TCF · ORAL", skill: "轉述資訊", label: "不看提示說 90 秒：轉述老師最近告訴你的事", q: "Rapporte une information qu’un professeur t’a donnée sur tes progrès et tes prochaines étapes.", a: "Mon professeur m’a expliqué que j’avais progressé, que je devais encore travailler la fluidité et que je pourrais bientôt commencer des exercices de niveau B2.", note: "參考答案只示範核心結構；正式練習需加入背景、細節、例子與結論，說滿 90 秒。" },
+  ],
+  pastHypothesesRegret: [
+    { id: "past-hypotheses-regret-form", phase: "advance", category: "B2 · GRAMMAIRE", skill: "過去非真實假設", label: "完成 Zoe 的過去假設句", q: "Si je ___ plus tôt, je ne ___ en retard. (partir / arriver)", a: "Si j’étais partie plus tôt, je ne serais pas arrivée en retard.", note: "未發生的過去條件：si + plus-que-parfait，結果用 conditionnel passé；Zoe 是女性，所以是 partie、arrivée。" },
+    { id: "past-hypotheses-regret-input", phase: "input", category: "B2 · LECTURE", skill: "反事實推論", label: "根據句子說明實際發生了什麼", q: "Si la ville avait consulté les habitants, elle aurait évité une partie des critiques.", a: "La ville n’a pas consulté les habitants ; elle a donc fait face à des critiques qu’elle aurait pu éviter.", note: "第三類 si 句描述與過去事實相反的條件；理解時要還原真正發生的情況。" },
+    { id: "past-hypotheses-regret-output", phase: "output", openEnded: true, category: "B2 · EXPRESSION", skill: "後悔與教訓", label: "說明錯誤、後悔與未來做法", q: "你因為沒有確認地址而走錯大樓，錯過了預約。", a: "Si j’avais vérifié l’adresse, je ne me serais pas trompée de bâtiment. J’aurais dû appeler avant de partir ; désormais, je confirmerai toujours l’adresse à l’avance.", note: "也可使用 j’aurais pu、je n’aurais pas dû；需區分過去反思與未來改進。" },
+    { id: "past-hypotheses-regret-fluency", phase: "fluency", openEnded: true, category: "TCF · ORAL", skill: "經驗反思", label: "說 2 分鐘：事件、原因、不同可能與學到的事", q: "Raconte une situation qui se serait mieux passée si tu avais agi autrement.", a: "Lors d’un voyage, j’ai raté mon train parce que je suis partie trop tard. Si j’étais partie trente minutes plus tôt, je l’aurais pris sans difficulté. J’aurais aussi pu préparer mon billet la veille. Cette expérience m’a appris à prévoir davantage de temps.", note: "參考答案只示範核心結構；正式練習需加入事件背景、細節、其他可能與結論，說滿 2 分鐘。" },
+  ],
+  causativePassive: [
+    { id: "causative-passive-form", phase: "advance", category: "B2 · GRAMMAIRE", skill: "faire + infinitif", label: "表示由別人替你完成動作", q: "Un technicien répare mon ordinateur. → Je ___ par un technicien.", a: "Je fais réparer mon ordinateur par un technicien.", note: "faire + infinitif 強調安排或促使別人做事；真正執行者可用 par 引出。" },
+    { id: "causative-passive-input", phase: "input", category: "B2 · LECTURE", skill: "使役與被動", label: "比較兩句分別強調什麼", q: "La mairie a fait fermer la rue par une entreprise spécialisée. La rue a été rouverte trois jours plus tard.", a: "第一句強調市府安排企業封路；第二句是被動語態，焦點在道路及重新開放的結果。", note: "faire + infinitif 突出發起者；être + participe passé 突出承受動作的人、事物或結果。" },
+    { id: "causative-passive-output", phase: "output", openEnded: true, category: "B2 · EXPRESSION", skill: "服務與結果", label: "同時使用使役與被動", q: "公寓漏水：房東請水管工修理；隔天損壞的管線被更換。", a: "Le propriétaire a fait réparer la fuite par un plombier, puis la canalisation endommagée a été remplacée le lendemain.", note: "可省略執行者或調整資訊順序；檢查被動過去分詞與主詞的性數配合。" },
+    { id: "causative-passive-fluency", phase: "fluency", openEnded: true, category: "TCF · ORAL", skill: "公共措施描述", label: "說 90 秒：誰安排措施、什麼被改變、結果如何", q: "Décris des travaux réalisés récemment dans ton quartier.", a: "La ville a fait installer de nouveaux lampadaires dans notre rue. Les anciennes lampes ont été remplacées et plusieurs passages pour piétons ont été repeints. Ces travaux ont amélioré la visibilité le soir.", note: "參考答案只示範核心結構；正式練習需加入背景、工程細節、影響與結論，說滿 90 秒。" },
+  ],
+  nominalization: [
+    { id: "nominalization-form", phase: "advance", category: "B2 · ÉCRIT", skill: "名詞化", label: "把兩個動詞改成正式名詞結構", q: "La ville interdit les voitures, ce qui contribue à améliorer la qualité de l’air.", a: "L’interdiction des voitures par la ville contribue à l’amélioration de la qualité de l’air.", note: "interdire → interdiction；améliorer → amélioration。名詞化能壓縮資訊，但仍需明確表達邏輯關係。" },
+    { id: "nominalization-input", phase: "input", category: "B2 · LECTURE", skill: "正式資訊密度", label: "找出三個名詞化及其原始動詞", q: "La mise en œuvre du programme a entraîné une réduction des délais et une amélioration de l’accueil.", a: "mise en œuvre ← mettre en œuvre；réduction ← réduire；amélioration ← améliorer。", note: "TCF 正式文本常用名詞化承載資訊；閱讀時把它還原成動詞有助理解因果與責任主體。" },
+    { id: "nominalization-output", phase: "output", openEnded: true, category: "TCF · ÉCRIT", skill: "正式改寫", label: "把三個短句整合成一句", q: "Les loyers augmentent. Cela inquiète les habitants. Ils demandent que la mairie intervienne.", a: "L’augmentation des loyers suscite l’inquiétude des habitants, qui demandent une intervention de la mairie.", note: "也可寫 réclament l’intervention de la mairie；評量重點是資訊完整、搭配自然，而非逐字一致。" },
+    { id: "nominalization-fluency", phase: "fluency", openEnded: true, category: "B2 · MÉDIATION", skill: "政策摘要", label: "用三個名詞化口頭摘要，再改用動詞說一次", q: "市府擴建自行車道、減少停車位，因此部分居民反對。", a: "L’extension des pistes cyclables et la réduction du nombre de places de stationnement ont provoqué l’opposition d’une partie des habitants.", note: "可使用 développement、suppression、contestation 等變體；口說不要過度名詞化，以免顯得生硬。" },
+  ],
+  formalRegisterCorrection: [
+    { id: "formal-register-correction-form", phase: "advance", category: "B2 · REGISTRE", skill: "正式改寫", label: "把口語句改成適合 TCF 寫作的句子", q: "Y a plein de gens qui sont pas d’accord avec ça.", a: "De nombreuses personnes ne sont pas d’accord avec cette mesure.", note: "正式文體恢復完整否定 ne…pas，並用 de nombreuses personnes、cette mesure 取代 plein de gens、ça；此處也省去口語的 y a 結構。" },
+    { id: "formal-register-correction-input", phase: "input", category: "B2 · CORRECTION", skill: "語域辨識", label: "指出不適合正式郵件之處並改寫", q: "Je vous écris parce que votre service, il a encore annulé mon rendez-vous et ça m’énerve.", a: "Je vous écris au sujet de la nouvelle annulation de mon rendez-vous, qui me cause un réel désagrément.", note: "原句有主詞重複、口語代名詞 ça 與情緒化表達；正式並不等於複雜，而是精確、克制、合乎對象。" },
+    { id: "formal-register-correction-output", phase: "output", openEnded: true, category: "TCF · ÉCRIT", skill: "正式申訴", label: "寫一封 60–120 字的正式郵件", q: "某服務單位兩次取消你的預約且未說明原因。要求說明並安排新時間。", a: "Madame, Monsieur,\nJe souhaite vous signaler que mon rendez-vous a été annulé à deux reprises sans explication. Le dernier rendez-vous était prévu pour le 22 juillet. Cette situation me cause un important désagrément. Je vous serais reconnaissante de bien vouloir m’en préciser la raison et de me proposer une nouvelle date dans les meilleurs délais. Je suis disponible tous les matins de la semaine prochaine, sauf mercredi.\nCordialement,\nZoe", note: "完整回答需達 60–120 字；其他禮貌且清楚的版本都可接受。Zoe 是女性，因此使用 reconnaissante。" },
+    { id: "formal-register-correction-fluency", phase: "fluency", openEnded: true, category: "TCF · ORAL", skill: "精確口語", label: "先自然回答，再去掉模糊口語詞重說", q: "Les cours en ligne constituent-ils une bonne solution pour tous les étudiants ?", a: "À mon avis, les cours en ligne constituent une bonne solution — ou, plus précisément, ils peuvent l’être pour les étudiants autonomes. Toutefois, ils ne conviennent pas à tout le monde, car certaines personnes ont besoin d’un accompagnement direct et d’échanges réguliers.", note: "需要修正時可用 plus précisément、je veux dire 或 autrement dit；合理立場皆可，重點是精確詞彙、完整否定與清楚連接詞。" },
+  ],
 };
 
 const mistakes = [
@@ -182,62 +386,151 @@ const LEARNER_PROFILE = Object.freeze({
 });
 
 const ADVANCE_MODULES = [
-  { id: "future-near", set: "futureNear", level: "A2.1", title: "近期未來 futur proche", outcome: "能說明明天與週末計畫" },
-  { id: "recent-past", set: "recentPast", level: "A2.1", title: "剛剛發生 passé récent", outcome: "能說明剛完成的事情" },
-  { id: "object-pronouns", set: "objectPronouns", level: "A2.1", title: "直接受詞 le / la / les", outcome: "避免反覆重複同一個名詞" },
-  { id: "comparatives", set: "comparatives", level: "A2.1", title: "比較級與偏好", outcome: "能比較兩個地方或選擇" },
-  { id: "imperative-directions", set: "imperativeDirections", level: "A2.1", title: "命令式與問路", outcome: "能理解並給出簡單路線" },
-  { id: "reflexive-past", set: "reflexivePast", level: "A2.2", title: "反身動詞的過去式", outcome: "能敘述昨天的日常流程" },
-  { id: "imperfect-intro", set: "imperfectIntro", level: "B1 預習", title: "未完成過去式 imparfait", outcome: "能描述過去背景與習慣" },
-  { id: "past-contrast", set: "pastContrast", level: "B1 預習", title: "passé composé vs imparfait", outcome: "能組成有背景與事件的故事" },
-  { id: "pronouns-y-en", set: "pronounsYEn", level: "B1 預習", title: "代名詞 y / en", outcome: "能自然避免重複地點與數量" },
-  { id: "polite-requests", set: "politeRequests", level: "B1／TCF", title: "禮貌請求與主動問資訊", outcome: "能完成 TCF 互動型口說任務" },
-  { id: "opinion-builder", set: "opinionBuilder", level: "B1／B2 預習", title: "意見、理由、例子、結論", outcome: "能連續表達並支持自己的立場" },
-  { id: "tcf-message", set: "tcfMessage", level: "TCF 預習", title: "TCF 訊息寫作與引導式訪談", outcome: "能完成 60–120 字訊息並應對兩分鐘訪談" },
-  { id: "relative-reformulation", set: "relativeReformulation", level: "B1.1", title: "關係代名詞與改寫", outcome: "能用 qui、que、dont、où 合併資訊並避免重複" },
-  { id: "hypothesis-nuance", set: "hypothesisNuance", level: "B1.2", title: "假設、條件與細緻語氣", outcome: "能提出有條件的立場，表達限制與可能結果" },
-  { id: "viewpoint-synthesis", set: "viewpointSynthesis", level: "B2.1", title: "雙觀點綜合與 reformulation", outcome: "能用自己的話中立比較兩份來源，不混入個人意見" },
-  { id: "tcf-task3-b2", set: "tcfTask3B2", level: "TCF · B2", title: "任務 3：限時論證", outcome: "能完成 120–180 字雙觀點寫作與 4 分 30 秒即席口說" },
+  { id: "present-regular", set: "presentRegular", stage: "A2", level: "A2.1", title: "現在式規則動詞", outcome: "能穩定變化 -er、-ir、-re 動詞" },
+  { id: "present-irregular", set: "presentIrregular", stage: "A2", level: "A2.1", title: "高頻不規則現在式", outcome: "能正確使用 être、avoir、aller、faire 等高頻動詞" },
+  { id: "articles-gender-number", set: "articlesGenderNumber", stage: "A2", level: "A2.1", title: "名詞性別、單複數與冠詞", outcome: "能依名詞性數選擇 le、la、les、un、une、des" },
+  { id: "adjective-agreement-position", set: "adjectiveAgreementPosition", stage: "A2", level: "A2.1", title: "形容詞配合與位置", outcome: "能讓形容詞與名詞性數配合並放在自然位置" },
+  { id: "possessive-demonstrative", set: "possessiveDemonstrative", stage: "A2", level: "A2.1", title: "所有與指示形容詞", outcome: "能區分 mon、ma、mes 與 ce、cet、cette、ces" },
+  { id: "contractions-places", set: "contractionsPlaces", stage: "A2", level: "A2.1", title: "à／de 縮合與地點介系詞", outcome: "能正確表達去、在、來自城市與國家" },
+  { id: "c-est-il-est", set: "cEstIlEst", stage: "A2", level: "A2.1", title: "c’est 與 il／elle est", outcome: "能自然介紹人事物並描述特徵" },
+  { id: "questions-registers", set: "questionsRegisters", stage: "A2", level: "A2.1", title: "三種問句與疑問詞", outcome: "能用語調、est-ce que 與倒裝主動提問" },
+  { id: "negation-expanded", set: "negationExpanded", stage: "A2", level: "A2.1", title: "進階否定句", outcome: "能使用 ne…jamais、plus、rien、personne" },
+  { id: "quantity-partitives", set: "quantityPartitives", stage: "A2", level: "A2.1", title: "部分冠詞與數量", outcome: "能區分 du、de la、des 與數量後的 de" },
+  { id: "modal-infinitive", set: "modalInfinitive", stage: "A2", level: "A2.2", title: "情態動詞＋不定詞", outcome: "能表達能力、義務、意願與建議" },
+  { id: "object-pronouns", set: "objectPronouns", stage: "A2", level: "A2.1", title: "直接受詞 le / la / les", outcome: "避免反覆重複同一個名詞" },
+  { id: "indirect-object-pronouns", set: "indirectObjectPronouns", stage: "A2", level: "A2.2", title: "間接受詞 lui／leur", outcome: "能取代 à＋人並避免重複" },
+  { id: "adverb-position", set: "adverbPosition", stage: "A2", level: "A2.2", title: "頻率與方式副詞位置", outcome: "能把 souvent、déjà、bien 等放在自然位置" },
+  { id: "comparatives", set: "comparatives", stage: "A2", level: "A2.1", title: "比較級與偏好", outcome: "能比較兩個地方或選擇" },
+  { id: "imperative-directions", set: "imperativeDirections", stage: "A2", level: "A2.1", title: "命令式與問路", outcome: "能理解並給出簡單路線" },
+  { id: "future-near", set: "futureNear", stage: "A2", level: "A2.1", title: "近期未來 futur proche", outcome: "能說明明天與週末計畫" },
+  { id: "recent-past", set: "recentPast", stage: "A2", level: "A2.1", title: "剛剛發生 passé récent", outcome: "能說明剛完成的事情" },
+  { id: "compound-past-foundations", set: "compoundPastFoundations", stage: "A2", level: "A2.2", title: "複合過去式總整理", outcome: "能選擇 avoir／être 並形成常見過去分詞" },
+  { id: "reflexive-past", set: "reflexivePast", stage: "A2", level: "A2.2", title: "反身動詞的過去式", outcome: "能敘述昨天的日常流程" },
+  { id: "imperfect-intro", set: "imperfectIntro", stage: "B1", level: "B1.1", title: "未完成過去式 imparfait", outcome: "能描述過去背景與習慣" },
+  { id: "past-contrast", set: "pastContrast", stage: "B1", level: "B1.1", title: "passé composé vs imparfait", outcome: "能組成有背景與事件的故事" },
+  { id: "future-simple", set: "futureSimple", stage: "B1", level: "B1.1", title: "簡單未來式 futur simple", outcome: "能說明較遠的計畫、預測與承諾" },
+  { id: "conditionnel-present", set: "conditionnelPresent", stage: "B1", level: "B1.1", title: "現在條件式", outcome: "能禮貌請求、給建議並表達假想結果" },
+  { id: "si-patterns", set: "siPatterns", stage: "B1", level: "B1.1", title: "si 條件句系統", outcome: "能區分真實條件與現在假設" },
+  { id: "plus-que-parfait", set: "plusQueParfait", stage: "B1", level: "B1.1", title: "愈過去式 plus-que-parfait", outcome: "能交代另一件過去事件之前已完成的事" },
+  { id: "pronouns-y-en", set: "pronounsYEn", stage: "B1", level: "B1.1", title: "代名詞 y／en", outcome: "能自然避免重複地點與數量" },
+  { id: "pronoun-order", set: "pronounOrder", stage: "B1", level: "B1.1", title: "雙代名詞順序", outcome: "能正確排列 me、le、lui、y、en" },
+  { id: "relative-reformulation", set: "relativeReformulation", stage: "B1", level: "B1.1", title: "關係代名詞與改寫", outcome: "能用 qui、que、dont、où 合併資訊並避免重複" },
+  { id: "preceding-cod-agreement", set: "precedingCodAgreement", stage: "B1", level: "B1.1", title: "avoir 的前置 COD 配合", outcome: "能在 que 或直接受詞前置時正確配合過去分詞" },
+  { id: "gerund-participle", set: "gerundParticiple", stage: "B1", level: "B1.1", title: "gérondif 與 participe présent", outcome: "能表達同時與方式，並精簡關係子句" },
+  { id: "passive-voice", set: "passiveVoice", stage: "B1", level: "B1.1", title: "被動語態", outcome: "能把焦點放在事件結果或承受者" },
+  { id: "reported-speech", set: "reportedSpeech", stage: "B1", level: "B1.2", title: "間接引語與間接問句", outcome: "能轉述別人的話、問題與指示" },
+  { id: "subjunctive-foundations", set: "subjunctiveFoundations", stage: "B1", level: "B1.2", title: "虛擬式基礎", outcome: "能在意願、必要與情緒後使用 subjonctif" },
+  { id: "cause-consequence", set: "causeConsequence", stage: "B1", level: "B1.2", title: "原因與結果", outcome: "能用 parce que、puisque、donc、par conséquent 組織理由" },
+  { id: "purpose-expression", set: "purposeExpression", stage: "B1", level: "B1.2", title: "目的與避免", outcome: "能區分 pour＋不定詞、pour que＋虛擬式與否定目的" },
+  { id: "concession-opposition", set: "concessionOpposition", stage: "B1", level: "B1.2", title: "讓步與對比", outcome: "能使用 cependant、même si、bien que 精確轉折" },
+  { id: "polite-requests", set: "politeRequests", stage: "B1", level: "B1.2", title: "禮貌請求與主動問資訊", outcome: "能完成 TCF 互動型口說任務" },
+  { id: "opinion-builder", set: "opinionBuilder", stage: "B1", level: "B1.2", title: "意見、理由、例子、結論", outcome: "能連續表達並支持自己的立場" },
+  { id: "hypothesis-nuance", set: "hypothesisNuance", stage: "B1", level: "B1.2", title: "假設、條件與細緻語氣", outcome: "能提出有條件的立場，表達限制與可能結果" },
+  { id: "tcf-message", set: "tcfMessage", stage: "B1", level: "B1.2", title: "TCF 訊息寫作與引導式訪談", outcome: "能完成 60–120 字訊息並應對兩分鐘訪談" },
+  { id: "subjunctive-choice", set: "subjunctiveChoice", stage: "B2", level: "B2.1", title: "直陳式或虛擬式", outcome: "能依確定、懷疑、立場與連接詞選擇語氣" },
+  { id: "compound-relatives", set: "compoundRelatives", stage: "B2", level: "B2.1", title: "複合關係代名詞", outcome: "能正確使用 lequel、auquel、duquel 及介系詞結構" },
+  { id: "tense-sequence", set: "tenseSequence", stage: "B2", level: "B2.1", title: "時態呼應與觀點轉換", outcome: "能在敘事與轉述中維持清楚時間關係" },
+  { id: "past-hypotheses-regret", set: "pastHypothesesRegret", stage: "B2", level: "B2.1", title: "過去假設與後悔", outcome: "能用 si＋愈過去式與條件式過去談未實現結果" },
+  { id: "causative-passive", set: "causativePassive", stage: "B2", level: "B2.1", title: "faire＋不定詞與進階被動", outcome: "能表達使役、委託與責任焦點" },
+  { id: "nominalization", set: "nominalization", stage: "B2", level: "B2.1", title: "名詞化與資訊密度", outcome: "能把動作改寫成名詞結構，提升正式書面表達" },
+  { id: "formal-register-correction", set: "formalRegisterCorrection", stage: "B2", level: "B2.1", title: "正式語域與自我修正", outcome: "能避免口語贅詞並在口說中自然改正自己" },
+  { id: "viewpoint-synthesis", set: "viewpointSynthesis", stage: "B2", level: "B2.1", title: "雙觀點綜合與 reformulation", outcome: "能用自己的話中立比較兩份來源，不混入個人意見" },
+  { id: "tcf-task3-b2", set: "tcfTask3B2", stage: "B2", level: "TCF · B2", title: "任務 3：限時論證", outcome: "能完成 120–180 字雙觀點寫作與 4 分 30 秒即席口說" },
 ];
 
 const CURRICULUM_CHAPTERS = [
   {
-    id: "a2-foundations",
+    id: "a2-present-system",
     level: "A2",
-    title: "日常句型打底",
-    description: "能談近期安排、剛發生的事，並用代名詞減少重複。",
-    moduleIds: ["future-near", "recent-past", "object-pronouns"],
+    title: "現在式與名詞系統",
+    description: "先穩定日常動詞、名詞冠詞、形容詞與指稱方式。",
+    moduleIds: ["present-regular", "present-irregular", "articles-gender-number", "adjective-agreement-position", "possessive-demonstrative"],
   },
   {
-    id: "a2-autonomy",
+    id: "a2-reference-questions",
     level: "A2",
-    title: "生活溝通自主",
-    description: "能比較選擇、理解路線，並敘述已完成的日常流程。",
-    moduleIds: ["comparatives", "imperative-directions", "reflexive-past"],
+    title: "地點、描述與提問",
+    description: "描述人事物與地點，主動提問，並把否定與數量說準確。",
+    moduleIds: ["contractions-places", "c-est-il-est", "questions-registers", "negation-expanded", "quantity-partitives"],
   },
   {
-    id: "b1-narrative",
-    level: "B1",
-    title: "敘事與資訊組織",
-    description: "把背景、事件、地點與數量串成清楚而自然的敘述。",
-    moduleIds: ["imperfect-intro", "past-contrast", "pronouns-y-en"],
+    id: "a2-sentence-tools",
+    level: "A2",
+    title: "句子工具與生活互動",
+    description: "用情態動詞、受詞代名詞、副詞、比較與命令式處理生活互動。",
+    moduleIds: ["modal-infinitive", "object-pronouns", "indirect-object-pronouns", "adverb-position", "comparatives"],
   },
   {
-    id: "b1-interaction",
+    id: "a2-time-and-directions",
+    level: "A2",
+    title: "指路、計畫與過去",
+    description: "從給路線、近期計畫與剛發生的事，走到完整過去敘事。",
+    moduleIds: ["imperative-directions", "future-near", "recent-past", "compound-past-foundations", "reflexive-past"],
+  },
+  {
+    id: "b1-time-hypothesis",
     level: "B1",
-    title: "互動、改寫與細緻立場",
-    description: "主動詢問、支持觀點，並用關係句與條件語氣提高精確度。",
-    moduleIds: ["polite-requests", "opinion-builder", "tcf-message", "relative-reformulation", "hypothesis-nuance"],
+    title: "時間與假設",
+    description: "在過去、未來與條件之間建立清楚時間線。",
+    moduleIds: ["imperfect-intro", "past-contrast", "future-simple", "conditionnel-present", "si-patterns"],
+  },
+  {
+    id: "b1-pronoun-rewrite",
+    level: "B1",
+    title: "敘事層次與句子改寫",
+    description: "用愈過去式、代名詞與關係句提高連貫度。",
+    moduleIds: ["plus-que-parfait", "pronouns-y-en", "pronoun-order", "relative-reformulation", "preceding-cod-agreement"],
+  },
+  {
+    id: "b1-complex-sentences",
+    level: "B1",
+    title: "複句與轉述",
+    description: "表達同時、被動、轉述、必要與原因。",
+    moduleIds: ["gerund-participle", "passive-voice", "reported-speech", "subjunctive-foundations", "cause-consequence"],
+  },
+  {
+    id: "b1-argumentation",
+    level: "B1",
+    title: "目的、讓步與互動論述",
+    description: "在口說與寫作中加入目的、限制、例子與細緻立場。",
+    moduleIds: ["purpose-expression", "concession-opposition", "polite-requests", "opinion-builder", "hypothesis-nuance"],
+  },
+  {
+    id: "b1-tcf-to-b2",
+    level: "B1 → B2",
+    title: "從任務輸出進入 B2",
+    description: "先完成實用訊息，再掌握 B2 語氣、關係句、時態與過去反事實。",
+    moduleIds: ["tcf-message", "subjunctive-choice", "compound-relatives", "tense-sequence", "past-hypotheses-regret"],
   },
   {
     id: "b2-tcf",
     level: "B2",
-    title: "TCF 雙觀點與限時論證",
-    description: "中立綜合兩份來源，再完成有立場、有讓步與例子的口筆輸出。",
-    moduleIds: ["viewpoint-synthesis", "tcf-task3-b2"],
+    title: "正式改寫與 TCF 論證",
+    description: "控制資訊焦點與正式語域，完成雙觀點綜合及限時論證。",
+    moduleIds: ["causative-passive", "nominalization", "formal-register-correction", "viewpoint-synthesis", "tcf-task3-b2"],
   },
 ];
 
+const LEGACY_CURRICULUM_MODULE_IDS = Object.freeze([
+  "future-near",
+  "recent-past",
+  "object-pronouns",
+  "comparatives",
+  "imperative-directions",
+  "reflexive-past",
+  "imperfect-intro",
+  "past-contrast",
+  "pronouns-y-en",
+  "polite-requests",
+  "opinion-builder",
+  "tcf-message",
+  "relative-reformulation",
+  "hypothesis-nuance",
+  "viewpoint-synthesis",
+  "tcf-task3-b2",
+]);
+
+const CURRICULUM_VERSION = 2;
 const CURRICULUM_REPETITIONS = 3;
 const DAILY_TASK_IDS = Object.freeze(["recall", "weakness", "advance", "output"]);
 const DAILY_TASK_ID_SET = new Set(DAILY_TASK_IDS);
@@ -658,6 +951,22 @@ function mergeTaskCheckpoints(localRaw, cloudRaw) {
   return merged;
 }
 
+function migrateCurriculumIndex(rawIndex, rawVersion = 1) {
+  const index = Math.max(0, Math.floor(Number(rawIndex) || 0));
+  const currentCap = ADVANCE_MODULES.length * CURRICULUM_REPETITIONS;
+  if (Number(rawVersion) >= CURRICULUM_VERSION) return Math.min(index, currentCap);
+
+  const legacyCap = LEGACY_CURRICULUM_MODULE_IDS.length * CURRICULUM_REPETITIONS;
+  if (index >= legacyCap) return currentCap;
+
+  const legacyModuleIndex = Math.floor(index / CURRICULUM_REPETITIONS);
+  const roundOffset = index % CURRICULUM_REPETITIONS;
+  const moduleId = LEGACY_CURRICULUM_MODULE_IDS[legacyModuleIndex];
+  const currentModuleIndex = ADVANCE_MODULES.findIndex((module) => module.id === moduleId);
+  if (currentModuleIndex < 0) return Math.min(index, currentCap);
+  return currentModuleIndex * CURRICULUM_REPETITIONS + roundOffset;
+}
+
 function normalizeGameState(raw = {}) {
   const today = getTodayKey();
   const safeRaw = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
@@ -697,6 +1006,7 @@ function normalizeGameState(raw = {}) {
     sessionsDone: 0,
     bossDefeated: 0,
     curriculumIndex: 0,
+    curriculumVersion: CURRICULUM_VERSION,
     achievements: [],
     logs: [],
     daily: {
@@ -708,7 +1018,11 @@ function normalizeGameState(raw = {}) {
       updatedAt: 0,
     },
     ...safeRaw,
-    curriculumIndex: Math.max(0, Math.floor(Number(safeRaw.curriculumIndex) || 0)),
+    curriculumIndex: migrateCurriculumIndex(
+      safeRaw.curriculumIndex,
+      safeRaw.curriculumVersion,
+    ),
+    curriculumVersion: CURRICULUM_VERSION,
     achievements: normalizeStringArray(safeRaw.achievements),
     logs: normalizeStringArray(safeRaw.logs),
     daily,
