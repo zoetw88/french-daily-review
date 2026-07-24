@@ -9,9 +9,9 @@
   - debounced automatic sync
   - session-only token handling
 - `french-daily-review/index.html`
-  - GitHub sync settings and actions
+  - gear-button entry point and GitHub sync settings drawer
 - `french-daily-review/styles.css`
-  - responsive sync settings layout and status states
+  - responsive drawer layout, motion, and sync status states
 
 ## External resource
 
@@ -21,5 +21,5 @@
 ## Verification
 
 - Static JavaScript syntax check
-- Local HTTP browser layout and interaction smoke test
+- Local HTTP desktop/mobile drawer, Escape close, and localized auth-error smoke tests
 - Live GitHub write/read smoke test remains blocked until a restricted token is entered

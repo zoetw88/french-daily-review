@@ -469,6 +469,8 @@ function setGitHubSyncStatus(message, status = "idle") {
   if (!output) return;
   output.textContent = message;
   output.dataset.status = status;
+  const dot = $("#settingsSyncDot");
+  if (dot) dot.dataset.status = status;
 }
 
 function validateGitHubSyncConfig(config) {
@@ -503,6 +505,12 @@ async function verifyPrivateGitHubRepo(config, token) {
     `${GITHUB_API_ENDPOINT}/repos/${encodeURIComponent(config.owner)}/${encodeURIComponent(config.repo)}`,
     { headers: githubHeaders(token) }
   );
+  if (response.status === 401) {
+    throw new Error("Token 無效或已過期。請重新建立 fine-grained Token。");
+  }
+  if (response.status === 404) {
+    throw new Error("Token 無法讀取這個 private repo。請確認 Token 已選取 french-review-progress-private，並開啟 Contents：Read and write。");
+  }
   if (!response.ok) throw new Error(await readGitHubError(response));
   const repo = await response.json();
   if (!repo.private) throw new Error("同步已停止：指定的 GitHub repo 不是 private。");
@@ -730,6 +738,27 @@ function initializeGitHubSyncUi() {
   } else {
     setGitHubSyncStatus("尚未連線。Token 只保留到關閉這個分頁。");
   }
+}
+
+let settingsPreviousFocus = null;
+
+function openSettings() {
+  settingsPreviousFocus = document.activeElement;
+  $("#settingsShell").hidden = false;
+  $(".topbar").inert = true;
+  $("main").inert = true;
+  document.body.classList.add("settings-open");
+  $("#settingsButton").setAttribute("aria-expanded", "true");
+  $("#settingsClose").focus();
+}
+
+function closeSettings() {
+  $("#settingsShell").hidden = true;
+  $(".topbar").inert = false;
+  $("main").inert = false;
+  document.body.classList.remove("settings-open");
+  $("#settingsButton").setAttribute("aria-expanded", "false");
+  if (settingsPreviousFocus?.focus) settingsPreviousFocus.focus();
 }
 
 function saveReviews() {
@@ -1298,6 +1327,12 @@ $("#progressBackupFile").addEventListener("change", (event) => {
   event.target.value = "";
 });
 $("#pasteProgressBtn").addEventListener("click", pasteProgressFromClipboard);
+$("#settingsButton").addEventListener("click", openSettings);
+$("#settingsClose").addEventListener("click", closeSettings);
+$("#settingsScrim").addEventListener("click", closeSettings);
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !$("#settingsShell").hidden) closeSettings();
+});
 $("#connectGithubSync").addEventListener("click", connectGitHubSync);
 $("#syncGithubNow").addEventListener("click", () => syncGitHubProgress({ push: true, verify: true }));
 $("#loadGithubProgress").addEventListener("click", () => syncGitHubProgress({ push: false, verify: true }));

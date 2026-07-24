@@ -38,10 +38,23 @@
         <button class="nav-link" data-view="game">遊戲</button>
       </nav>
 
-      <button class="streak-pill" id="streakButton" aria-label="連續學習天數">
-        <span class="flame">✦</span>
-        <span><strong id="streakCount">4</strong> 天連續</span>
-      </button>
+      <div class="topbar-actions">
+        <button class="streak-pill" id="streakButton" aria-label="連續學習天數">
+          <span class="flame">✦</span>
+          <span><strong id="streakCount">4</strong> 天連續</span>
+        </button>
+        <button
+          class="settings-button"
+          id="settingsButton"
+          type="button"
+          aria-label="開啟同步設定"
+          aria-controls="settingsPanel"
+          aria-expanded="false"
+        >
+          <span aria-hidden="true">⚙</span>
+          <i id="settingsSyncDot" data-status="idle" aria-hidden="true"></i>
+        </button>
+      </div>
     </header>
 
     <main>
@@ -346,32 +359,6 @@
                 <p id="progressBackupStatus">每次完成題目都會存到本機；另外也可用複製/貼上跨設備同步。</p>
                 <input id="progressBackupFile" type="file" accept=".json,application/json" />
               </div>
-              <div class="github-sync-block">
-                <div class="github-sync-heading">
-                  <div>
-                    <p>GitHub 私有雲端同步</p>
-                    <small>進度會存到獨立 private repo；Token 不會寫進程式、Git 或備份檔。</small>
-                  </div>
-                  <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">建立限權 Token ↗</a>
-                </div>
-                <div class="github-sync-grid">
-                  <label>帳號<input id="githubOwner" autocomplete="username" /></label>
-                  <label>私有 repo<input id="githubRepo" autocomplete="off" spellcheck="false" /></label>
-                  <label>分支<input id="githubBranch" autocomplete="off" spellcheck="false" /></label>
-                  <label>檔案路徑<input id="githubProgressPath" autocomplete="off" spellcheck="false" /></label>
-                </div>
-                <label class="github-token-label" for="githubToken">Fine-grained Token（只需該 repo 的 Contents：Read and write）</label>
-                <div class="github-token-row">
-                  <input id="githubToken" type="password" placeholder="github_pat_..." autocomplete="off" spellcheck="false" />
-                  <button id="connectGithubSync">連線並同步</button>
-                </div>
-                <div class="backup-row">
-                  <button id="syncGithubNow" class="ghost-compact">立即同步</button>
-                  <button id="loadGithubProgress" class="ghost-compact">載入雲端進度</button>
-                  <button id="disconnectGithubSync" class="ghost-compact">登出並清除 Token</button>
-                </div>
-                <p id="githubSyncStatus" data-status="idle">尚未連線。Token 只保留到關閉這個分頁。</p>
-              </div>
             </div>
           </article>
         </div>
@@ -421,6 +408,53 @@
         </div>
       </section>
     </main>
+
+    <div class="settings-shell" id="settingsShell" hidden>
+      <button class="settings-scrim" id="settingsScrim" type="button" aria-label="點擊背景關閉設定"></button>
+      <aside class="settings-panel" id="settingsPanel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <header class="settings-panel-header">
+          <div>
+            <p>PARAMÈTRES</p>
+            <h2 id="settingsTitle">同步設定</h2>
+          </div>
+          <button class="settings-close" id="settingsClose" type="button" aria-label="關閉設定">×</button>
+        </header>
+
+        <div class="settings-panel-body">
+          <div class="settings-intro">
+            <span>01</span>
+            <p>讓學習進度跟著你，而不是跟著某一台電腦。</p>
+          </div>
+
+          <section class="github-sync-block" aria-labelledby="githubSyncTitle">
+            <div class="github-sync-heading">
+              <div>
+                <p id="githubSyncTitle">GitHub 私有雲端同步</p>
+                <small>進度只存到獨立 private repo；Token 不會寫進程式、Git 或備份檔。</small>
+              </div>
+              <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">建立限權 Token ↗</a>
+            </div>
+            <div class="github-sync-grid">
+              <label>帳號<input id="githubOwner" autocomplete="username" /></label>
+              <label>私有 repo<input id="githubRepo" autocomplete="off" spellcheck="false" /></label>
+              <label>分支<input id="githubBranch" autocomplete="off" spellcheck="false" /></label>
+              <label>檔案路徑<input id="githubProgressPath" autocomplete="off" spellcheck="false" /></label>
+            </div>
+            <label class="github-token-label" for="githubToken">Fine-grained Token（只需該 repo 的 Contents：Read and write）</label>
+            <div class="github-token-row">
+              <input id="githubToken" type="password" placeholder="github_pat_..." autocomplete="off" spellcheck="false" />
+              <button id="connectGithubSync">連線並同步</button>
+            </div>
+            <div class="backup-row">
+              <button id="syncGithubNow" class="ghost-compact">立即同步</button>
+              <button id="loadGithubProgress" class="ghost-compact">載入雲端進度</button>
+              <button id="disconnectGithubSync" class="ghost-compact">登出並清除 Token</button>
+            </div>
+            <p id="githubSyncStatus" data-status="idle">尚未連線。Token 只保留到關閉這個分頁。</p>
+          </section>
+        </div>
+      </aside>
+    </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </body>
